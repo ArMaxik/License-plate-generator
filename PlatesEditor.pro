@@ -25,11 +25,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        basicitem.cpp \
+        controllviewpanel.cpp \
+        customcentralwidget.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        settingswidget.cpp \
+        textureeditorwidget.cpp \
+        toolbar.cpp
 
 HEADERS += \
-        mainwindow.h
+        basicitem.h \
+        controllviewpanel.h \
+        customcentralwidget.h \
+        mainwindow.h \
+        settingswidget.h \
+        textureeditorwidget.h \
+        toolbar.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
