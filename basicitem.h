@@ -3,6 +3,7 @@
 
 #include <QGraphicsItem>
 #include <QVBoxLayout>
+#include <QFont>
 
 class BasicItem : public QGraphicsObject
 {
@@ -51,6 +52,7 @@ public:
                QWidget *widget) override;
 private:
     QString text;
+    QFont font;
 };
 
 #endif // BASICITEM_H

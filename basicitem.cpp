@@ -35,8 +35,12 @@ QWidget *BasicItem::getSettingsWidget()
 //    QVBoxLayout *vl = new QVBoxLayout();
     QGridLayout *gl = new QGridLayout();
 
+    QLineEdit *nameLE = new QLineEdit(this->name);
+    QLabel *nameL = new QLabel(tr("Items name"));
+
+    bool isMovable = this->flags().testFlag(QGraphicsItem::ItemIsMovable);
     QCheckBox *movableCB = new QCheckBox();
-    movableCB->setCheckState(Qt::Checked);
+    movableCB->setCheckState(isMovable ? Qt::Checked : Qt::Unchecked);
 
     QSpinBox *xSpinBox = new QSpinBox();
     QSpinBox *ySpinBox = new QSpinBox();
@@ -44,6 +48,8 @@ QWidget *BasicItem::getSettingsWidget()
     ySpinBox->setRange(0, 5000);
     xSpinBox->setValue(x());
     ySpinBox->setValue(y());
+    xSpinBox->setEnabled(isMovable);
+    ySpinBox->setEnabled(isMovable);
 
     QSpinBox *wSpinBox = new QSpinBox();
     QSpinBox *hSpinBox = new QSpinBox();
@@ -58,17 +64,22 @@ QWidget *BasicItem::getSettingsWidget()
     QLabel *widthL = new QLabel(tr("Width"));
     QLabel *heightL = new QLabel(tr("Height"));
 
-    gl->addWidget(movL, 0, 0);
-    gl->addWidget(movableCB, 0, 1);
-    gl->addWidget(xposL, 1, 0);
-    gl->addWidget(xSpinBox, 1, 1);
-    gl->addWidget(yposL, 2, 0);
-    gl->addWidget(ySpinBox, 2, 1);
-    gl->addWidget(widthL, 3, 0);
-    gl->addWidget(wSpinBox, 3, 1);
-    gl->addWidget(heightL, 4, 0);
-    gl->addWidget(hSpinBox, 4, 1);
+    gl->addWidget(nameL, 0, 0);
+    gl->addWidget(nameLE, 0, 1);
+    gl->addWidget(movL, 1, 0);
+    gl->addWidget(movableCB, 1, 1);
+    gl->addWidget(xposL, 2, 0);
+    gl->addWidget(xSpinBox, 2, 1);
+    gl->addWidget(yposL, 3, 0);
+    gl->addWidget(ySpinBox, 3, 1);
+    gl->addWidget(widthL, 4, 0);
+    gl->addWidget(wSpinBox, 4, 1);
+    gl->addWidget(heightL, 5, 0);
+    gl->addWidget(hSpinBox, 5, 1);
 
+    // Name change
+    connect(nameLE, &QLineEdit::textChanged,
+            this, [this](QString text){ if(text.isEmpty()) text = tr("Unnamed Item"); name = text; });
     // Movable check
     connect(movableCB, &QCheckBox::stateChanged,
             this, [this](int state){ setFlag(QGraphicsItem::ItemIsMovable, state); });
@@ -133,8 +144,9 @@ void StaticImageItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
 StaticTextItem::StaticTextItem(QGraphicsItem *parent)
     : BasicItem(parent)
+    , text(tr("Text"))
 {
-
+    font.setPixelSize(20);
 }
 
 QWidget *StaticTextItem::getSettingsWidget()
@@ -142,7 +154,7 @@ QWidget *StaticTextItem::getSettingsWidget()
     QWidget *wid = BasicItem::getSettingsWidget();
 
     QLabel *tL = new QLabel(tr("Text"));
-    QLineEdit *lE = new QLineEdit();
+    QLineEdit *lE = new QLineEdit(text);
 
     QHBoxLayout *hl = new QHBoxLayout();
     hl->addWidget(tL);
@@ -151,17 +163,18 @@ QWidget *StaticTextItem::getSettingsWidget()
     static_cast<QVBoxLayout *>(wid->layout())->addLayout(hl);
 
     connect(lE, &QLineEdit::textChanged,
-            this, [this](QString newText){
-                text = newText;
-                prepareGeometryChange();
-                QPainter p;
-                bound = p.boundingRect(0, 0, 500, 500, Qt::AlignLeft, text);
-    });
+            this, [this](QString newText){ text = newText; });
 
     return wid;
 }
 
 void StaticTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawText(0, 0, text);
+    painter->setFont(font);
+    painter->drawText(bound, text);
+    prepareGeometryChange();
+    QRectF r = painter->boundingRect(x(), y(), 500, 500, Qt::AlignLeft, text);
+    bound.setWidth(r.width());
+    bound.setHeight(r.height());
+    BasicItem::paint(painter, option, widget);
 }

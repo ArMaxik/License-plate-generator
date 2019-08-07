@@ -12,6 +12,11 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     connect(controllScene, &QGraphicsScene::selectionChanged,
             this, &TextureEditorWidget::onItemSelected);
 
+//    StaticImageItem *i1 = new StaticImageItem();
+//    StaticImageItem *i2 = new StaticImageItem();
+//    i2->setParentItem(i1);
+//    treeModel->addItem(i1);
+
     setUpLayout();
 }
 

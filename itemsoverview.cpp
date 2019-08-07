@@ -7,7 +7,10 @@ ItemsOverview::ItemsOverview(ItemsTreeModel *model, QMainWindow *parent, Qt::Win
 
 //    ItemsTreeModel *model = new ItemsTreeModel(gs);
     treeView->setModel(model);
-
+    treeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    treeView->setDragEnabled(true);
+    treeView->setAcceptDrops(true);
+    treeView->setDropIndicatorShown(true);
     setWidget(treeView);
     setWindowTitle(tr("Items overview"));
 

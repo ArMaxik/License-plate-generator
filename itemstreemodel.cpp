@@ -1,6 +1,5 @@
 #include "itemstreemodel.h"
 
-#include "QRandomGenerator"
 
 ItemsTreeModel::ItemsTreeModel(QGraphicsScene *gs, QObject *parent)
     : QAbstractItemModel (parent)
@@ -34,20 +33,22 @@ QVariant ItemsTreeModel::data(const QModelIndex &index, int role) const
 
     BasicItem *bi = static_cast<BasicItem*>(index.internalPointer());
 
-    QRectF b = bi->boundingRect();
-
-    QString a = bi->getName();
-
     return QVariant(bi->getName());
 
 }
 
 Qt::ItemFlags ItemsTreeModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid())
-        return Qt::NoItemFlags;
+//    if (!index.isValid())
+//        return Qt::NoItemFlags;
 
-    return QAbstractItemModel::flags(index);  // А нужно ли
+//    return QAbstractItemModel::flags(index);  // А нужно ли
+    Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+
+    if (index.isValid())
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | defaultFlags;
+    else
+        return Qt::NoItemFlags;
 }
 
 QVariant ItemsTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -80,22 +81,22 @@ QModelIndex ItemsTreeModel::index(int row, int column, const QModelIndex &parent
 
 QModelIndex ItemsTreeModel::parent(const QModelIndex &index) const
 {
-    return QModelIndex();
-//    if (!index.isValid())
-//        return QModelIndex();
+//    return QModelIndex();
+    if (!index.isValid())
+        return QModelIndex();
 
-//    QGraphicsItem *childItem = static_cast<QGraphicsItem*>(index.internalPointer());
-//    QGraphicsItem *parentItem = childItem->parentItem();
+    BasicItem *childItem = static_cast<BasicItem*>(index.internalPointer());
+    BasicItem *parentItem = static_cast<BasicItem*>(childItem->parentItem());
 
-//    if (parentItem == nullptr)
-//        return QModelIndex();
-//    int row;
-//    if(parentItem->parentItem() == nullptr) {
-//        row = grScene->items().indexOf(parentItem);
-//    } else {
-//        row = parentItem->parentItem()->childItems().indexOf(parentItem);
-//    }
-//    return createIndex(row, 0, parentItem);
+    if (parentItem == nullptr)
+        return QModelIndex();
+    int row;
+    if(parentItem->parentItem() == nullptr) {
+        row = grScene->items().indexOf(parentItem);
+    } else {
+        row = parentItem->parentItem()->childItems().indexOf(parentItem);
+    }
+    return createIndex(row, 0, parentItem);
 }
 
 int ItemsTreeModel::rowCount(const QModelIndex &parent) const
@@ -112,4 +113,9 @@ int ItemsTreeModel::rowCount(const QModelIndex &parent) const
 int ItemsTreeModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
+}
+
+Qt::DropActions ItemsTreeModel::supportedDragActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
 }
