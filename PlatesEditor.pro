@@ -28,6 +28,8 @@ SOURCES += \
         basicitem.cpp \
         controllviewpanel.cpp \
         customcentralwidget.cpp \
+        itemsoverview.cpp \
+        itemstreemodel.cpp \
         main.cpp \
         mainwindow.cpp \
         settingswidget.cpp \
@@ -38,6 +40,8 @@ HEADERS += \
         basicitem.h \
         controllviewpanel.h \
         customcentralwidget.h \
+        itemsoverview.h \
+        itemstreemodel.h \
         mainwindow.h \
         settingswidget.h \
         textureeditorwidget.h \

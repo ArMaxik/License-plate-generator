@@ -8,6 +8,7 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
 {
     setWidget(widget);
     widget->setLayout(new QVBoxLayout());
+    setWindowTitle(tr("Settings"));
 
     show();
 }
@@ -15,10 +16,12 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
 void SettingsWidget::SetSettingsLayout(BasicItem *item)
 {
     if(widget->layout() != nullptr) {
-        RemoveLayout(widget->layout());
+//        RemoveLayout(widget->layout());
+        setWidget(widget);
     }
     if(item != nullptr) {
-        widget->setLayout(item->getSettingsLayout());
+//        widget->setLayout(item->getSettingsLayout());
+        setWidget(item->getSettingsWidget());
     }
 }
 

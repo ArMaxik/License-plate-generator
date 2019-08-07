@@ -10,9 +10,11 @@ public:
     ToolBar(const QString &title, QWidget *parent);
 
     QAction *getAddStaticImageAction() const;
+    QAction *getAddStaticTextAction() const;
 
 private:
    QAction *addStaticImageAction;
+   QAction *addStaticTextAction;
 };
 
 #endif // TOOLBAR_H

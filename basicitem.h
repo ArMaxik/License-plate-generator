@@ -15,10 +15,12 @@ public:
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
 
-    virtual QLayout *getSettingsLayout();
+    virtual QWidget *getSettingsWidget();
+    QString getName();
 
-private:
+protected:
     QRectF bound;
+    QString name;
 
 };
 
@@ -28,7 +30,7 @@ class StaticImageItem : public BasicItem
 public:
     StaticImageItem(QGraphicsItem *parent = nullptr);
 
-    QLayout *getSettingsLayout() override;
+    QWidget *getSettingsWidget() override;
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
@@ -37,9 +39,18 @@ private:
     QImage *img;
 };
 
-class StaticTextImage : public BasicItem
+class StaticTextItem : public BasicItem
 {
+    Q_OBJECT
+public:
+    StaticTextItem(QGraphicsItem *parent = nullptr);
 
+    QWidget *getSettingsWidget() override;
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option,
+               QWidget *widget) override;
+private:
+    QString text;
 };
 
 #endif // BASICITEM_H

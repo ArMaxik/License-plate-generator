@@ -7,6 +7,7 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     : CustomCentralWidget(parent)
     , controllScene(new QGraphicsScene(this))
     , controllView(new ControllViewPanel(controllScene))
+    , treeModel(new ItemsTreeModel(controllScene))
 {
     connect(controllScene, &QGraphicsScene::selectionChanged,
             this, &TextureEditorWidget::onItemSelected);
@@ -14,9 +15,26 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     setUpLayout();
 }
 
+QGraphicsScene *TextureEditorWidget::getControllScene() const
+{
+    return controllScene;
+}
+
+ItemsTreeModel *TextureEditorWidget::getItemsTreeModel() const
+{
+    return treeModel;
+}
+
 void TextureEditorWidget::addStaticImageItem()
 {
-    controllScene->addItem(new StaticImageItem());
+    treeModel->addItem(new StaticImageItem());
+//    controllScene->addItem(new StaticImageItem());
+}
+
+void TextureEditorWidget::addStaticTextItem()
+{
+    treeModel->addItem(new StaticTextItem());
+//    controllScene->addItem(new StaticTextItem());
 }
 
 void TextureEditorWidget::setUpLayout()

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "toolbar.h"
 #include "settingswidget.h"
+#include "itemsoverview.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -28,6 +29,8 @@ void MainWindow::setUpToolBar()
 
     connect(tb->getAddStaticImageAction(), &QAction::triggered,
             textureEdit, &TextureEditorWidget::addStaticImageItem);
+    connect(tb->getAddStaticTextAction(), &QAction::triggered,
+            textureEdit, &TextureEditorWidget::addStaticTextItem);
 
 
     addToolBar(tb);
@@ -41,4 +44,7 @@ void MainWindow::setDockWidgets()
             sw, &SettingsWidget::SetSettingsLayout);
 
     addDockWidget(Qt::LeftDockWidgetArea, sw);
+
+    ItemsOverview *is = new ItemsOverview(textureEdit->getItemsTreeModel());
+    addDockWidget(Qt::LeftDockWidgetArea, is);
 }

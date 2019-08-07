@@ -28,6 +28,9 @@ private:
 
     void setUpLayout();
     void onItemSelected();
+    
+private slots:
+    void onModelCurrentChange();
 
 };
 

@@ -4,13 +4,14 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QCheckBox>
+#include <QLineEdit>
 
-#include<QDebug>
-
+#include <QDebug>
 
 BasicItem::BasicItem(QGraphicsItem *parent)
     : QGraphicsObject(parent)
     , bound(0, 0, 50, 50)
+    , name(tr("Unnamed Item"))
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -29,7 +30,7 @@ void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     }
 }
 
-QLayout *BasicItem::getSettingsLayout()
+QWidget *BasicItem::getSettingsWidget()
 {
 //    QVBoxLayout *vl = new QVBoxLayout();
     QGridLayout *gl = new QGridLayout();
@@ -91,7 +92,18 @@ QLayout *BasicItem::getSettingsLayout()
     connect(hSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
             this, [this](int h){ prepareGeometryChange(); bound.setHeight(h);});
 
-    return  gl;
+    QWidget *wid = new QWidget();
+    QVBoxLayout *ml = new QVBoxLayout();
+    ml->addLayout(gl);
+    wid->setLayout(ml);
+    return  wid;
+}
+
+QString BasicItem::getName()
+{
+//    return QString("Hi");
+//    qDebug() << name;
+    return name;
 }
 
 QRectF BasicItem::boundingRect() const
@@ -105,9 +117,9 @@ StaticImageItem::StaticImageItem(QGraphicsItem *parent)
 
 }
 
-QLayout *StaticImageItem::getSettingsLayout()
+QWidget *StaticImageItem::getSettingsWidget()
 {
-    return BasicItem::getSettingsLayout();
+    return BasicItem::getSettingsWidget();
 }
 
 void StaticImageItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -118,3 +130,38 @@ void StaticImageItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 }
 
 
+
+StaticTextItem::StaticTextItem(QGraphicsItem *parent)
+    : BasicItem(parent)
+{
+
+}
+
+QWidget *StaticTextItem::getSettingsWidget()
+{
+    QWidget *wid = BasicItem::getSettingsWidget();
+
+    QLabel *tL = new QLabel(tr("Text"));
+    QLineEdit *lE = new QLineEdit();
+
+    QHBoxLayout *hl = new QHBoxLayout();
+    hl->addWidget(tL);
+    hl->addWidget(lE);
+
+    static_cast<QVBoxLayout *>(wid->layout())->addLayout(hl);
+
+    connect(lE, &QLineEdit::textChanged,
+            this, [this](QString newText){
+                text = newText;
+                prepareGeometryChange();
+                QPainter p;
+                bound = p.boundingRect(0, 0, 500, 500, Qt::AlignLeft, text);
+    });
+
+    return wid;
+}
+
+void StaticTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->drawText(0, 0, text);
+}
