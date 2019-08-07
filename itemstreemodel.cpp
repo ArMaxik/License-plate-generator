@@ -9,6 +9,11 @@ ItemsTreeModel::ItemsTreeModel(QGraphicsScene *gs, QObject *parent)
 
 }
 
+QGraphicsScene *ItemsTreeModel::getGraphicsScene() const
+{
+    return grScene;
+}
+
 void ItemsTreeModel::addItem(BasicItem *item)
 {
     emit layoutAboutToBeChanged();

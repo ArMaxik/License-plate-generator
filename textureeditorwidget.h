@@ -29,6 +29,8 @@ private:
     void setUpLayout();
     void onItemSelected();
 
+private slots:
+
 };
 
 #endif // TEXTUREEDITORWIDGET_H

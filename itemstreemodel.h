@@ -11,6 +11,7 @@ class ItemsTreeModel : public QAbstractItemModel
 public:
     ItemsTreeModel(QGraphicsScene *gs, QObject *parent = nullptr);
 
+    QGraphicsScene *getGraphicsScene() const;
     void addItem(BasicItem *item);
 
     QVariant data(const QModelIndex &index, int role) const override;
