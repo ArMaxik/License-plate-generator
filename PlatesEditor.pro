@@ -26,23 +26,29 @@ CONFIG += c++11
 
 SOURCES += \
         basicitem.cpp \
+        chanels.cpp \
         controllviewpanel.cpp \
         customcentralwidget.cpp \
         itemsoverview.cpp \
         itemstreemodel.cpp \
         main.cpp \
         mainwindow.cpp \
+        nodes.cpp \
+        properties.cpp \
         settingswidget.cpp \
         textureeditorwidget.cpp \
         toolbar.cpp
 
 HEADERS += \
         basicitem.h \
+        chanels.h \
         controllviewpanel.h \
         customcentralwidget.h \
         itemsoverview.h \
         itemstreemodel.h \
         mainwindow.h \
+        nodes.h \
+        properties.h \
         settingswidget.h \
         textureeditorwidget.h \
         toolbar.h

@@ -15,7 +15,7 @@ public slots:
     void SetSettingsLayout(BasicItem *item);
 
 private:
-    QWidget *widget;
+    QWidget *emptyWidget;
 };
 
 #endif // SETTINGSWIDGET_H

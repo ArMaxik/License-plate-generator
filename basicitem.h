@@ -1,58 +1,65 @@
 #ifndef BASICITEM_H
 #define BASICITEM_H
 
+#include "chanels.h"
+
 #include <QGraphicsItem>
 #include <QVBoxLayout>
 #include <QFont>
+#include <QVector2D>
+
 
 class BasicItem : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    BasicItem(QGraphicsItem *parent = nullptr);
+    BasicItem();
 
+    void paint(QPainter *painter,
+                   const QStyleOptionGraphicsItem *option,
+                   QWidget *widget) override;
     QRectF boundingRect() const override;
-    virtual void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget) override;
 
-    virtual QWidget *getSettingsWidget();
+    virtual QLayout *getSettingsLayout();
     QString getName();
 
+    BasicChanel *getDiffuseChanel();
+
+signals:
+    void sizeChanged();
+
 protected:
-    QRectF bound;
     QString name;
+    QVector2D position;
+
+    BasicChanel *diffuseCh;
+
+    QLayout *setUpBasicLayout();
+
+protected slots:
+    void onChanelSizeChange();
 
 };
 
-class StaticImageItem : public BasicItem
+class ControllGraphicsItem : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    StaticImageItem(QGraphicsItem *parent = nullptr);
+    ControllGraphicsItem(BasicItem *bi, QGraphicsItem *parent = nullptr);
 
-    QWidget *getSettingsWidget() override;
     void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget) override;
+                   const QStyleOptionGraphicsItem *option,
+                   QWidget *widget) override;
+    QRectF boundingRect() const override;
+
+    BasicItem *getItem();
 
 private:
-    QImage *img;
-};
+    BasicItem *item;
+    QRectF bound;
 
-class StaticTextItem : public BasicItem
-{
-    Q_OBJECT
-public:
-    StaticTextItem(QGraphicsItem *parent = nullptr);
-
-    QWidget *getSettingsWidget() override;
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget) override;
-private:
-    QString text;
-    QFont font;
+private slots:
+    void onChanelChangeSize();
 };
 
 #endif // BASICITEM_H

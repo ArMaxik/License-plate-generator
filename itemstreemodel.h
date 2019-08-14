@@ -6,12 +6,32 @@
 
 #include "basicitem.h"
 
+class TreeItem
+{
+public:
+    explicit TreeItem(BasicItem *item, TreeItem *parent);
+    ~TreeItem();
+
+    void appendChild(TreeItem *child);
+
+    TreeItem *child(int row);
+    int childCount() const;
+    int columnCount() const;
+    QVariant data(int column) const;
+    int row() const;
+    TreeItem *parentItem();
+
+private:
+    QVector<TreeItem*> m_childItems;
+    BasicItem *m_itemData;
+    TreeItem *m_parentItem;
+};
+
 class ItemsTreeModel : public QAbstractItemModel
 {
 public:
-    ItemsTreeModel(QGraphicsScene *gs, QObject *parent = nullptr);
+    ItemsTreeModel(QObject *parent = nullptr);
 
-    QGraphicsScene *getGraphicsScene() const;
     void addItem(BasicItem *item);
 
     QVariant data(const QModelIndex &index, int role) const override;
@@ -26,7 +46,7 @@ public:
 
     Qt::DropActions supportedDragActions() const override;
 private:
-    QGraphicsScene *grScene;
+    TreeItem *rootItem;
 };
 
 #endif // ITEMSTREEMODEL_H

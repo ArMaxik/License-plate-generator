@@ -15,16 +15,27 @@ public:
     ItemsTreeModel *getItemsTreeModel() const;
 
 public slots:
-    void addStaticImageItem();
-    void addStaticTextItem();
+    void addItem();
+//    void addStaticImageItem();
+//    void addStaticTextItem();
 
 signals:
     void itemSelected(BasicItem *item);
 
 private:
+    ItemsTreeModel *treeModel;
+
     QGraphicsScene *controllScene;
     ControllViewPanel *controllView;
-    ItemsTreeModel *treeModel;
+
+    QGraphicsScene *diffuseScene;
+    ControllViewPanel *diffuseView;
+
+    QGraphicsScene *specularScene;
+    ControllViewPanel *specularView;
+
+    QGraphicsScene *normalScene;
+    ControllViewPanel *normalView;
 
     void setUpLayout();
     void onItemSelected();

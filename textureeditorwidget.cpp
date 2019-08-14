@@ -5,17 +5,19 @@
 
 TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     : CustomCentralWidget(parent)
+    , treeModel(new ItemsTreeModel())
     , controllScene(new QGraphicsScene(this))
     , controllView(new ControllViewPanel(controllScene))
-    , treeModel(new ItemsTreeModel(controllScene))
+    , diffuseScene(new QGraphicsScene(this))
+    , diffuseView(new ControllViewPanel(diffuseScene))
+    , specularScene(new QGraphicsScene(this))
+    , specularView(new ControllViewPanel(specularScene))
+    , normalScene(new QGraphicsScene(this))
+    , normalView(new ControllViewPanel(normalScene))
 {
     connect(controllScene, &QGraphicsScene::selectionChanged,
             this, &TextureEditorWidget::onItemSelected);
 
-//    StaticImageItem *i1 = new StaticImageItem();
-//    StaticImageItem *i2 = new StaticImageItem();
-//    i2->setParentItem(i1);
-//    treeModel->addItem(i1);
 
     setUpLayout();
 }
@@ -30,16 +32,13 @@ ItemsTreeModel *TextureEditorWidget::getItemsTreeModel() const
     return treeModel;
 }
 
-void TextureEditorWidget::addStaticImageItem()
+void TextureEditorWidget::addItem()
 {
-    treeModel->addItem(new StaticImageItem());
-//    controllScene->addItem(new StaticImageItem());
-}
+    BasicItem *item = new BasicItem();
+    treeModel->addItem(item);
+    ControllGraphicsItem *cgi = new ControllGraphicsItem(item);
 
-void TextureEditorWidget::addStaticTextItem()
-{
-    treeModel->addItem(new StaticTextItem());
-//    controllScene->addItem(new StaticTextItem());
+    controllScene->addItem(cgi);
 }
 
 void TextureEditorWidget::setUpLayout()
@@ -54,8 +53,13 @@ void TextureEditorWidget::setUpLayout()
     QVBoxLayout *etL = new QVBoxLayout();
     etL->addWidget(controllView, 0, Qt::AlignCenter);
     editTab->setLayout(etL);
-    editTab->setBackgroundRole(QPalette::Dark);  // Сделай потом красивый серый цвет
     tw->addTab(editTab, tr("Edit"));
+
+    QWidget *diffuseTab = new QWidget();
+    QVBoxLayout *diL = new QVBoxLayout();
+    diL->addWidget(diffuseView, 0, Qt::AlignCenter);
+    diffuseTab->setLayout(diL);
+    tw->addTab(diffuseTab, tr("Diffuse chanel"));
 
 }
 
@@ -64,8 +68,8 @@ void TextureEditorWidget::onItemSelected()
     if(controllScene->selectedItems().empty()) {
         emit itemSelected(nullptr);
     } else {
-        QGraphicsItem *hmm = controllScene->selectedItems()[ controllScene->selectedItems().count()-1];
-        BasicItem *item = dynamic_cast<BasicItem*>(hmm);
-        emit itemSelected(item);
+        QGraphicsItem *hmm = controllScene->selectedItems().takeLast();
+        ControllGraphicsItem *item = dynamic_cast<ControllGraphicsItem*>(hmm);
+        emit itemSelected(item->getItem());
     }
 }
