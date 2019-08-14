@@ -43,13 +43,12 @@ public:
 
 
 protected:
-    QImage image;
-
+    ImagePropertie *image;
     NumberPropertie *width;
     NumberPropertie *height;
 
 protected slots:
-    void reloadImage(QString newPath);
+    void reloadImage();
     void changeSizeW(int w);
     void changeSizeH(int h);
 };

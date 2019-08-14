@@ -6,6 +6,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QGroupBox>
+#include <QFrame>
 
 #include <QDebug>
 

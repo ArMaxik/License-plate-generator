@@ -19,10 +19,18 @@ BasicNode::~BasicNode()
 QLayout *BasicNode::getSettingsLayout()
 {
     QVBoxLayout *ml = new QVBoxLayout();
+//    QVBoxLayout *fl = new QVBoxLayout();
+
+//    QFrame *frame = new QFrame();
+//    frame->setLayout(fl);
+//    frame->setFrameStyle(QFrame::Panel | QFrame::Raised);
+//    frame->setLineWidth(1);
 
     foreach (const BasicPropertie *p, properites) {
         ml->addLayout(p->getSettingsLayout());
     }
+
+//    ml->addWidget(frame);
 
     return ml;
 }
@@ -36,14 +44,13 @@ void BasicNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 ImageNode::ImageNode(BoundRect *br)
     : BasicNode(br)
-    , image("C:/Users/slava/OneDrive/SOavater.png")  // Временно, потом убери
+    , image(new ImagePropertie(tr("Image")))
     , width(new NumberPropertie(tr("Image Width"), 0, 0, 10000))
     , height(new NumberPropertie(tr("Image Height"), 0, 0, 10000))
 {
-    ImagePropertie *imgPr = new ImagePropertie(tr("Image Path"));
-    connect(imgPr, &ImagePropertie::imagePathChange,
+    connect(image, &ImagePropertie::imageChange,
             this, &ImageNode::reloadImage);
-    properites.push_back(imgPr);
+    properites.push_back(image);
 
     connect(width, &NumberPropertie::numberValueChange,
             this, &ImageNode::changeSizeW);
@@ -56,31 +63,27 @@ ImageNode::ImageNode(BoundRect *br)
 
 void ImageNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawImage(0, 0, image);
+    painter->drawImage(0, 0, *image);
 }
 
-void ImageNode::reloadImage(QString newPath)
+void ImageNode::reloadImage()
 {
-    image = QImage(newPath);
-    width->setValue(image.width());
-    height->setValue(image.height());
-//    emit boundSizeChanged(QSizeF(*width, *height));
+    width->setValue(image->getImage().width());
+    height->setValue(image->getImage().height());
     bound->setSize(QSizeF(*width, *height));
 }
 
 void ImageNode::changeSizeW(int w)
 {
-    qreal factor = qreal(w) / qreal(image.width()) ;
-//    emit scaleChanged(factor);
+    qreal factor = qreal(w) / qreal(image->getImage().width()) ;
     bound->setScale(factor);
-    height->setValue(image.height() * factor);
+    height->setValue(image->getImage().height() * factor);
 }
 
 void ImageNode::changeSizeH(int h)
 {
-    qreal factor = qreal(h) / qreal(image.height());
-//    emit scaleChanged(factor);
+    qreal factor = qreal(h) / qreal(image->getImage().height());
     bound->setScale(factor);
-    width->setValue(image.width() * factor);
+    width->setValue(image->getImage().width() * factor);
 }
 

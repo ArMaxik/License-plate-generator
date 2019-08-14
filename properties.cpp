@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QImage>
 
 BasicPropertie::BasicPropertie(QString labelText)
     : QObject()
@@ -62,6 +63,15 @@ QLayout *NumberPropertie::getSettingsLayout() const
     connect(numSB, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &NumberPropertie::onValueChange);
 
+//    QVBoxLayout *fl = new QVBoxLayout();
+
+//    QFrame *frame = new QFrame();
+//    frame->setLayout(ml);
+//    frame->setFrameStyle(QFrame::Panel | QFrame::Raised);
+//    frame->setLineWidth(1);
+
+//    fl->addWidget(frame);
+
     return ml;
 }
 
@@ -97,13 +107,15 @@ void NumberPropertie::onValueChange(int newValue)
 
 ImagePropertie::ImagePropertie(QString labelText)
     : BasicPropertie (labelText)
+    , img("C:/Users/slava/OneDrive/SOavater.png")  // Временно, потом убери
+
 {
 
 }
 
 QLayout *ImagePropertie::getSettingsLayout() const
 {
-    QVBoxLayout *ml = static_cast<QVBoxLayout*>(BasicPropertie::getSettingsLayout());
+    QLayout *ml = BasicPropertie::getSettingsLayout();
 
     QHBoxLayout *pathLO = new QHBoxLayout();
     QLabel *pathL = new QLabel(label);
@@ -111,34 +123,36 @@ QLayout *ImagePropertie::getSettingsLayout() const
     QPushButton *pathB = new QPushButton(tr("Select image"));
 
     connect(pathB, &QPushButton::clicked,
-            this, [=]() {
-        QString path = QFileDialog::getOpenFileName(nullptr,
-                                                     tr("Open Image"),
-                                                     "/home/",
-                                                     tr("Image Files (*.png *.jpg *.bmp)"));
-        emit imagePathChange(path);
-    });
+            this, &ImagePropertie::onPathButtonPush);
 
     pathLO->addWidget(pathL);
     pathLO->addWidget(pathB);
-    ml->addLayout(pathLO);
+    ml->addItem(pathLO);
+
+//    QVBoxLayout *fl = new QVBoxLayout();
+
+//    QFrame *frame = new QFrame();
+//    frame->setLayout(ml);
+//    frame->setFrameStyle(QFrame::Panel | QFrame::Raised);
+//    frame->setLineWidth(1);
+
+//    fl->addWidget(frame);
+
 
     return ml;
 }
 
+QImage &ImagePropertie::getImage()
+{
+    return img;
+}
+
 void ImagePropertie::onPathButtonPush()
 {
-//    savePath->setText(
-//                    QFileDialog::getExistingDirectory(
-//                               this
-//                             , "Save path"
-//                             , ""
-//                             , QFileDialog::ShowDirsOnly
-//                             | QFileDialog::DontResolveSymlinks) + "/");
+    QString path = QFileDialog::getOpenFileName(nullptr,
+                                                 tr("Open Image"),
+                                                 "/home/",
+                                                 tr("Image Files (*.png *.jpg *.bmp)"));
+    img = QImage(path);
+    emit imageChange();
 }
-
-void ImagePropertie::onImgPathChange(const QString &text)
-{
-    imgPath = text;
-}
-

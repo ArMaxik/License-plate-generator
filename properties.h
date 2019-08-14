@@ -54,16 +54,17 @@ public:
     ImagePropertie(QString labelText);
 
     QLayout *getSettingsLayout() const override;
+    QImage &getImage();
+    operator QImage() const { return img; }
 
 signals:
-    void imagePathChange(QString newPath) const;
+    void imageChange() const;
 
 protected:
-    QString imgPath;
+    QImage img;
 
 protected slots:
     void onPathButtonPush();
-    void onImgPathChange(const QString &text);
 };
 
 #endif // PROPERTIES_H
