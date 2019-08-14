@@ -107,20 +107,19 @@ QLayout *ImagePropertie::getSettingsLayout() const
 
     QHBoxLayout *pathLO = new QHBoxLayout();
     QLabel *pathL = new QLabel(label);
-    QLabel *pathLD = new QLabel();
+//    QLabel *pathLD = new QLabel();
     QPushButton *pathB = new QPushButton(tr("Select image"));
 
     connect(pathB, &QPushButton::clicked,
             this, [=]() {
-        pathLD->setText(QFileDialog::getOpenFileName(nullptr,
+        QString path = QFileDialog::getOpenFileName(nullptr,
                                                      tr("Open Image"),
                                                      "/home/",
-                                                     tr("Image Files (*.png *.jpg *.bmp)")));
-        emit imagePathChange(pathLD->text());
+                                                     tr("Image Files (*.png *.jpg *.bmp)"));
+        emit imagePathChange(path);
     });
 
     pathLO->addWidget(pathL);
-    pathLO->addWidget(pathLD);
     pathLO->addWidget(pathB);
     ml->addLayout(pathLO);
 

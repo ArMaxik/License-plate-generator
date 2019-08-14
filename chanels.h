@@ -10,10 +10,10 @@ class BasicChanel : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    BasicChanel(QGraphicsItem *parent = nullptr);
+    BasicChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 
     QRectF boundingRect() const override;
-    virtual void paint(QPainter *painter,
+    void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
 
@@ -28,7 +28,8 @@ signals:
     void sizeChanged();
 
 protected:
-    QRectF bound;
+//    QRectF bound;
+    BoundRect *bound;
     bool enable;
     BasicNode *node;
 
@@ -39,11 +40,11 @@ class DiffuseChanel : public BasicChanel
 {
     Q_OBJECT
 public:
-    DiffuseChanel(QGraphicsItem *parent = nullptr);
+    DiffuseChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget) override;
+//    void paint(QPainter *painter,
+//               const QStyleOptionGraphicsItem *option,
+//               QWidget *widget) override;
 
     QLayout *getSettingsLayout() override;
 };

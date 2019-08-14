@@ -8,17 +8,18 @@
 #include <QFont>
 #include <QVector2D>
 
-
 class BasicItem : public QGraphicsObject
 {
     Q_OBJECT
 public:
     BasicItem();
+    friend BoundRect;
 
     void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
     QRectF boundingRect() const override;
+    BoundRect *getBoundRect() const;
 
     virtual QLayout *getSettingsLayout();
     QString getName();
@@ -30,7 +31,7 @@ signals:
 
 protected:
     QString name;
-    QVector2D position;
+    BoundRect *bound;
 
     BasicChanel *diffuseCh;
 
@@ -59,7 +60,7 @@ private:
     QRectF bound;
 
 private slots:
-    void onChanelChangeSize();
+    void setSize(QRectF rect);
 };
 
 #endif // BASICITEM_H

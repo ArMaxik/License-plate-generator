@@ -3,7 +3,10 @@
 #include <QPainter>
 #include <QSize>
 
-BasicNode::BasicNode()
+#include <QtDebug>
+
+BasicNode::BasicNode(BoundRect *br)
+    : bound(br)
 {
 
 }
@@ -27,10 +30,13 @@ QLayout *BasicNode::getSettingsLayout()
 void BasicNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 //    return QSize(0, 0);
+//    qDebug() <<"BasicNode " << boundingRect();
+
 }
 
-ImageNode::ImageNode()
-    : image("C:/Users/slava/OneDrive/SOavater.png")  // Временно, потом убери
+ImageNode::ImageNode(BoundRect *br)
+    : BasicNode(br)
+    , image("C:/Users/slava/OneDrive/SOavater.png")  // Временно, потом убери
     , width(new NumberPropertie(tr("Image Width"), 0, 0, 10000))
     , height(new NumberPropertie(tr("Image Height"), 0, 0, 10000))
 {
@@ -58,20 +64,23 @@ void ImageNode::reloadImage(QString newPath)
     image = QImage(newPath);
     width->setValue(image.width());
     height->setValue(image.height());
-    emit boundSizeChanged(QSizeF(*width, *height));
+//    emit boundSizeChanged(QSizeF(*width, *height));
+    bound->setSize(QSizeF(*width, *height));
 }
 
 void ImageNode::changeSizeW(int w)
 {
     qreal factor = qreal(w) / qreal(image.width()) ;
-    emit scaleChanged(factor);
+//    emit scaleChanged(factor);
+    bound->setScale(factor);
     height->setValue(image.height() * factor);
 }
 
 void ImageNode::changeSizeH(int h)
 {
     qreal factor = qreal(h) / qreal(image.height());
-    emit scaleChanged(factor);
+//    emit scaleChanged(factor);
+    bound->setScale(factor);
     width->setValue(image.width() * factor);
 }
 

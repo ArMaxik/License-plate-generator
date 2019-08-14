@@ -1,6 +1,7 @@
 #ifndef NODES_H
 #define NODES_H
 
+#include "boundrect.h"
 #include "properties.h"
 
 #include <QLayout>
@@ -11,7 +12,7 @@ class BasicNode : public QObject
 {
     Q_OBJECT
 public:
-    BasicNode();
+    BasicNode(BoundRect *br);
     ~BasicNode();
 
     QLayout *getSettingsLayout();
@@ -26,6 +27,7 @@ signals:
 
 protected:
     QList<BasicPropertie*> properites;
+    BoundRect *bound;
 
 };
 
@@ -33,7 +35,7 @@ class ImageNode : public BasicNode
 {
     Q_OBJECT
 public:
-    ImageNode();
+    ImageNode(BoundRect *br);
 
     void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,

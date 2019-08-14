@@ -12,8 +12,8 @@
 BasicItem::BasicItem()
     : QGraphicsObject()
     , name(QObject::tr("Unnamed Item"))
-    , position(0, 0)
-    , diffuseCh(new DiffuseChanel())
+    , bound(new BoundRect(QRectF(0.0, 0.0, 50.0, 50.0), this))
+    , diffuseCh(new DiffuseChanel(bound))
 {
     diffuseCh->setParentItem(this);
 
@@ -23,12 +23,18 @@ BasicItem::BasicItem()
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-//    diffuseCh->paint(painter, option, widget);
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+    diffuseCh->paint(painter, option, widget);
 }
 
 QRectF BasicItem::boundingRect() const
 {
-    return diffuseCh->boundingRect();
+    return bound->getBound();
+}
+
+BoundRect *BasicItem::getBoundRect() const
+{
+    return bound;
 }
 
 QLayout *BasicItem::getSettingsLayout()
@@ -124,8 +130,8 @@ ControllGraphicsItem::ControllGraphicsItem(BasicItem *bi, QGraphicsItem *parent)
 
     item->setParentItem(this);
 
-    QObject::connect(item, &BasicItem::sizeChanged,
-                     this, &ControllGraphicsItem::onChanelChangeSize);
+    QObject::connect(item->getBoundRect(), &BoundRect::sizeChanged,
+                     this, &ControllGraphicsItem::setSize);
 }
 
 void ControllGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -143,7 +149,7 @@ void ControllGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsIt
 
 QRectF ControllGraphicsItem::boundingRect() const
 {
-    return item->boundingRect();
+    return bound;
 }
 
 BasicItem *ControllGraphicsItem::getItem()
@@ -151,8 +157,9 @@ BasicItem *ControllGraphicsItem::getItem()
     return item;
 }
 
-void ControllGraphicsItem::onChanelChangeSize()
+void ControllGraphicsItem::setSize(QRectF rect)
 {
     prepareGeometryChange();
-    bound = item->getDiffuseChanel()->boundingRect();
+    bound = rect;
 }
+

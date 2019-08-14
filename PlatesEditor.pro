@@ -26,6 +26,7 @@ CONFIG += c++11
 
 SOURCES += \
         basicitem.cpp \
+        boundrect.cpp \
         chanels.cpp \
         controllviewpanel.cpp \
         customcentralwidget.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
 
 HEADERS += \
         basicitem.h \
+        boundrect.h \
         chanels.h \
         controllviewpanel.h \
         customcentralwidget.h \

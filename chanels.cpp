@@ -6,58 +6,53 @@
 #include <QComboBox>
 #include <QVector2D>
 
-BasicChanel::BasicChanel(QGraphicsItem *parent)
-    : QGraphicsObject (parent)
-    , bound(0, 0, 50, 50)
-    , enable(true)
-    , node(new BasicNode())
-{
+#include <QtDebug>
 
+BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
+    : QGraphicsObject (parent)
+    , bound(br)
+    , enable(true)
+    , node(new BasicNode(bound))
+{
+    hide();
 }
 
 QRectF BasicChanel::boundingRect() const
 {
-    return bound;
+    return bound->getBound();
 }
 
 void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-
-
+    node->paint(painter, option, widget);
 }
 
 void BasicChanel::changeScale(qreal scale)
 {
-    setBoundSize(boundingRect().size() / this->scale() * scale);
-    setScale(scale);
+    bound->setScale(scale);
 }
 
 void BasicChanel::setBoundSize(QSizeF size)
 {
-    prepareGeometryChange();
-    bound.setSize(size);
-    emit sizeChanged();
+    bound->setSize(size);
 }
 
-DiffuseChanel::DiffuseChanel(QGraphicsItem *parent)
-    : BasicChanel (parent)
+DiffuseChanel::DiffuseChanel(BoundRect *br, QGraphicsItem *parent)
+    : BasicChanel (br, parent)
 {
-    node = new ImageNode();
+    node = new ImageNode(bound);
 
-    connect(node, &BasicNode::scaleChanged,
-            this, &BasicChanel::changeScale);
+//    connect(node, &BasicNode::scaleChanged,
+//            this, &BasicChanel::changeScale);
 
-    connect(node, &BasicNode::boundSizeChanged,
-            this, &BasicChanel::setBoundSize);
+//    connect(node, &BasicNode::boundSizeChanged,
+//            this, &BasicChanel::setBoundSize);
 }
 
-void DiffuseChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-//    QRectF r = boundingRect();
-//    r.adjust(5, 5, -5, -5);
-//    painter->drawEllipse(r);
-    node->paint(painter, option, widget);
-}
+//void DiffuseChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+//{
+//    node->paint(painter, option, widget);
+//}
 
 QLayout *DiffuseChanel::getSettingsLayout()
 {
