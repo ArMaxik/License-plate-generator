@@ -6,6 +6,8 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QImage>
+#include <QColorDialog>
+// ========[ BasicPropertie ]==================================================
 
 BasicPropertie::BasicPropertie(QString labelText)
     : QObject()
@@ -31,6 +33,8 @@ QLayout *BasicPropertie::getSettingsLayout() const
 
     return ml;
 }
+
+// ========[ NumberPropertie ]==================================================
 
 NumberPropertie::NumberPropertie(QString labelText, int val, int min_v, int max_v)
     : BasicPropertie (labelText)
@@ -105,6 +109,8 @@ void NumberPropertie::onValueChange(int newValue)
     }
 }
 
+// ========[ ImagePropertie ]==================================================
+
 ImagePropertie::ImagePropertie(QString labelText)
     : BasicPropertie (labelText)
     , img("C:/Users/slava/OneDrive/SOavater.png")  // Временно, потом убери
@@ -155,4 +161,80 @@ void ImagePropertie::onPathButtonPush()
                                                  tr("Image Files (*.png *.jpg *.bmp)"));
     img = QImage(path);
     emit imageChange();
+}
+
+// ========[ StringPropertie ]==================================================
+
+StringPropertie::StringPropertie(QString labelText, QString s)
+    : BasicPropertie(labelText)
+    , str(s)
+{
+
+}
+
+QLayout *StringPropertie::getSettingsLayout() const
+{
+    QLayout *ml = BasicPropertie::getSettingsLayout();
+
+    QHBoxLayout *strLO = new QHBoxLayout();
+    QLabel *strL = new QLabel(label);
+    QLineEdit *strLE = new QLineEdit(str);
+
+    connect(strLE, &QLineEdit::textChanged,
+            this, &StringPropertie::onStringChange);
+
+    strLO->addWidget(strL);
+    strLO->addWidget(strLE);
+    ml->addItem(strLO);
+
+    return ml;
+}
+
+QString &StringPropertie::getString()
+{
+    return str;
+}
+
+void StringPropertie::onStringChange(QString newStr)
+{
+    str = newStr;
+    emit stringChange(newStr);
+}
+
+// ========[ ColorPropertie ]==================================================
+
+
+ColorPropertie::ColorPropertie(QString labelText)
+    : BasicPropertie(labelText)
+{
+
+}
+
+QLayout *ColorPropertie::getSettingsLayout() const
+{
+    QLayout *ml = BasicPropertie::getSettingsLayout();
+
+    QHBoxLayout *colorLO = new QHBoxLayout();
+    QLabel *colorL = new QLabel(label);
+    QPushButton *colorPB = new QPushButton(tr("Choose color"));
+
+    connect(colorPB, &QPushButton::clicked,
+            this, &ColorPropertie::onColorChange);
+
+    colorLO->addWidget(colorL);
+    colorLO->addWidget(colorPB);
+    ml->addItem(colorLO);
+
+    return ml;
+}
+
+QColor &ColorPropertie::getColor()
+{
+    return color;
+}
+
+void ColorPropertie::onColorChange()
+{
+    color = QColorDialog::getColor();
+    emit colorChange(color);
 }

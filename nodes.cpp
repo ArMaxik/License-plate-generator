@@ -5,6 +5,7 @@
 
 #include <QtDebug>
 
+// ========[ BasicNode ]==================================================
 BasicNode::BasicNode(BoundRect *br)
     : bound(br)
 {
@@ -41,6 +42,8 @@ void BasicNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 //    qDebug() <<"BasicNode " << boundingRect();
 
 }
+
+// ========[ ImageNode ]==================================================
 
 ImageNode::ImageNode(BoundRect *br)
     : BasicNode(br)
@@ -87,3 +90,41 @@ void ImageNode::changeSizeH(int h)
     width->setValue(image->getImage().width() * factor);
 }
 
+// ========[ TextNode ]==================================================
+
+TextNode::TextNode(BoundRect *br)
+    : BasicNode (br)
+    , string(new StringPropertie(tr("Text")))
+    , fontSize(new NumberPropertie(tr("Text size"), 20, 1, 10000))
+    , color(new ColorPropertie(tr("Text Color")))
+    , updateBound(true)
+{
+    connect(string, &StringPropertie::stringChange,
+            this, &TextNode::stringChanged);
+    properites.push_back(string);
+
+    font.setPixelSize(20);
+    connect(fontSize, &NumberPropertie::numberValueChange,
+            this, [this](int size) { font.setPixelSize(size); });
+    properites.push_back(fontSize);
+
+    properites.push_back(color);
+}
+
+
+void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setFont(font);
+    painter->setPen(*color);
+
+    if(updateBound) {
+        QRectF newR = painter->boundingRect(bound->getBound(), Qt::AlignLeft, *string);
+        bound->setSize(newR.size());
+    }
+    painter->drawText(bound->getBound(), *string);
+}
+
+void TextNode::stringChanged(QString newStr)
+{
+    updateBound = true;
+}

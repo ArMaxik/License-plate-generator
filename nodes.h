@@ -7,6 +7,7 @@
 #include <QLayout>
 #include <QImage>
 #include <QGraphicsItem>
+#include <QPen>
 
 class BasicNode : public QObject
 {
@@ -36,6 +37,7 @@ class ImageNode : public BasicNode
     Q_OBJECT
 public:
     ImageNode(BoundRect *br);
+//    ~ImageNode() override;
 
     void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
@@ -51,6 +53,29 @@ protected slots:
     void reloadImage();
     void changeSizeW(int w);
     void changeSizeH(int h);
+};
+
+class TextNode : public BasicNode
+{
+    Q_OBJECT
+public:
+    TextNode(BoundRect *br);
+//    ~TextNode() override;
+
+    void paint(QPainter *painter,
+                   const QStyleOptionGraphicsItem *option,
+                   QWidget *widget) override;
+
+protected:
+    StringPropertie *string;
+    NumberPropertie *fontSize;
+    ColorPropertie *color;
+    QFont font;
+    QPen pen;
+    bool updateBound;
+
+protected slots:
+    void stringChanged(QString newStr);
 };
 
 #endif // NODES_H

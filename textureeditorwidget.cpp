@@ -66,10 +66,10 @@ void TextureEditorWidget::setUpLayout()
 void TextureEditorWidget::onItemSelected()
 {
     if(controllScene->selectedItems().empty()) {
-        emit itemSelected(nullptr);
+        emit itemSettingsLayoutUpdate(nullptr);
     } else {
         QGraphicsItem *hmm = controllScene->selectedItems().takeLast();
         ControllGraphicsItem *item = dynamic_cast<ControllGraphicsItem*>(hmm);
-        emit itemSelected(item->getItem());
+        emit itemSettingsLayoutUpdate(item->getItem());
     }
 }

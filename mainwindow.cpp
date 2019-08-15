@@ -39,7 +39,7 @@ void MainWindow::setDockWidgets()
 {
     SettingsWidget *sw = new SettingsWidget();
 
-    connect(textureEdit, &TextureEditorWidget::itemSelected,
+    connect(textureEdit, &TextureEditorWidget::itemSettingsLayoutUpdate,
             sw, &SettingsWidget::SetSettingsLayout);
 
     addDockWidget(Qt::LeftDockWidgetArea, sw);

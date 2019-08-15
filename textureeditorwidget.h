@@ -20,7 +20,7 @@ public slots:
 //    void addStaticTextItem();
 
 signals:
-    void itemSelected(BasicItem *item);
+    void itemSettingsLayoutUpdate(BasicItem *item);
 
 private:
     ItemsTreeModel *treeModel;

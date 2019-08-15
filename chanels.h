@@ -17,9 +17,10 @@ public:
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
 
-    virtual QLayout *getSettingsLayout() = 0;
+    QLayout *getSettingsLayout();
     void randomize();
 
+    enum Nodes { ImageN, TextN, ShapeN };
 public slots:
     void changeScale(qreal scale);
     void setBoundSize(QSizeF size);
@@ -29,11 +30,14 @@ signals:
 
 protected:
 //    QRectF bound;
+    QVector<Nodes> allowedNodes;
+    Nodes currentNode;
     BoundRect *bound;
     bool enable;
     BasicNode *node;
 
-
+protected slots:
+    void onNodeChange(int index);
 };
 
 class DiffuseChanel : public BasicChanel
@@ -46,7 +50,7 @@ public:
 //               const QStyleOptionGraphicsItem *option,
 //               QWidget *widget) override;
 
-    QLayout *getSettingsLayout() override;
+//    QLayout *getSettingsLayout() override;
 };
 
 #endif // CHANELS_H

@@ -67,4 +67,46 @@ protected slots:
     void onPathButtonPush();
 };
 
+class StringPropertie : public BasicPropertie
+{
+    Q_OBJECT
+public:
+    StringPropertie(QString labelText, QString s = "Text");
+
+    QLayout *getSettingsLayout() const override;
+
+    QString &getString();
+    operator QString() const { return str; }
+
+signals:
+    void stringChange(QString newStr);
+
+protected:
+    QString str;
+
+protected slots:
+    void onStringChange(QString newStr);
+};
+
+class ColorPropertie : public BasicPropertie
+{
+    Q_OBJECT
+public:
+    ColorPropertie(QString labelText);
+
+    QLayout *getSettingsLayout() const override;
+
+    QColor &getColor();
+    operator QColor() const { return color; }
+
+signals:
+    void colorChange(QColor newColor);
+
+protected:
+    QColor color;
+
+protected slots:
+    void onColorChange();
+};
+
 #endif // PROPERTIES_H
