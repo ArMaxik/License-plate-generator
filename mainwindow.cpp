@@ -39,11 +39,15 @@ void MainWindow::setDockWidgets()
 {
     SettingsWidget *sw = new SettingsWidget();
 
-    connect(textureEdit, &TextureEditorWidget::itemSettingsLayoutUpdate,
+    connect(textureEdit, &TextureEditorWidget::itemSelected,
             sw, &SettingsWidget::SetSettingsLayout);
 
     addDockWidget(Qt::LeftDockWidgetArea, sw);
 
-//    ItemsOverview *is = new ItemsOverview(textureEdit->getItemsTreeModel());
-//    addDockWidget(Qt::LeftDockWidgetArea, is);
+    ItemsOverview *is = new ItemsOverview(textureEdit->getItemsTreeModel());
+
+    connect(textureEdit, &TextureEditorWidget::itemSelected,
+            is, &ItemsOverview::onSelectionChanged);
+
+    addDockWidget(Qt::LeftDockWidgetArea, is);
 }

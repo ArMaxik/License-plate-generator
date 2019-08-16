@@ -21,6 +21,8 @@ public:
     int row() const;
     TreeItem *parentItem();
 
+    BasicItem *getItem() const;
+
 private:
     QVector<TreeItem*> m_childItems;
     BasicItem *m_itemData;

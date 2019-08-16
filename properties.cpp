@@ -113,7 +113,6 @@ void NumberPropertie::onValueChange(int newValue)
 
 ImagePropertie::ImagePropertie(QString labelText)
     : BasicPropertie (labelText)
-    , img("C:/Users/slava/OneDrive/SOavater.png")  // Временно, потом убери
 
 {
 
