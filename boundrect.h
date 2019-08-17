@@ -14,6 +14,8 @@ public:
 
     QRectF getBound() const;
     qreal getScale() const;
+//    qreal diffuseChanelScale() const  { return dScale; }
+//    qreal specularChanelScale() const { return sScale; }
 
 public slots:
     void setSize(QSizeF size);
@@ -25,6 +27,8 @@ signals:
 private:
     QRectF bound;
     BasicItem *item;
+//    qreal dScale;
+//    qreal sScale;
 };
 
 #endif // BOUNDRECT_H

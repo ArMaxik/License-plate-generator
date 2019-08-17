@@ -8,6 +8,8 @@
 // ========[ BasicNode ]==================================================
 BasicNode::BasicNode(BoundRect *br)
     : bound(br)
+    , affectSize(false)
+    , scale(1.0)
 {
 
 }
@@ -66,6 +68,10 @@ ImageNode::ImageNode(BoundRect *br)
 
 void ImageNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->setClipping(true);
+    QRectF r = bound->getBound();
+    r.setSize(r.size() / scale);
+    painter->setClipRect(r);
     painter->drawImage(0, 0, *image);
 }
 
@@ -73,21 +79,35 @@ void ImageNode::reloadImage()
 {
     width->setValue(image->getImage().width());
     height->setValue(image->getImage().height());
-    bound->setSize(QSizeF(*width, *height));
+
+    scale = 1.0;
+    emit scaleChanged(scale);
+
+    if(affectSize) {
+        bound->setSize(QSizeF(*width, *height));
+    }
 }
 
 void ImageNode::changeSizeW(int w)
 {
-    qreal factor = qreal(w) / qreal(image->getImage().width()) ;
-    bound->setScale(factor);
-    height->setValue(image->getImage().height() * factor);
+    scale = qreal(w) / qreal(image->getImage().width()) ;
+    emit scaleChanged(scale);
+    height->setValue(image->getImage().height() * scale);
+
+    if(affectSize) {
+        bound->setSize(QSizeF(*width, *height));
+    }
 }
 
 void ImageNode::changeSizeH(int h)
 {
-    qreal factor = qreal(h) / qreal(image->getImage().height());
-    bound->setScale(factor);
-    width->setValue(image->getImage().width() * factor);
+    scale = qreal(h) / qreal(image->getImage().height());
+    emit scaleChanged(scale);
+    width->setValue(image->getImage().width() * scale);
+
+    if(affectSize) {
+        bound->setSize(QSizeF(*width, *height));
+    }
 }
 
 // ========[ TextNode ]==================================================
@@ -117,7 +137,7 @@ void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setFont(font);
     painter->setPen(*color);
 
-    if(updateBound) {
+    if(updateBound && affectSize) {
         QRectF newR = painter->boundingRect(bound->getBound(), Qt::AlignLeft, *string);
         bound->setSize(newR.size());
     }

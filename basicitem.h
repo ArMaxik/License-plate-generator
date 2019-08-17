@@ -15,16 +15,18 @@ public:
     BasicItem();
     friend BoundRect;
 
-    void paint(QPainter *painter,
+    virtual void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
     QRectF boundingRect() const override;
-    BoundRect *getBoundRect() const;
 
     virtual QLayout *getSettingsLayout();
     QString getName();
 
     BasicChanel *getDiffuseChanel();
+    BasicChanel *getSpecularChanel();
+
+    enum Chanels { diffuseC, specularC, normalC };
 
 signals:
     void sizeChanged();
@@ -38,8 +40,24 @@ protected:
 
     QLayout *setUpBasicLayout();
 
+    Chanels shownC;
+
 protected slots:
     void onChanelSizeChange();
+    void onShownChanelChange(int index);
+
+};
+
+class Canvas : public BasicItem
+{
+    Q_OBJECT
+public:
+    Canvas(QSize size);
+
+    void paint(QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
+                       QWidget *widget) override;
+    QLayout *getSettingsLayout() override;
 
 };
 

@@ -21,23 +21,27 @@ public:
     void randomize();
 
     enum Nodes { ImageN, TextN, ShapeN };
+
 public slots:
-    void changeScale(qreal scale);
-    void setBoundSize(QSizeF size);
+    void changeScale(qreal scale)   { bound->setScale(scale); }
+    void setBoundSize(QSizeF size)  { bound->setSize(size); }
+    void setAffectSize(bool affect) { affectSize = affect; node->setAffectSize(affect); }
 
 signals:
     void sizeChanged();
 
 protected:
-//    QRectF bound;
     QVector<Nodes> allowedNodes;
     Nodes currentNode;
     BoundRect *bound;
     bool enable;
+    bool affectSize;
     BasicNode *node;
+    qreal chanelSize;
 
 protected slots:
-    void onNodeChange(int index);
+    void setNode(int index);
+    void onNodeChangeScale(qreal factor, QSizeF size);
 };
 
 class DiffuseChanel : public BasicChanel

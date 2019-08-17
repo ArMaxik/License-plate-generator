@@ -54,7 +54,6 @@ QLayout *NumberPropertie::getSettingsLayout() const
 
     QHBoxLayout *numLO = new QHBoxLayout();
     QLabel *numL = new QLabel(label);
-//    QSpinBox *numSB = new QSpinBox();
 
     numSB->setRange(min, max);
     numSB->setValue(value);

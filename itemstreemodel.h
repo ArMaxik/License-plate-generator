@@ -35,6 +35,7 @@ public:
     ItemsTreeModel(QObject *parent = nullptr);
 
     void addItem(BasicItem *item);
+    void setCanvas(Canvas *canvas);
 
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -49,6 +50,7 @@ public:
     Qt::DropActions supportedDragActions() const override;
 private:
     TreeItem *rootItem;
+    TreeItem *canvas;
 };
 
 #endif // ITEMSTREEMODEL_H

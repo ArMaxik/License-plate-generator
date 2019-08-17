@@ -7,27 +7,48 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QFrame>
+#include <QComboBox>
 
 #include <QDebug>
 
 BasicItem::BasicItem()
     : QGraphicsObject()
     , name(QObject::tr("Unnamed Item"))
-    , bound(new BoundRect(QRectF(0.0, 0.0, 50.0, 50.0), this))
+    , bound(new BoundRect(QRectF(0.0, 0.0, 0.0, 0.0), this))
     , diffuseCh(new DiffuseChanel(bound))
     , specularCh(new SpecularChanel(bound))
+    , shownC(Chanels::diffuseC)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
-    diffuseCh->setParentItem(this);
-    specularCh->setParentItem(this);
+    diffuseCh->setAffectSize(true);
+
+    connect(this, &QGraphicsObject::xChanged,
+            this, [this](){ diffuseCh->setX(x()); });
+
+    connect(this, &QGraphicsObject::yChanged,
+            this, [this](){ diffuseCh->setY(y()); });
+
+    connect(this, &QGraphicsObject::xChanged,
+            this, [this](){ specularCh->setX(x()); });
+
+    connect(this, &QGraphicsObject::yChanged,
+            this, [this](){ specularCh->setY(y()); });
 }
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setRenderHint(QPainter::SmoothPixmapTransform);
-    diffuseCh->paint(painter, option, widget);
+    switch (shownC) {
+    case Chanels::diffuseC:
+        diffuseCh->paint(painter, option, widget);
+        break;
+    case Chanels::specularC:
+        specularCh->paint(painter, option, widget);
+        break;
+    case Chanels::normalC:
+        break;
+    }
 
     if(isSelected()) {
            QPen pen;
@@ -43,11 +64,6 @@ void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 QRectF BasicItem::boundingRect() const
 {
     return bound->getBound();
-}
-
-BoundRect *BasicItem::getBoundRect() const
-{
-    return bound;
 }
 
 QLayout *BasicItem::getSettingsLayout()
@@ -77,6 +93,11 @@ QString BasicItem::getName()
 BasicChanel *BasicItem::getDiffuseChanel()
 {
     return diffuseCh;
+}
+
+BasicChanel *BasicItem::getSpecularChanel()
+{
+    return specularCh;
 }
 
 QLayout *BasicItem::setUpBasicLayout()
@@ -127,6 +148,23 @@ QLayout *BasicItem::setUpBasicLayout()
     connect(this, &QGraphicsObject::yChanged,
             ySpinBox, [this, ySpinBox](){ySpinBox->setValue(y());});
 
+    // Choose what chanel to show
+    QHBoxLayout *showLO = new QHBoxLayout();
+    QLabel *showL = new QLabel(tr("Show chanel in edit"));
+    QComboBox *showCB = new QComboBox();
+
+    showCB->addItem(tr("Diffuse"));
+    showCB->addItem(tr("Specular"));
+//    showCB->addItem(tr("Normal"));
+    showCB->setCurrentIndex(shownC);
+
+    showLO->addWidget(showL);
+    showLO->addWidget(showCB);
+    vlb->addLayout(showLO);
+
+    connect(showCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &BasicItem::onShownChanelChange);
+
     return vlb;
 }
 
@@ -135,3 +173,37 @@ void BasicItem::onChanelSizeChange()
     emit sizeChanged();
 }
 
+void BasicItem::onShownChanelChange(int index)
+{
+    switch (index) {
+    case Chanels::diffuseC:
+        shownC = Chanels::diffuseC;
+        break;
+    case Chanels::specularC:
+        shownC = Chanels::specularC;
+        break;
+    case Chanels::normalC:
+        shownC = Chanels::normalC;
+        break;
+    }
+    update();
+}
+
+
+Canvas::Canvas(QSize size)
+    : BasicItem ()
+{
+    name = "Canvas";
+    bound->setSize(size);
+}
+
+void Canvas::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setBrush(Qt::red);
+    painter->drawRect(boundingRect());
+}
+
+QLayout *Canvas::getSettingsLayout()
+{
+
+}

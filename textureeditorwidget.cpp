@@ -18,6 +18,8 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     connect(controllScene, &QGraphicsScene::selectionChanged,
             this, &TextureEditorWidget::onItemSelected);
 
+    Canvas *canvas = new Canvas(QSize(200, 200));
+    treeModel->setCanvas(canvas);
 
     setUpLayout();
 }
@@ -36,9 +38,10 @@ void TextureEditorWidget::addItem()
 {
     BasicItem *item = new BasicItem();
     treeModel->addItem(item);
-//    ControllGraphicsItem *cgi = new ControllGraphicsItem(item);
 
     controllScene->addItem(item);
+    diffuseScene->addItem(item->getDiffuseChanel());
+    specularScene->addItem(item->getSpecularChanel());
 }
 
 void TextureEditorWidget::setUpLayout()
@@ -60,6 +63,12 @@ void TextureEditorWidget::setUpLayout()
     diL->addWidget(diffuseView, 0, Qt::AlignCenter);
     diffuseTab->setLayout(diL);
     tw->addTab(diffuseTab, tr("Diffuse chanel"));
+
+    QWidget *specularTab = new QWidget();
+    QVBoxLayout *spL = new QVBoxLayout();
+    spL->addWidget(specularView, 0, Qt::AlignCenter);
+    specularTab->setLayout(spL);
+    tw->addTab(specularTab, tr("Specular chanel"));
 
 }
 

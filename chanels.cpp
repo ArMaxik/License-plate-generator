@@ -13,9 +13,10 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     : QGraphicsObject (parent)
     , bound(br)
     , enable(true)
-    , node(new BasicNode(bound))
+    , affectSize(false)
+    , node(nullptr)
+    , chanelSize(1.0)
 {
-//    hide();
 }
 
 QRectF BasicChanel::boundingRect() const
@@ -25,7 +26,13 @@ QRectF BasicChanel::boundingRect() const
 
 void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->save();
+
+    painter->setRenderHint(QPainter::SmoothPixmapTransform);
+    painter->scale(node->getScale(), node->getScale());
     node->paint(painter, option, widget);
+
+    painter->restore();
 }
 
 QLayout *BasicChanel::getSettingsLayout()
@@ -62,7 +69,7 @@ QLayout *BasicChanel::getSettingsLayout()
     nodeCB->setCurrentIndex(currentNode);
 
     connect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &BasicChanel::onNodeChange);
+            this, &BasicChanel::setNode);
 
     nodeLO->addWidget(nodeL);
     nodeLO->addWidget(nodeCB);
@@ -73,17 +80,7 @@ QLayout *BasicChanel::getSettingsLayout()
     return mL;
 }
 
-void BasicChanel::changeScale(qreal scale)
-{
-    bound->setScale(scale);
-}
-
-void BasicChanel::setBoundSize(QSizeF size)
-{
-    bound->setSize(size);
-}
-
-void BasicChanel::onNodeChange(int index)
+void BasicChanel::setNode(int index)
 {
     delete node;
 
@@ -97,55 +94,30 @@ void BasicChanel::onNodeChange(int index)
          node = new ImageNode(bound);
         break;
     }
+    node->setAffectSize(affectSize);
+
     update();
+}
+
+void BasicChanel::onNodeChangeScale(qreal factor, QSizeF size)
+{
+    chanelSize = factor;
+    if(affectSize) {
+        bound->setSize(size * factor);
+    }
 }
 
 DiffuseChanel::DiffuseChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
 {
-    node = new ImageNode(bound);
-    currentNode = Nodes::ImageN;
+    setNode(Nodes::ImageN);
 
     allowedNodes.push_back(Nodes::ImageN);
     allowedNodes.push_back(Nodes::TextN);
+
 //    allowedNodes.push_back(Nodes::ShapeN);
 }
 
-//void DiffuseChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-//{
-//    node->paint(painter, option, widget);
-//}
-
-//QLayout *DiffuseChanel::getSettingsLayout()
-//{
-//    QVBoxLayout *mL = new QVBoxLayout();
-//    // Enable check box
-//    QHBoxLayout *enableLO = new QHBoxLayout();
-//    QLabel *enableL = new QLabel(tr("Enable"));
-//    QCheckBox *enableCB = new QCheckBox();
-
-//    enableCB->setCheckState(Qt::Checked);
-
-//    enableLO->addWidget(enableL);
-//    enableLO->addWidget(enableCB);
-//    mL->addLayout(enableLO);
-//    // Node selector
-//    QHBoxLayout *nodeLO = new QHBoxLayout();
-//    QLabel *nodeL = new QLabel(tr("Node type"));
-//    QComboBox *nodeCB = new QComboBox();
-
-//    nodeCB->addItem(tr("Image"));
-//    nodeCB->addItem(tr("Text"));
-//    nodeCB->addItem(tr("Shape"));
-
-//    nodeLO->addWidget(nodeL);
-//    nodeLO->addWidget(nodeCB);
-//    mL->addLayout(nodeLO);
-
-//    mL->addLayout(node->getSettingsLayout());
-
-//    return mL;
-//}
 
 SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)

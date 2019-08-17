@@ -1,6 +1,8 @@
 #include "boundrect.h"
 #include "basicitem.h"
 
+#include <QDebug>
+
 BoundRect::BoundRect(QRectF rect, BasicItem *bi)
     : bound(rect)
     , item(bi)
@@ -21,15 +23,14 @@ qreal BoundRect::getScale() const
 void BoundRect::setSize(QSizeF size)
 {
     item->prepareGeometryChange();
-    item->setScale(1.0);
     bound.setSize(size);
 
     emit sizeChanged(QRectF(0.0, 0.0,
-                            bound.width()*item->scale(),
-                            bound.height()*item->scale()));
+                            bound.width(),
+                            bound.height()));
 }
 
-void BoundRect::setScale(qreal scale)
+void BoundRect::setScale(qreal scale)  // Useless
 {
 //    setSize(bound.size() / getScale() * scale);
     item->setScale(scale);

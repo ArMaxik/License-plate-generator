@@ -21,15 +21,19 @@ public:
     virtual void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
+    void setAffectSize(bool affect) { affectSize = affect; }
+    qreal getScale() const { return scale; }
 
 signals:
-    void scaleChanged(qreal factor);
+//    void scaleChanged(qreal factor, QSizeF size);
+    void scaleChanged(qreal newScale);
     void boundSizeChanged(QSizeF size);
 
 protected:
     QList<BasicPropertie*> properites;
     BoundRect *bound;
-
+    bool affectSize;
+    qreal scale;
 };
 
 class ImageNode : public BasicNode

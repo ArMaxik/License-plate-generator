@@ -5,7 +5,6 @@ ItemsOverview::ItemsOverview(ItemsTreeModel *model, QMainWindow *parent, Qt::Win
     , treeView(new QTreeView())
 {
 
-//    ItemsTreeModel *model = new ItemsTreeModel(gs);
     treeView->setModel(model);
     treeView->setSelectionMode(QAbstractItemView::SingleSelection);
     treeView->setDragEnabled(true);

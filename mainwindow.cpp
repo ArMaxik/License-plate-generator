@@ -49,5 +49,5 @@ void MainWindow::setDockWidgets()
     connect(textureEdit, &TextureEditorWidget::itemSelected,
             is, &ItemsOverview::onSelectionChanged);
 
-    addDockWidget(Qt::LeftDockWidgetArea, is);
+    addDockWidget(Qt::RightDockWidgetArea, is);
 }

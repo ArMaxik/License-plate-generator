@@ -61,6 +61,7 @@ int TreeItem::row() const
 ItemsTreeModel::ItemsTreeModel(QObject *parent)
     : QAbstractItemModel (parent)
     , rootItem(new TreeItem(nullptr, nullptr))
+    , canvas(new TreeItem(nullptr, rootItem))
 {
 
 }
@@ -68,9 +69,21 @@ ItemsTreeModel::ItemsTreeModel(QObject *parent)
 void ItemsTreeModel::addItem(BasicItem *item)
 {
     emit layoutAboutToBeChanged();
+    beginInsertRows(index(0, 0, QModelIndex()), rowCount(), rowCount());
+
+    canvas->appendChild(new TreeItem(item, canvas));
+
+    endInsertRows();
+    emit layoutChanged();
+    emit dataChanged(index(0, 0), index(rowCount()-1, 0));
+}
+
+void ItemsTreeModel::setCanvas(Canvas *canvas)
+{
+    emit layoutAboutToBeChanged();
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
-    rootItem->appendChild(new TreeItem(item, rootItem));
+    rootItem->appendChild(new TreeItem(canvas, rootItem));
 
     endInsertRows();
     emit layoutChanged();
