@@ -35,7 +35,7 @@ public:
     ItemsTreeModel(QObject *parent = nullptr);
 
     void addItem(BasicItem *item);
-    void setCanvas(Canvas *canvas);
+    void setCanvas(Canvas *c);
 
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;

@@ -10,6 +10,11 @@ ItemsOverview::ItemsOverview(ItemsTreeModel *model, QMainWindow *parent, Qt::Win
     treeView->setDragEnabled(true);
     treeView->setAcceptDrops(true);
     treeView->setDropIndicatorShown(true);
+
+    treeView->setAnimated(true);
+    treeView->setRootIsDecorated(false);
+    treeView->expandAll();
+
     setWidget(treeView);
     setWindowTitle(tr("Items overview"));
 

@@ -194,7 +194,8 @@ Canvas::Canvas(QSize size)
     : BasicItem ()
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
-//    setFlag(QGraphicsItem::ItemIsSelectable, false);
+
+    diffuseCh->setAffectSize(false);
 
     name = "Canvas";
     bound->setSize(size);
@@ -205,9 +206,39 @@ void Canvas::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->setBrush(Qt::white);
     painter->setPen(Qt::gray);
     painter->drawRect(boundingRect());
+
+    switch (shownC) {
+    case Chanels::diffuseC:
+        diffuseCh->paint(painter, option, widget);
+        break;
+    case Chanels::specularC:
+        specularCh->paint(painter, option, widget);
+        break;
+    case Chanels::normalC:
+        break;
+    }
 }
 
 QLayout *Canvas::getSettingsLayout()
+{
+    QVBoxLayout *mainL = new QVBoxLayout();
+
+    QGroupBox *basicGroup = new QGroupBox(tr("Basic properties"));
+    QGroupBox *diffuseGroup = new QGroupBox(tr("Diffuse chanel"));
+    QGroupBox *specularGroup = new QGroupBox(tr("Specular chanel"));
+
+    basicGroup->setLayout(setUpBasicLayout());
+    diffuseGroup->setLayout(diffuseCh->getSettingsLayout());
+    specularGroup->setLayout(specularCh->getSettingsLayout());
+
+    mainL->addWidget(basicGroup);
+    mainL->addWidget(diffuseGroup);
+    mainL->addWidget(specularGroup);
+
+    return mainL;
+}
+
+QLayout *Canvas::setUpBasicLayout()
 {
     QVBoxLayout *vlb = new QVBoxLayout();
 
@@ -250,6 +281,22 @@ QLayout *Canvas::getSettingsLayout()
     connect(xSpinBox,  QOverload<int>::of(&QSpinBox::valueChanged),
             this, [this](int h){ bound->setHeight(h); });
 
+    // Choose what chanel to show
+    QHBoxLayout *showLO = new QHBoxLayout();
+    QLabel *showL = new QLabel(tr("Show chanel in edit"));
+    QComboBox *showCB = new QComboBox();
+
+    showCB->addItem(tr("Diffuse"));
+    showCB->addItem(tr("Specular"));
+//    showCB->addItem(tr("Normal"));
+    showCB->setCurrentIndex(shownC);
+
+    showLO->addWidget(showL);
+    showLO->addWidget(showCB);
+    vlb->addLayout(showLO);
+
+    connect(showCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &Canvas::onShownChanelChange);
 
     return vlb;
 }

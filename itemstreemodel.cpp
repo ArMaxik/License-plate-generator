@@ -61,7 +61,7 @@ int TreeItem::row() const
 ItemsTreeModel::ItemsTreeModel(QObject *parent)
     : QAbstractItemModel (parent)
     , rootItem(new TreeItem(nullptr, nullptr))
-    , canvas(new TreeItem(nullptr, rootItem))
+    , canvas(nullptr)
 {
 
 }
@@ -69,22 +69,23 @@ ItemsTreeModel::ItemsTreeModel(QObject *parent)
 void ItemsTreeModel::addItem(BasicItem *item)
 {
     emit layoutAboutToBeChanged();
-//    beginInsertRows(index(0, 0, QModelIndex()),
-//                    rowCount(index(0, 0, QModelIndex())),
-//                    rowCount(index(0, 0, QModelIndex())));
+    beginInsertRows(index(0, 0, QModelIndex()),
+                    rowCount(index(0, 0, QModelIndex())),
+                    rowCount(index(0, 0, QModelIndex())));
 
-    rootItem->appendChild(new TreeItem(item, rootItem));
+    canvas->appendChild(new TreeItem(item, canvas));
 
-//    endInsertRows();
+    endInsertRows();
     emit layoutChanged();
 }
 
-void ItemsTreeModel::setCanvas(Canvas *canvas)
+void ItemsTreeModel::setCanvas(Canvas *c)
 {
     emit layoutAboutToBeChanged();
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
-    rootItem->appendChild(new TreeItem(canvas, rootItem));
+    canvas = new TreeItem(c, rootItem);
+    rootItem->appendChild(canvas);
 
     endInsertRows();
     emit layoutChanged();
@@ -117,7 +118,7 @@ Qt::ItemFlags ItemsTreeModel::flags(const QModelIndex &index) const
 QVariant ItemsTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return QVariant(section);
+        return QVariant(tr("Item name"));
 
     return QVariant();
 }

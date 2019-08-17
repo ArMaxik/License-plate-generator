@@ -23,8 +23,10 @@ private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     Canvas *canvas;
+    qreal scale;
 
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void recalulateSceneRect();

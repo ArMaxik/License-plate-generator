@@ -61,6 +61,9 @@ public:
                        QWidget *widget) override;
     QLayout *getSettingsLayout() override;
 
+protected:
+    QLayout *setUpBasicLayout();
+
 };
 
 #endif // BASICITEM_H
