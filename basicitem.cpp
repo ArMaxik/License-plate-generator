@@ -193,17 +193,63 @@ void BasicItem::onShownChanelChange(int index)
 Canvas::Canvas(QSize size)
     : BasicItem ()
 {
+    setFlag(QGraphicsItem::ItemIsMovable, false);
+//    setFlag(QGraphicsItem::ItemIsSelectable, false);
+
     name = "Canvas";
     bound->setSize(size);
 }
 
 void Canvas::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setBrush(Qt::red);
+    painter->setBrush(Qt::white);
+    painter->setPen(Qt::gray);
     painter->drawRect(boundingRect());
 }
 
 QLayout *Canvas::getSettingsLayout()
 {
+    QVBoxLayout *vlb = new QVBoxLayout();
 
+    QLineEdit *nameLE = new QLineEdit(this->name);
+    QLabel *nameL = new QLabel(tr("Items name"));
+
+    QSpinBox *wSpinBox = new QSpinBox();
+    QSpinBox *xSpinBox = new QSpinBox();
+    wSpinBox->setRange(0, 5000);
+    xSpinBox->setRange(0, 5000);
+    wSpinBox->setValue(boundingRect().width());
+    xSpinBox->setValue(boundingRect().height());
+
+    QLabel *wL = new QLabel(tr("Width"));
+    QLabel *hL = new QLabel(tr("Height"));
+
+    QHBoxLayout *nameLt = new QHBoxLayout();
+    QHBoxLayout *wLt = new QHBoxLayout();
+    QHBoxLayout *hLt = new QHBoxLayout();
+
+    vlb->addLayout(nameLt);
+    vlb->addLayout(wLt);
+    vlb->addLayout(hLt);
+
+    nameLt->addWidget(nameL);
+    nameLt->addWidget(nameLE);
+
+    wLt->addWidget(wL);
+    wLt->addWidget(wSpinBox);
+
+    hLt->addWidget(hL);
+    hLt->addWidget(xSpinBox);
+
+    // Name change
+    connect(nameLE, &QLineEdit::textChanged,
+            this, [this](QString text){ if(text.isEmpty()) text = tr("Unnamed Item"); name = text; });
+    // Size spinBox affect on object
+    connect(wSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int w){ bound->setWidth(w); });
+    connect(xSpinBox,  QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int h){ bound->setHeight(h); });
+
+
+    return vlb;
 }

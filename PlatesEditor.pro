@@ -28,7 +28,6 @@ SOURCES += \
         basicitem.cpp \
         boundrect.cpp \
         chanels.cpp \
-        controllviewpanel.cpp \
         customcentralwidget.cpp \
         itemsoverview.cpp \
         itemstreemodel.cpp \
@@ -38,13 +37,13 @@ SOURCES += \
         properties.cpp \
         settingswidget.cpp \
         textureeditorwidget.cpp \
-        toolbar.cpp
+        toolbar.cpp \
+        viewwidget.cpp
 
 HEADERS += \
         basicitem.h \
         boundrect.h \
         chanels.h \
-        controllviewpanel.h \
         customcentralwidget.h \
         itemsoverview.h \
         itemstreemodel.h \
@@ -53,7 +52,8 @@ HEADERS += \
         properties.h \
         settingswidget.h \
         textureeditorwidget.h \
-        toolbar.h
+        toolbar.h \
+        viewwidget.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

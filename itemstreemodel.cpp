@@ -69,13 +69,14 @@ ItemsTreeModel::ItemsTreeModel(QObject *parent)
 void ItemsTreeModel::addItem(BasicItem *item)
 {
     emit layoutAboutToBeChanged();
-    beginInsertRows(index(0, 0, QModelIndex()), rowCount(), rowCount());
+//    beginInsertRows(index(0, 0, QModelIndex()),
+//                    rowCount(index(0, 0, QModelIndex())),
+//                    rowCount(index(0, 0, QModelIndex())));
 
-    canvas->appendChild(new TreeItem(item, canvas));
+    rootItem->appendChild(new TreeItem(item, rootItem));
 
-    endInsertRows();
+//    endInsertRows();
     emit layoutChanged();
-    emit dataChanged(index(0, 0), index(rowCount()-1, 0));
 }
 
 void ItemsTreeModel::setCanvas(Canvas *canvas)
@@ -87,7 +88,6 @@ void ItemsTreeModel::setCanvas(Canvas *canvas)
 
     endInsertRows();
     emit layoutChanged();
-    emit dataChanged(index(0, 0), index(rowCount()-1, 0));
 }
 
 QVariant ItemsTreeModel::data(const QModelIndex &index, int role) const
@@ -157,8 +157,8 @@ QModelIndex ItemsTreeModel::parent(const QModelIndex &index) const
 int ItemsTreeModel::rowCount(const QModelIndex &parent) const
 {
     TreeItem *parentItem;
-    if (parent.column() > 0)
-        return 0;
+//    if (parent.column() > 0)
+//        return 0;
 
     if (!parent.isValid())
         parentItem = rootItem;

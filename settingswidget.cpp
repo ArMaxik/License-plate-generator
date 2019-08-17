@@ -4,10 +4,12 @@ static void RemoveLayout(QLayout* layout);
 
 SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     : QDockWidget()
-    , emptyWidget(new QWidget(this))
+    , emptyWidget(new QFrame(this))
 {
     setWidget(emptyWidget);
     emptyWidget->setLayout(new QVBoxLayout());
+    emptyWidget->setFrameStyle(QFrame::Panel | QFrame::Raised);
+    emptyWidget->setLineWidth(2);
     setWindowTitle(tr("Settings"));
 
     show();
@@ -22,7 +24,9 @@ void SettingsWidget::SetSettingsLayout(BasicItem *item)
     }
     if(item != nullptr) {
 //        widget->setLayout(item->getSettingsLayout());
-        QWidget *w = new QWidget();
+        QFrame *w = new QFrame();
+        w->setFrameStyle(QFrame::Panel | QFrame::Raised);
+        w->setLineWidth(2);
         w->setLayout(item->getSettingsLayout());
         setWidget(w);
     }

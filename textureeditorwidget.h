@@ -2,7 +2,7 @@
 #define TEXTUREEDITORWIDGET_H
 
 #include "customcentralwidget.h"
-#include "controllviewpanel.h"
+#include "viewwidget.h"
 #include "itemstreemodel.h"
 
 class TextureEditorWidget : public CustomCentralWidget
@@ -26,16 +26,16 @@ private:
     ItemsTreeModel *treeModel;
 
     QGraphicsScene *controllScene;
-    ControllViewPanel *controllView;
+    ViewWidget *controllView;
 
     QGraphicsScene *diffuseScene;
-    ControllViewPanel *diffuseView;
+    ViewWidget *diffuseView;
 
     QGraphicsScene *specularScene;
-    ControllViewPanel *specularView;
+    ViewWidget *specularView;
 
     QGraphicsScene *normalScene;
-    ControllViewPanel *normalView;
+    ViewWidget *normalView;
 
     void setUpLayout();
     void onItemSelected();

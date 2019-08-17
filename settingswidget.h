@@ -4,6 +4,7 @@
 #include "basicitem.h"
 
 #include <QDockWidget>
+#include <QFrame>
 
 class SettingsWidget :public QDockWidget
 {
@@ -15,7 +16,7 @@ public slots:
     void SetSettingsLayout(BasicItem *item);
 
 private:
-    QWidget *emptyWidget;
+    QFrame *emptyWidget;
 };
 
 #endif // SETTINGSWIDGET_H

@@ -26,6 +26,8 @@ public:
     BasicChanel *getDiffuseChanel();
     BasicChanel *getSpecularChanel();
 
+    BoundRect *getBoundRect() const { return bound; }
+
     enum Chanels { diffuseC, specularC, normalC };
 
 signals:

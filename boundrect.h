@@ -14,12 +14,12 @@ public:
 
     QRectF getBound() const;
     qreal getScale() const;
-//    qreal diffuseChanelScale() const  { return dScale; }
-//    qreal specularChanelScale() const { return sScale; }
 
 public slots:
     void setSize(QSizeF size);
     void setScale(qreal scale);
+    void setWidth(qreal width) { setSize(QSizeF(width, bound.height())); }
+    void setHeight(qreal height) { setSize(QSizeF(bound.width(), height)); }
 
 signals:
     void sizeChanged(QRectF bound);
