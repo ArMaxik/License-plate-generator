@@ -15,17 +15,29 @@ BasicItem::BasicItem()
     , name(QObject::tr("Unnamed Item"))
     , bound(new BoundRect(QRectF(0.0, 0.0, 50.0, 50.0), this))
     , diffuseCh(new DiffuseChanel(bound))
+    , specularCh(new SpecularChanel(bound))
 {
-    diffuseCh->setParentItem(this);
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
 
-    connect(diffuseCh, &BasicChanel::sizeChanged,
-            this, &BasicItem::onChanelSizeChange);
+    diffuseCh->setParentItem(this);
+    specularCh->setParentItem(this);
 }
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
     diffuseCh->paint(painter, option, widget);
+
+    if(isSelected()) {
+           QPen pen;
+           pen.setColor(Qt::red);
+           pen.setStyle(Qt::DotLine);
+           pen.setWidth(2);
+           painter->setPen(pen);
+
+           painter->drawRect(boundingRect());
+    }
 }
 
 QRectF BasicItem::boundingRect() const
@@ -44,12 +56,15 @@ QLayout *BasicItem::getSettingsLayout()
 
     QGroupBox *basicGroup = new QGroupBox(tr("Basic properties"));
     QGroupBox *diffuseGroup = new QGroupBox(tr("Diffuse chanel"));
+    QGroupBox *specularGroup = new QGroupBox(tr("Specular chanel"));
 
     basicGroup->setLayout(setUpBasicLayout());
     diffuseGroup->setLayout(diffuseCh->getSettingsLayout());
+    specularGroup->setLayout(specularCh->getSettingsLayout());
 
     mainL->addWidget(basicGroup);
     mainL->addWidget(diffuseGroup);
+    mainL->addWidget(specularGroup);
 
     return mainL;
 }
@@ -75,8 +90,8 @@ QLayout *BasicItem::setUpBasicLayout()
     QSpinBox *ySpinBox = new QSpinBox();
     xSpinBox->setRange(0, 5000);
     ySpinBox->setRange(0, 5000);
-    xSpinBox->setValue(parentItem()->x());
-    ySpinBox->setValue(parentItem()->y());
+    xSpinBox->setValue(x());
+    ySpinBox->setValue(y());
 
     QLabel *xposL = new QLabel(tr("X position"));
     QLabel *yposL = new QLabel(tr("Y position"));
@@ -103,14 +118,14 @@ QLayout *BasicItem::setUpBasicLayout()
             this, [this](QString text){ if(text.isEmpty()) text = tr("Unnamed Item"); name = text; });
     // Position spinBox affect on object
     connect(xSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, [this](int x){ parentItem()->setX(x); });
+            this, [this](int x){ setX(x); });
     connect(ySpinBox,  QOverload<int>::of(&QSpinBox::valueChanged),
-            this, [this](int y){ parentItem()->setY(y); });
+            this, [this](int y){ setY(y); });
     // Object position affect in spinBox
-    connect(static_cast<QGraphicsObject*>(parentItem()), &QGraphicsObject::xChanged,
-            xSpinBox, [this, xSpinBox](){xSpinBox->setValue(parentItem()->x());});
-    connect(static_cast<QGraphicsObject*>(parentItem()), &QGraphicsObject::yChanged,
-            ySpinBox, [this, ySpinBox](){ySpinBox->setValue(parentItem()->y());});
+    connect(this, &QGraphicsObject::xChanged,
+            xSpinBox, [this, xSpinBox](){xSpinBox->setValue(x());});
+    connect(this, &QGraphicsObject::yChanged,
+            ySpinBox, [this, ySpinBox](){ySpinBox->setValue(y());});
 
     return vlb;
 }
@@ -118,49 +133,5 @@ QLayout *BasicItem::setUpBasicLayout()
 void BasicItem::onChanelSizeChange()
 {
     emit sizeChanged();
-}
-
-
-ControllGraphicsItem::ControllGraphicsItem(BasicItem *bi, QGraphicsItem *parent)
-    : QGraphicsObject(parent)
-    , item(bi)
-    , bound(bi->getDiffuseChanel()->boundingRect())
-{
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemIsSelectable);
-
-    item->setParentItem(this);
-
-    QObject::connect(item->getBoundRect(), &BoundRect::sizeChanged,
-                     this, &ControllGraphicsItem::setSize);
-}
-
-void ControllGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    if(isSelected()) {
-           QPen pen;
-           pen.setColor(Qt::red);
-           pen.setStyle(Qt::DotLine);
-           pen.setWidth(2);
-           painter->setPen(pen);
-
-           painter->drawRect(boundingRect());
-    }
-}
-
-QRectF ControllGraphicsItem::boundingRect() const
-{
-    return bound;
-}
-
-BasicItem *ControllGraphicsItem::getItem()
-{
-    return item;
-}
-
-void ControllGraphicsItem::setSize(QRectF rect)
-{
-    prepareGeometryChange();
-    bound = rect;
 }
 

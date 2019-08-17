@@ -36,9 +36,9 @@ void TextureEditorWidget::addItem()
 {
     BasicItem *item = new BasicItem();
     treeModel->addItem(item);
-    ControllGraphicsItem *cgi = new ControllGraphicsItem(item);
+//    ControllGraphicsItem *cgi = new ControllGraphicsItem(item);
 
-    controllScene->addItem(cgi);
+    controllScene->addItem(item);
 }
 
 void TextureEditorWidget::setUpLayout()
@@ -69,7 +69,7 @@ void TextureEditorWidget::onItemSelected()
         emit itemSelected(nullptr);
     } else {
         QGraphicsItem *hmm = controllScene->selectedItems().takeLast();
-        ControllGraphicsItem *item = dynamic_cast<ControllGraphicsItem*>(hmm);
-        emit itemSelected(item->getItem());
+        BasicItem *item = dynamic_cast<BasicItem*>(hmm);
+        emit itemSelected(item);
     }
 }

@@ -146,3 +146,13 @@ DiffuseChanel::DiffuseChanel(BoundRect *br, QGraphicsItem *parent)
 
 //    return mL;
 //}
+
+SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
+    : BasicChanel (br, parent)
+{
+    node = new ImageNode(bound);
+    currentNode = Nodes::ImageN;
+
+    allowedNodes.push_back(Nodes::ImageN);
+    allowedNodes.push_back(Nodes::TextN);
+}

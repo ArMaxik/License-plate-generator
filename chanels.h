@@ -45,12 +45,13 @@ class DiffuseChanel : public BasicChanel
     Q_OBJECT
 public:
     DiffuseChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
+};
 
-//    void paint(QPainter *painter,
-//               const QStyleOptionGraphicsItem *option,
-//               QWidget *widget) override;
-
-//    QLayout *getSettingsLayout() override;
+class SpecularChanel : public BasicChanel
+{
+    Q_OBJECT
+public:
+    SpecularChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 };
 
 #endif // CHANELS_H

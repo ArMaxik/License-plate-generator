@@ -23,9 +23,9 @@ ItemsOverview::ItemsOverview(ItemsTreeModel *model, QMainWindow *parent, Qt::Win
 void ItemsOverview::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     if(previous.isValid())
-        static_cast<TreeItem*>(previous.internalPointer())->getItem()->parentItem()->setSelected(false);
+        static_cast<TreeItem*>(previous.internalPointer())->getItem()->setSelected(false);
     if(current.isValid())
-        static_cast<TreeItem*>(current.internalPointer())->getItem()->parentItem()->setSelected(true);
+        static_cast<TreeItem*>(current.internalPointer())->getItem()->setSelected(true);
 }
 
 void ItemsOverview::onSelectionChanged()
@@ -37,7 +37,7 @@ void ItemsOverview::onSelectionChanged()
 QModelIndex ItemsOverview::findSelected(QModelIndex start)
 {
     if(start.isValid()) {
-        if(static_cast<TreeItem*>(start.internalPointer())->getItem()->parentItem()->isSelected()) {
+        if(static_cast<TreeItem*>(start.internalPointer())->getItem()->isSelected()) {
             return start;
         }
     }
