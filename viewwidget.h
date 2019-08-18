@@ -6,13 +6,14 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 
+class ScaleWidget;
+
 class ViewWidget : public QWidget
 {
     Q_OBJECT
 public:
     ViewWidget(QWidget *parent = nullptr);
 
-    void setGraphicsScene(QGraphicsScene *gs);
     void setCanvas(Canvas *c);
     void addItem(QGraphicsItem *item) { scene->addItem(item); }
 
@@ -23,13 +24,38 @@ private:
     QGraphicsScene *scene;
     QGraphicsView *view;
     Canvas *canvas;
-    qreal scale;
+
+    ScaleWidget *scaleW;
 
     void resizeEvent(QResizeEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
+    void setScale(qreal scale);
     void recalulateSceneRect();
+};
+
+class ScaleWidget : public QWidget
+{
+Q_OBJECT
+public:
+    ScaleWidget(QWidget *parent = nullptr);
+
+    qreal getScale() const { return scale; }
+
+public slots:
+//    void setScale(qreal s) { scale = s; }
+    void increaseScale();
+    void deincreaseScale();
+
+signals:
+    void scaleChanged(qreal s);
+
+private:
+    qreal scale;
+    qreal scaleStep;
+
+    QSpinBox *scaleSB;
 };
 
 #endif // CONTROLLVIEWPANEL_H

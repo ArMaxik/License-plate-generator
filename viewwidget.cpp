@@ -2,6 +2,7 @@
 
 #include <QtDebug>
 #include <QKeyEvent>
+#include <QStatusBar>
 
 #define BACK_BORDER 50
 
@@ -10,24 +11,26 @@ ViewWidget::ViewWidget(QWidget *parent)
     , scene(new QGraphicsScene())
     , view(new QGraphicsView(scene))
     , canvas(nullptr)
-    , scale(1.0)
+    , scaleW(new ScaleWidget())
 {
     QVBoxLayout *lo = new QVBoxLayout();
+    QStatusBar *sb = new QStatusBar();
+
+    sb->addPermanentWidget(scaleW);
+    sb->setSizeGripEnabled(false);
+
     lo->addWidget(view);
+    lo->addWidget(sb);
     lo->setMargin(7);
     setLayout(lo);
 
     scene->setBackgroundBrush(QBrush(Qt::lightGray));
 
 
-//    view->setSceneRect(0, 0, width(), height());
+    connect(scaleW, &ScaleWidget::scaleChanged,
+            this, &ViewWidget::setScale);
 
 
-}
-
-void ViewWidget::setGraphicsScene(QGraphicsScene *gs)
-{
-    scene = gs;
 }
 
 void ViewWidget::setCanvas(Canvas *c)
@@ -51,16 +54,18 @@ void ViewWidget::keyPressEvent(QKeyEvent *event)
 {
     if(event->modifiers() & Qt::ControlModifier) {
         if(event->key() == Qt::Key_Plus) {
-            view->scale((scale+0.1)/scale, (scale+0.1)/scale);
-            scale += 0.1;
-            recalulateSceneRect();
+            scaleW->increaseScale();
         }
         if(event->key() == Qt::Key_Minus) {
-            view->scale((scale-0.1)/scale, (scale-0.1)/scale);
-            scale -= 0.1;
-            recalulateSceneRect();
+            scaleW->deincreaseScale();
         }
     }
+}
+
+void ViewWidget::setScale(qreal scale)
+{
+    view->scale(scale, scale);
+    recalulateSceneRect();
 }
 
 void ViewWidget::recalulateSceneRect()
@@ -85,3 +90,34 @@ void ViewWidget::recalulateSceneRect()
     }
 }
 
+
+ScaleWidget::ScaleWidget(QWidget *parent)
+    : QWidget (parent)
+    , scale(1.0)
+    , scaleStep(0.1)
+{
+    QHBoxLayout *ml = new QHBoxLayout();
+    scaleSB = new QSpinBox();
+
+    scaleSB->setRange(10, 1000);
+    scaleSB->setSuffix(tr("%"));
+    scaleSB->setSingleStep(scaleStep * 100);
+    scaleSB->setValue(scale * 100);
+
+    ml->addWidget(scaleSB);
+    ml->setMargin(0);
+    setLayout(ml);
+
+    connect(scaleSB, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int s){ emit scaleChanged((s / 100.0)/scale); scale=s/100.0; });
+}
+
+void ScaleWidget::increaseScale()
+{
+    scaleSB->setValue(scale + scaleStep);
+}
+
+void ScaleWidget::deincreaseScale()
+{
+    scaleSB->setValue(scale - scaleStep);
+}

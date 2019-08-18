@@ -27,11 +27,6 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     setUpLayout();
 }
 
-QGraphicsScene *TextureEditorWidget::getControllScene() const
-{
-    return controllScene;
-}
-
 ItemsTreeModel *TextureEditorWidget::getItemsTreeModel() const
 {
     return treeModel;

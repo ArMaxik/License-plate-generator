@@ -109,8 +109,8 @@ QLayout *BasicItem::setUpBasicLayout()
 
     QSpinBox *xSpinBox = new QSpinBox();
     QSpinBox *ySpinBox = new QSpinBox();
-    xSpinBox->setRange(0, 5000);
-    ySpinBox->setRange(0, 5000);
+    xSpinBox->setRange(-5000, 5000);
+    ySpinBox->setRange(-5000, 5000);
     xSpinBox->setValue(x());
     ySpinBox->setValue(y());
 

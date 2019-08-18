@@ -11,13 +11,10 @@ class TextureEditorWidget : public CustomCentralWidget
 public:
     TextureEditorWidget(QWidget *parent = nullptr);
 
-    QGraphicsScene *getControllScene() const;
     ItemsTreeModel *getItemsTreeModel() const;
 
 public slots:
     void addItem();
-//    void addStaticImageItem();
-//    void addStaticTextItem();
 
 signals:
     void itemSelected(BasicItem *item);
@@ -25,16 +22,9 @@ signals:
 private:
     ItemsTreeModel *treeModel;
 
-    QGraphicsScene *controllScene;
     ViewWidget *controllView;
-
-    QGraphicsScene *diffuseScene;
     ViewWidget *diffuseView;
-
-    QGraphicsScene *specularScene;
     ViewWidget *specularView;
-
-    QGraphicsScene *normalScene;
     ViewWidget *normalView;
 
     void setUpLayout();
