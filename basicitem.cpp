@@ -22,8 +22,6 @@ BasicItem::BasicItem()
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
-    diffuseCh->setAffectSize(true);
-
     connect(this, &QGraphicsObject::xChanged,
             this, [this](){ diffuseCh->setX(x()); });
 
@@ -98,6 +96,19 @@ BasicChanel *BasicItem::getDiffuseChanel()
 BasicChanel *BasicItem::getSpecularChanel()
 {
     return specularCh;
+}
+
+void BasicItem::setUpChanels()
+{
+    diffuseCh->setAffectSize(true);
+
+    diffuseCh->addAllowedNode(BasicChanel::ImageN);
+    diffuseCh->addAllowedNode(BasicChanel::TextN);
+    diffuseCh->setNode(0);
+
+    specularCh->addAllowedNode(BasicChanel::ImageN);
+    specularCh->addAllowedNode(BasicChanel::TextN);
+    specularCh->setNode(0);
 }
 
 QLayout *BasicItem::setUpBasicLayout()
@@ -195,8 +206,6 @@ Canvas::Canvas(QSize size)
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
 
-    diffuseCh->setAffectSize(false);
-
     name = "Canvas";
     bound->setSize(size);
 }
@@ -236,6 +245,17 @@ QLayout *Canvas::getSettingsLayout()
     mainL->addWidget(specularGroup);
 
     return mainL;
+}
+
+void Canvas::setUpChanels()
+{
+    diffuseCh->addAllowedNode(BasicChanel::FillBackN);
+    diffuseCh->addAllowedNode(BasicChanel::ImageBackN);
+    diffuseCh->setNode(0);
+
+    specularCh->addAllowedNode(BasicChanel::FillBackN);
+    specularCh->addAllowedNode(BasicChanel::ImageBackN);
+    specularCh->setNode(0);
 }
 
 QLayout *Canvas::setUpBasicLayout()

@@ -43,7 +43,7 @@ public:
     ImageNode(BoundRect *br);
 //    ~ImageNode() override;
 
-    void paint(QPainter *painter,
+    virtual void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
 
@@ -66,7 +66,7 @@ public:
     TextNode(BoundRect *br);
 //    ~TextNode() override;
 
-    void paint(QPainter *painter,
+    virtual void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
 
@@ -80,6 +80,19 @@ protected:
 
 protected slots:
     void stringChanged(QString newStr);
+};
+
+class FillBasckgroundNode : public BasicNode
+{
+    Q_OBJECT
+public:
+    FillBasckgroundNode(BoundRect *br);
+
+    virtual void paint(QPainter *painter,
+                   const QStyleOptionGraphicsItem *option,
+                   QWidget *widget) override;
+protected:
+    ColorPropertie *color;
 };
 
 #endif // NODES_H

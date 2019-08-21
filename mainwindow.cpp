@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "toolbar.h"
 #include "settingswidget.h"
-#include "itemsoverview.h"
 
 #include <QAction>
 #include <QToolBar>
@@ -9,11 +8,11 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , textureEdit(new TextureEditorWidget(this))
+    , modelEdit(new ModelEditorWidget(this))
 {
-    setCentralWidget(textureEdit);
-
+    setUpEditors();
     setUpToolBar();
-    setDockWidgets();
+    setUpDockWidgets();
 
     resize(1280, 720);
 }
@@ -27,27 +26,56 @@ void MainWindow::setUpToolBar()
 {
     ToolBar *tb = new ToolBar(tr("Tool Bar"), this);
 
-    connect(tb->getAddStaticImageAction(), &QAction::triggered,
+    connect(tb->getAddItemAction(), &QAction::triggered,
             textureEdit, &TextureEditorWidget::addItem);
+
+    connect(tb->getSwitchEditorsAction(), &QAction::triggered,
+            this, &MainWindow::switchEditors);
 
 
 
     addToolBar(tb);
 }
 
-void MainWindow::setDockWidgets()
+void MainWindow::setUpDockWidgets()
 {
     SettingsWidget *sw = new SettingsWidget();
 
-    connect(textureEdit, &TextureEditorWidget::itemSelected,
-            sw, &SettingsWidget::SetSettingsLayout);
 
     addDockWidget(Qt::LeftDockWidgetArea, sw);
 
-    ItemsOverview *is = new ItemsOverview(textureEdit->getItemsTreeModel());
+    itemsOverview = new ItemsOverview(textureEdit->getItemsTreeModel());
 
     connect(textureEdit, &TextureEditorWidget::itemSelected,
-            is, &ItemsOverview::onSelectionChanged);
+            itemsOverview, &ItemsOverview::onSelectionChanged);
 
-    addDockWidget(Qt::RightDockWidgetArea, is);
+    connect(itemsOverview, &ItemsOverview::itemSelected,
+            sw, &SettingsWidget::SetSettingsLayout);
+
+    addDockWidget(Qt::RightDockWidgetArea, itemsOverview);
+}
+
+void MainWindow::setUpEditors()
+{
+    modelEdit->hide();
+    QVBoxLayout *l = new QVBoxLayout();
+    l->setMargin(0);
+    l->addWidget(textureEdit);
+    l->addWidget(modelEdit);
+    QWidget *cw = new QWidget(this);
+    cw->setLayout(l);
+    setCentralWidget(cw);
+}
+
+void MainWindow::switchEditors()
+{
+    bool isTextureEditorVisible = !textureEdit->isVisible();
+    textureEdit->setVisible(isTextureEditorVisible);
+    modelEdit->setVisible(!isTextureEditorVisible);
+
+    if(isTextureEditorVisible) {
+        itemsOverview->setModel(textureEdit->getItemsTreeModel());
+    } else {
+        itemsOverview->setModel(modelEdit->getSceneTreeModel());
+    }
 }

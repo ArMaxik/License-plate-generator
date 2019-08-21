@@ -5,6 +5,7 @@
 
 #include <QGraphicsObject>
 #include <QLayout>
+#include <QStack>
 
 class BasicChanel : public QGraphicsObject
 {
@@ -20,12 +21,14 @@ public:
     QLayout *getSettingsLayout();
     void randomize();
 
-    enum Nodes { ImageN, TextN, ShapeN };
+    enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN };
 
 public slots:
     void changeScale(qreal scale)   { bound->setScale(scale); }
     void setBoundSize(QSizeF size)  { bound->setSize(size); }
-    void setAffectSize(bool affect) { affectSize = affect; node->setAffectSize(affect); }
+    void setAffectSize(bool affect) { affectSize = affect; }
+    void addAllowedNode(Nodes node) { allowedNodes.push_back(node); }
+    void setNode(int index);
 
 signals:
     void sizeChanged();
@@ -40,7 +43,6 @@ protected:
     qreal chanelSize;
 
 protected slots:
-    void setNode(int index);
     void onNodeChangeScale(qreal factor, QSizeF size);
 };
 

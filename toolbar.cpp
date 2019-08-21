@@ -6,19 +6,19 @@ ToolBar::ToolBar(const QString &title, QWidget *parent)
     setWindowTitle(title);
     setObjectName(title);
 
-    addStaticImageAction = new QAction(tr("Add Static Image"), parent);
-    addStaticTextAction = new QAction(tr("Add Static Text"), parent);
+    addItemAction = new QAction(tr("Add Item"), parent);
+    switchEditorsAction = new QAction(tr("Switch Editors"), parent);
 
-    addAction(addStaticImageAction);
-    addAction(addStaticTextAction);
+    addAction(addItemAction);
+    addAction(switchEditorsAction);
 }
 
-QAction *ToolBar::getAddStaticImageAction() const
+QAction *ToolBar::getAddItemAction() const
 {
-    return addStaticImageAction;
+    return addItemAction;
 }
 
-QAction *ToolBar::getAddStaticTextAction() const
+QAction *ToolBar::getSwitchEditorsAction() const
 {
-    return  addStaticTextAction;
+    return  switchEditorsAction;
 }

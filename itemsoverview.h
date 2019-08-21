@@ -1,7 +1,7 @@
 #ifndef OBJECTSOVERVIEW_H
 #define OBJECTSOVERVIEW_H
 
-#include "itemstreemodel.h"
+#include "treemodel.h"
 
 #include <QDockWidget>
 #include <QTreeView>
@@ -13,8 +13,13 @@ class ItemsOverview :public QDockWidget
 public:
     ItemsOverview(ItemsTreeModel *model, QMainWindow *parent = nullptr, Qt::WindowFlags flags = 0);
 
+    void setModel(QAbstractItemModel *model);
+
 public slots:
     void onSelectionChanged();
+
+signals:
+    void itemSelected(QLayout *layout);
 
 private:
     QTreeView *treeView;

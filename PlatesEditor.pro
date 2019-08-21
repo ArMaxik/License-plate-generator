@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui 3dcore 3drender 3dinput 3dextras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,15 +29,21 @@ SOURCES += \
         boundrect.cpp \
         chanels.cpp \
         customcentralwidget.cpp \
+        imagetexture.cpp \
         itemsoverview.cpp \
-        itemstreemodel.cpp \
         main.cpp \
         mainwindow.cpp \
+        managers.cpp \
+        material.cpp \
+        modeleditorwidget.cpp \
+        modelitem.cpp \
         nodes.cpp \
         properties.cpp \
         settingswidget.cpp \
         textureeditorwidget.cpp \
+        texturegenerator.cpp \
         toolbar.cpp \
+        treemodel.cpp \
         viewwidget.cpp
 
 HEADERS += \
@@ -45,14 +51,20 @@ HEADERS += \
         boundrect.h \
         chanels.h \
         customcentralwidget.h \
+        imagetexture.h \
         itemsoverview.h \
-        itemstreemodel.h \
         mainwindow.h \
+        managers.h \
+        material.h \
+        modeleditorwidget.h \
+        modelitem.h \
         nodes.h \
         properties.h \
         settingswidget.h \
         textureeditorwidget.h \
+        texturegenerator.h \
         toolbar.h \
+        treemodel.h \
         viewwidget.h
 
 # Default rules for deployment.

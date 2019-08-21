@@ -24,12 +24,26 @@ ItemsOverview::ItemsOverview(ItemsTreeModel *model, QMainWindow *parent, Qt::Win
             this, &ItemsOverview::onCurrentChanged);
 }
 
+void ItemsOverview::setModel(QAbstractItemModel *model)
+{
+    QItemSelectionModel *m = treeView->selectionModel();
+    treeView->setModel(model);
+    delete m;
+}
+
 void ItemsOverview::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
-    if(previous.isValid())
-        static_cast<TreeItem*>(previous.internalPointer())->getItem()->setSelected(false);
-    if(current.isValid())
-        static_cast<TreeItem*>(current.internalPointer())->getItem()->setSelected(true);
+    if(previous.isValid()) {
+        static_cast<AbstractModelItem*>(previous.internalPointer())->setSelected(false);
+
+    }
+    if(current.isValid()) {
+        AbstractModelItem *item =  static_cast<AbstractModelItem*>(current.internalPointer());
+        item->setSelected(true);
+        emit itemSelected(item->getSettingsLayout());
+    } else {
+        emit itemSelected(nullptr);
+    }
 }
 
 void ItemsOverview::onSelectionChanged()
@@ -41,7 +55,7 @@ void ItemsOverview::onSelectionChanged()
 QModelIndex ItemsOverview::findSelected(QModelIndex start)
 {
     if(start.isValid()) {
-        if(static_cast<TreeItem*>(start.internalPointer())->getItem()->isSelected()) {
+        if(static_cast<AbstractModelItem*>(start.internalPointer())->isSelected()) {
             return start;
         }
     }

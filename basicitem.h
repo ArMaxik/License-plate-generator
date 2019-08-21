@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QFont>
 #include <QVector2D>
+#include <QDebug>
 
 class BasicItem : public QGraphicsObject
 {
@@ -27,6 +28,8 @@ public:
     BasicChanel *getSpecularChanel();
 
     BoundRect *getBoundRect() const { return bound; }
+
+    virtual void setUpChanels();
 
     enum Chanels { diffuseC, specularC, normalC };
 
@@ -60,6 +63,8 @@ public:
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
     QLayout *getSettingsLayout() override;
+
+    void setUpChanels() override;
 
 protected:
     QLayout *setUpBasicLayout();

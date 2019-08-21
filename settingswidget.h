@@ -13,7 +13,7 @@ public:
     SettingsWidget(QMainWindow *parent = nullptr, Qt::WindowFlags flags = 0);
 
 public slots:
-    void SetSettingsLayout(BasicItem *item);
+    void SetSettingsLayout(QLayout *layout);
 
 private:
     QFrame *emptyWidget;

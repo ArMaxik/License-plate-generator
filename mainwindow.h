@@ -2,7 +2,8 @@
 #define MAINWINDOW_H
 
 #include "textureeditorwidget.h"
-
+#include "modeleditorwidget.h"
+#include "itemsoverview.h"
 
 #include <QMainWindow>
 #include <QTabWidget>
@@ -17,9 +18,16 @@ public:
 
 private:
     void setUpToolBar();
-    void setDockWidgets();
+    void setUpDockWidgets();
+    void setUpEditors();
 
     TextureEditorWidget *textureEdit;
+    ModelEditorWidget *modelEdit;
+
+    ItemsOverview *itemsOverview;
+
+private slots:
+    void switchEditors();
 };
 
 #endif // MAINWINDOW_H

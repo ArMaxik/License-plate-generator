@@ -9,12 +9,12 @@ class ToolBar : public QToolBar
 public:
     ToolBar(const QString &title, QWidget *parent);
 
-    QAction *getAddStaticImageAction() const;
-    QAction *getAddStaticTextAction() const;
+    QAction *getAddItemAction() const;
+    QAction *getSwitchEditorsAction() const;
 
 private:
-   QAction *addStaticImageAction;
-   QAction *addStaticTextAction;
+   QAction *addItemAction;
+   QAction *switchEditorsAction;
 };
 
 #endif // TOOLBAR_H

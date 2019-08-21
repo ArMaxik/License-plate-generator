@@ -15,19 +15,19 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     show();
 }
 
-void SettingsWidget::SetSettingsLayout(BasicItem *item)
+void SettingsWidget::SetSettingsLayout(QLayout *layout)
 {
     if(emptyWidget->layout() != nullptr) {
 //        RemoveLayout(widget->layout());
 //        delete this->widget();
         setWidget(emptyWidget);
     }
-    if(item != nullptr) {
+    if(layout != nullptr) {
 //        widget->setLayout(item->getSettingsLayout());
         QFrame *w = new QFrame();
         w->setFrameStyle(QFrame::Panel | QFrame::Raised);
         w->setLineWidth(2);
-        w->setLayout(item->getSettingsLayout());
+        w->setLayout(layout);
         setWidget(w);
     }
 }

@@ -3,9 +3,10 @@
 
 #include "customcentralwidget.h"
 #include "viewwidget.h"
-#include "itemstreemodel.h"
+#include "treemodel.h"
 
-class TextureEditorWidget : public CustomCentralWidget
+
+class TextureEditorWidget : public QWidget
 {
     Q_OBJECT
 public:

@@ -4,7 +4,7 @@
 #include <QTabWidget>
 
 TextureEditorWidget::TextureEditorWidget(QWidget *parent)
-    : CustomCentralWidget(parent)
+    : QWidget(parent)
     , treeModel(new ItemsTreeModel())
     , controllView(new ViewWidget())
     , diffuseView(new ViewWidget())
@@ -15,6 +15,7 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
             this, &TextureEditorWidget::onItemSelected);
 
     Canvas *canvas = new Canvas(QSize(600, 400));
+    canvas->setUpChanels();
     controllView->addItem(canvas);
     diffuseView->addItem(canvas->getDiffuseChanel());
     specularView->addItem(canvas->getSpecularChanel());
@@ -35,6 +36,7 @@ ItemsTreeModel *TextureEditorWidget::getItemsTreeModel() const
 void TextureEditorWidget::addItem()
 {
     BasicItem *item = new BasicItem();
+    item->setUpChanels();
     treeModel->addItem(item);
 
     controllView->addItem(item);

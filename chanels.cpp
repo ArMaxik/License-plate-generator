@@ -64,6 +64,12 @@ QLayout *BasicChanel::getSettingsLayout()
         case Nodes::ShapeN:
             nodeCB->addItem(tr("Shape"));
             break;
+        case Nodes::ImageBackN:
+            nodeCB->addItem(tr("Tilled Image"));
+            break;
+        case Nodes::FillBackN:
+            nodeCB->addItem(tr("Fill color"));
+            break;
         }
     }
     nodeCB->setCurrentIndex(currentNode);
@@ -84,7 +90,7 @@ void BasicChanel::setNode(int index)
 {
     delete node;
 
-    switch (index) {
+    switch (allowedNodes[index]) {
     case Nodes::TextN:
          currentNode = Nodes::TextN;
          node = new TextNode(bound);
@@ -92,6 +98,14 @@ void BasicChanel::setNode(int index)
     case Nodes::ImageN:
         currentNode = Nodes::ImageN;
          node = new ImageNode(bound);
+        break;
+    case Nodes::ImageBackN:
+        currentNode = Nodes::ImageN;
+//        node = new ImageNode(bound);
+        break;
+    case Nodes::FillBackN:
+        currentNode = Nodes::ImageN;
+        node = new FillBasckgroundNode(bound);
         break;
     }
     node->setAffectSize(affectSize);
@@ -110,21 +124,20 @@ void BasicChanel::onNodeChangeScale(qreal factor, QSizeF size)
 DiffuseChanel::DiffuseChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
 {
-    setNode(Nodes::ImageN);
 
-    allowedNodes.push_back(Nodes::ImageN);
-    allowedNodes.push_back(Nodes::TextN);
-
+//    allowedNodes.push_back(Nodes::ImageN);
+//    allowedNodes.push_back(Nodes::TextN);
 //    allowedNodes.push_back(Nodes::ShapeN);
+
+//    setNode(0);
 }
 
 
 SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
 {
-    node = new ImageNode(bound);
-    currentNode = Nodes::ImageN;
+//    allowedNodes.push_back(Nodes::ImageN);
+//    allowedNodes.push_back(Nodes::TextN);
 
-    allowedNodes.push_back(Nodes::ImageN);
-    allowedNodes.push_back(Nodes::TextN);
+//    setNode(0);
 }

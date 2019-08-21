@@ -148,3 +148,17 @@ void TextNode::stringChanged(QString newStr)
 {
     updateBound = true;
 }
+
+FillBasckgroundNode::FillBasckgroundNode(BoundRect *br)
+    : BasicNode(br)
+    , color(new ColorPropertie(tr("Fill color")))
+{
+    properites.push_back(color);
+}
+
+void FillBasckgroundNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setPen(*color);
+    painter->setBrush(QBrush(*color));
+    painter->drawRect(bound->getBound());
+}
