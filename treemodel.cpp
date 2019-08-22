@@ -8,6 +8,7 @@ AbstractTreeModel::AbstractTreeModel(QObject *parent)
 
 QVariant AbstractTreeModel::data(const QModelIndex &index, int role) const
 {
+//    qDebug() << "parentItem->childCount()";
     if (!index.isValid())
         return QVariant();
 
@@ -70,6 +71,11 @@ QModelIndex AbstractTreeModel::parent(const QModelIndex &index) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
+bool AbstractTreeModel::hasChildren(const QModelIndex &parent) const
+{
+    return rowCount(parent) > 0;
+}
+
 int AbstractTreeModel::rowCount(const QModelIndex &parent) const
 {
     AbstractModelItem *parentItem;
@@ -106,15 +112,14 @@ ItemsTreeModel::ItemsTreeModel(QObject *parent)
 
 void ItemsTreeModel::addItem(BasicItem *item)
 {
-    emit layoutAboutToBeChanged();
-    beginInsertRows(index(0, 0, QModelIndex()),
-                    rowCount(index(0, 0, QModelIndex())),
-                    rowCount(index(0, 0, QModelIndex())));
+//    emit layoutAboutToBeChanged();
+    int pos = rowCount(index(0, 0, QModelIndex()));
+    beginInsertRows(index(0, 0, QModelIndex()), pos, pos);
 
     canvas->appendChild(new TreeItem(item, canvas));
 
     endInsertRows();
-    emit layoutChanged();
+//    emit layoutChanged();
 }
 
 void ItemsTreeModel::setCanvas(Canvas *c)
@@ -140,9 +145,9 @@ SceneTreeModel::SceneTreeModel(QObject *parent)
 void SceneTreeModel::addItem(AbstractManager *item)
 {
     emit layoutAboutToBeChanged();
-    beginInsertRows(index(0, 0, QModelIndex()),
-                    rowCount(index(0, 0, QModelIndex())),
-                    rowCount(index(0, 0, QModelIndex())));
+    beginInsertRows(index(0, 0),
+                    rowCount(index(0, 0)),
+                    rowCount(index(0, 0)));
 
     rootItem->appendChild(new TreeManagerItem(item, rootItem));
 

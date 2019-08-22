@@ -24,6 +24,9 @@ private:
     TextureEditorWidget *textureEdit;
     ModelEditorWidget *modelEdit;
 
+    QItemSelectionModel *texS;
+    QItemSelectionModel *modelS;
+
     ItemsOverview *itemsOverview;
 
 private slots:

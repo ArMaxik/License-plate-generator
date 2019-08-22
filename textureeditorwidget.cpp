@@ -30,6 +30,7 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
 
 ItemsTreeModel *TextureEditorWidget::getItemsTreeModel() const
 {
+    qDebug()<<treeModel->rowCount(treeModel->index(0, 0));
     return treeModel;
 }
 

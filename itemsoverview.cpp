@@ -26,9 +26,18 @@ ItemsOverview::ItemsOverview(ItemsTreeModel *model, QMainWindow *parent, Qt::Win
 
 void ItemsOverview::setModel(QAbstractItemModel *model)
 {
-    QItemSelectionModel *m = treeView->selectionModel();
+//    QItemSelectionModel *m = treeView->selectionModel();
     treeView->setModel(model);
-    delete m;
+//        delete m;
+}
+
+void ItemsOverview::setSelectionModel(QItemSelectionModel *selectionModel)
+{
+    treeView->setSelectionModel(selectionModel);
+    connect(treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &ItemsOverview::onCurrentChanged);
+    selectionModel->clearSelection();
+        treeView->expandAll();
 }
 
 void ItemsOverview::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)

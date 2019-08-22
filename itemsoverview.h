@@ -14,6 +14,7 @@ public:
     ItemsOverview(ItemsTreeModel *model, QMainWindow *parent = nullptr, Qt::WindowFlags flags = 0);
 
     void setModel(QAbstractItemModel *model);
+    void setSelectionModel(QItemSelectionModel *selectionModel);
 
 public slots:
     void onSelectionChanged();

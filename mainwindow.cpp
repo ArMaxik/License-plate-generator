@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , textureEdit(new TextureEditorWidget(this))
     , modelEdit(new ModelEditorWidget(this))
+    , texS(new QItemSelectionModel(textureEdit->getItemsTreeModel()))
+    , modelS(new QItemSelectionModel(modelEdit->getSceneTreeModel()))
 {
     setUpEditors();
     setUpToolBar();
@@ -75,7 +77,9 @@ void MainWindow::switchEditors()
 
     if(isTextureEditorVisible) {
         itemsOverview->setModel(textureEdit->getItemsTreeModel());
+        itemsOverview->setSelectionModel(texS);
     } else {
         itemsOverview->setModel(modelEdit->getSceneTreeModel());
+        itemsOverview->setSelectionModel(modelS);
     }
 }
