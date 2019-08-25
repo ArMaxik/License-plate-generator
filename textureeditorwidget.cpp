@@ -6,10 +6,11 @@
 TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     : QWidget(parent)
     , treeModel(new ItemsTreeModel())
-    , controllView(new ViewWidget())
-    , diffuseView(new ViewWidget())
-    , specularView(new ViewWidget())
-    , normalView(new ViewWidget())
+    , controllView(new SceneViewWidget())
+    , diffuseView(new SceneViewWidget())
+    , specularView(new SceneViewWidget())
+    , normalView(new SceneViewWidget())
+    , texGen(new TextureGenerator())
 {
     connect(controllView->getScene(), &QGraphicsScene::selectionChanged,
             this, &TextureEditorWidget::onItemSelected);
@@ -17,9 +18,10 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     Canvas *canvas = new Canvas(QSize(600, 400));
     canvas->setUpChanels();
     controllView->addItem(canvas);
-    diffuseView->addItem(canvas->getDiffuseChanel());
-    specularView->addItem(canvas->getSpecularChanel());
+//    diffuseView->addItem(canvas->getDiffuseChanel());
+//    specularView->addItem(canvas->getSpecularChanel());
 
+    texGen->setCanvas(canvas);
     treeModel->setCanvas(canvas);
     controllView->setCanvas(canvas);
     diffuseView->setCanvas(canvas);
@@ -30,7 +32,7 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
 
 ItemsTreeModel *TextureEditorWidget::getItemsTreeModel() const
 {
-    qDebug()<<treeModel->rowCount(treeModel->index(0, 0));
+//    qDebug()<<treeModel->rowCount(treeModel->index(0, 0));
     return treeModel;
 }
 
@@ -41,8 +43,6 @@ void TextureEditorWidget::addItem()
     treeModel->addItem(item);
 
     controllView->addItem(item);
-    diffuseView->addItem(item->getDiffuseChanel());
-    specularView->addItem(item->getSpecularChanel());
 }
 
 void TextureEditorWidget::setUpLayout()

@@ -6,7 +6,7 @@
 
 #define BACK_BORDER 50
 
-ViewWidget::ViewWidget(QWidget *parent)
+SceneViewWidget::SceneViewWidget(QWidget *parent)
     : QWidget(parent)
     , scene(new QGraphicsScene())
     , view(new QGraphicsView(scene))
@@ -28,29 +28,29 @@ ViewWidget::ViewWidget(QWidget *parent)
 
 
     connect(scaleW, &ScaleWidget::scaleChanged,
-            this, &ViewWidget::setScale);
+            this, &SceneViewWidget::setScale);
 
 
 }
 
-void ViewWidget::setCanvas(Canvas *c)
+void SceneViewWidget::setCanvas(Canvas *c)
 {
     if(canvas != nullptr) {
         disconnect(canvas->getBoundRect(), &BoundRect::sizeChanged,
-                this, &ViewWidget::recalulateSceneRect);
+                this, &SceneViewWidget::recalulateSceneRect);
     }
     canvas = c;
     connect(canvas->getBoundRect(), &BoundRect::sizeChanged,
-            this, &ViewWidget::recalulateSceneRect);
+            this, &SceneViewWidget::recalulateSceneRect);
     recalulateSceneRect();
 }
 
-void ViewWidget::resizeEvent(QResizeEvent *event)
+void SceneViewWidget::resizeEvent(QResizeEvent *event)
 {
     recalulateSceneRect();
 }
 
-void ViewWidget::keyPressEvent(QKeyEvent *event)
+void SceneViewWidget::keyPressEvent(QKeyEvent *event)
 {
     if(event->modifiers() & Qt::ControlModifier) {
         if(event->key() == Qt::Key_Plus) {
@@ -62,13 +62,13 @@ void ViewWidget::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void ViewWidget::setScale(qreal scale)
+void SceneViewWidget::setScale(qreal scale)
 {
     view->scale(scale, scale);
     recalulateSceneRect();
 }
 
-void ViewWidget::recalulateSceneRect()
+void SceneViewWidget::recalulateSceneRect()
 {
 
     if(canvas != nullptr) {

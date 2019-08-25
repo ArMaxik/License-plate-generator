@@ -8,7 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , textureEdit(new TextureEditorWidget(this))
-    , modelEdit(new ModelEditorWidget(this))
+    , modelEdit(new ModelEditorWidget(textureEdit->getTextureGenerator(), this))
     , texS(new QItemSelectionModel(textureEdit->getItemsTreeModel()))
     , modelS(new QItemSelectionModel(modelEdit->getSceneTreeModel()))
 {

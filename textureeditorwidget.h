@@ -4,6 +4,7 @@
 #include "customcentralwidget.h"
 #include "viewwidget.h"
 #include "treemodel.h"
+#include "texturegenerator.h"
 
 
 class TextureEditorWidget : public QWidget
@@ -13,6 +14,7 @@ public:
     TextureEditorWidget(QWidget *parent = nullptr);
 
     ItemsTreeModel *getItemsTreeModel() const;
+    TextureGenerator *getTextureGenerator() { return texGen; }
 
 public slots:
     void addItem();
@@ -23,10 +25,12 @@ signals:
 private:
     ItemsTreeModel *treeModel;
 
-    ViewWidget *controllView;
-    ViewWidget *diffuseView;
-    ViewWidget *specularView;
-    ViewWidget *normalView;
+    SceneViewWidget *controllView;
+    SceneViewWidget *diffuseView;
+    SceneViewWidget *specularView;
+    SceneViewWidget *normalView;
+
+    TextureGenerator *texGen;
 
     void setUpLayout();
     void onItemSelected();

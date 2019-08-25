@@ -26,9 +26,7 @@ ItemsOverview::ItemsOverview(ItemsTreeModel *model, QMainWindow *parent, Qt::Win
 
 void ItemsOverview::setModel(QAbstractItemModel *model)
 {
-//    QItemSelectionModel *m = treeView->selectionModel();
-    treeView->setModel(model);
-//        delete m;
+    treeView->setModel(model);  // Selection model, memory leak (maybe)
 }
 
 void ItemsOverview::setSelectionModel(QItemSelectionModel *selectionModel)
@@ -37,7 +35,8 @@ void ItemsOverview::setSelectionModel(QItemSelectionModel *selectionModel)
     connect(treeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &ItemsOverview::onCurrentChanged);
     selectionModel->clearSelection();
-        treeView->expandAll();
+    treeView->expandAll();
+    emit itemSelected(nullptr);
 }
 
 void ItemsOverview::onCurrentChanged(const QModelIndex &current, const QModelIndex &previous)

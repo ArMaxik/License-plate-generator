@@ -8,11 +8,11 @@
 
 class ScaleWidget;
 
-class ViewWidget : public QWidget
+class SceneViewWidget : public QWidget
 {
     Q_OBJECT
 public:
-    ViewWidget(QWidget *parent = nullptr);
+    SceneViewWidget(QWidget *parent = nullptr);
 
     void setCanvas(Canvas *c);
     void addItem(QGraphicsItem *item) { scene->addItem(item); }

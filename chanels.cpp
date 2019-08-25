@@ -86,6 +86,11 @@ QLayout *BasicChanel::getSettingsLayout()
     return mL;
 }
 
+void BasicChanel::randomize()
+{
+//    node->randomize()
+}
+
 void BasicChanel::setNode(int index)
 {
     delete node;

@@ -1,27 +1,30 @@
 #ifndef TEXTUREGENERATOR_H
 #define TEXTUREGENERATOR_H
 
-#include <QImage>
-#include <QPen>
-#include <QBrush>
-#include <QPainter>
+#include "basicitem.h"
 
-#include <QFontDatabase>
+#include <QGraphicsScene>
 
 class TextureGenerator : public QObject
 {
     Q_OBJECT
 public:
-    TextureGenerator(QObject *parent);
+    TextureGenerator(QObject *parent = nullptr);
+
+    QImage *getDiffuseTexture();
+    QImage *getSpecularTexture();
+//    QImage *getNormalTexture();
+    void setCanvas(Canvas *c);
+
 public slots:
-    void generateTexture();
-signals:
-    void diffuseGenerated(QImage *diffuse);
-    void normalGenerated(QImage *normal);
-    void orangeMaskGenerated(QImage *orangeMask);
-    void heightGenerated(QImage *height);
+    void randomize();
+
 private:
-    int font_id;
+    QGraphicsScene *diffuseTextureScene;
+    QGraphicsScene *specularTextureScene;
+    Canvas *canvas;
+
+    void randomizeChildren(QGraphicsItem *parent);
 };
 
 

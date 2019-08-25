@@ -31,6 +31,7 @@ SOURCES += \
         customcentralwidget.cpp \
         imagetexture.cpp \
         itemsoverview.cpp \
+        lights.cpp \
         main.cpp \
         mainwindow.cpp \
         managers.cpp \
@@ -38,7 +39,9 @@ SOURCES += \
         modeleditorwidget.cpp \
         modelitem.cpp \
         nodes.cpp \
+        offscreenengine.cpp \
         properties.cpp \
+        renderableentity.cpp \
         settingswidget.cpp \
         textureeditorwidget.cpp \
         texturegenerator.cpp \
@@ -53,13 +56,16 @@ HEADERS += \
         customcentralwidget.h \
         imagetexture.h \
         itemsoverview.h \
+        lights.h \
         mainwindow.h \
         managers.h \
         material.h \
         modeleditorwidget.h \
         modelitem.h \
         nodes.h \
+        offscreenengine.h \
         properties.h \
+        renderableentity.h \
         settingswidget.h \
         textureeditorwidget.h \
         texturegenerator.h \
