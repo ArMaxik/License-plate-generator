@@ -34,7 +34,8 @@ public:
     enum Chanels { diffuseC, specularC, normalC };
 
 signals:
-    void sizeChanged();
+//    void sizeChanged();
+    void changed();
 
 protected:
     QString name;
@@ -48,7 +49,7 @@ protected:
     Chanels shownC;
 
 protected slots:
-    void onChanelSizeChange();
+    void onChanelChanged() { emit changed(); }
     void onShownChanelChange(int index);
 
 };

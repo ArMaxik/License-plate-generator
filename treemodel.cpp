@@ -118,6 +118,7 @@ void ItemsTreeModel::addItem(BasicItem *item)
 
     canvas->appendChild(new TreeItem(item, canvas));
 
+    item->setParentItem(canvas->getItem());
     item->getDiffuseChanel()->setParentItem(canvas->getItem()->getDiffuseChanel());
     item->getSpecularChanel()->setParentItem(canvas->getItem()->getSpecularChanel());
 

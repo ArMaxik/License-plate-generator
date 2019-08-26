@@ -14,25 +14,54 @@ class SceneViewWidget : public QWidget
 public:
     SceneViewWidget(QWidget *parent = nullptr);
 
-    void setCanvas(Canvas *c);
-    void addItem(QGraphicsItem *item) { scene->addItem(item); }
-
     QGraphicsScene *getScene() const { return scene; }
     QGraphicsView *getView() const { return view; }
 
-private:
+protected:
     QGraphicsScene *scene;
     QGraphicsView *view;
-    Canvas *canvas;
+
+    QRectF contentBound;
 
     ScaleWidget *scaleW;
 
     void resizeEvent(QResizeEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
 
-private slots:
+protected slots:
     void setScale(qreal scale);
-    void recalulateSceneRect();
+    virtual void recalulateSceneRect();
+};
+
+class CanvasViewWidget : public SceneViewWidget
+{
+    Q_OBJECT
+public:
+    CanvasViewWidget(QWidget *parent = nullptr);
+
+    void setCanvas(Canvas *c);
+    void addItem(QGraphicsItem *item) { scene->addItem(item); }
+
+protected slots:
+    void recalulateSceneRect() override;
+
+private:
+    Canvas *canvas;
+
+};
+
+class ImageViewWiget : public SceneViewWidget
+{
+    Q_OBJECT
+public:
+    ImageViewWiget(QWidget *parent = nullptr);
+
+public slots:
+    void setImage(const QImage *img);
+
+private:
+    QGraphicsPixmapItem *image;
+
 };
 
 class ScaleWidget : public QWidget

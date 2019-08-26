@@ -28,7 +28,6 @@ SOURCES += \
         basicitem.cpp \
         boundrect.cpp \
         chanels.cpp \
-        customcentralwidget.cpp \
         imagetexture.cpp \
         itemsoverview.cpp \
         lights.cpp \
@@ -53,7 +52,6 @@ HEADERS += \
         basicitem.h \
         boundrect.h \
         chanels.h \
-        customcentralwidget.h \
         imagetexture.h \
         itemsoverview.h \
         lights.h \

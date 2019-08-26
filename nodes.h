@@ -26,8 +26,9 @@ public:
 
 signals:
 //    void scaleChanged(qreal factor, QSizeF size);
-    void scaleChanged(qreal newScale);
-    void boundSizeChanged(QSizeF size);
+//    void scaleChanged(qreal newScale);
+//    void boundSizeChanged(QSizeF size);
+    void changed();
 
 protected:
     QList<BasicPropertie*> properites;

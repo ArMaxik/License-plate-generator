@@ -93,7 +93,11 @@ void BasicChanel::randomize()
 
 void BasicChanel::setNode(int index)
 {
-    delete node;
+    if(node != nullptr) {
+        disconnect(node, &BasicNode::changed,
+                   this, &BasicChanel::onNodeChanged);
+        delete node;
+    }
 
     switch (allowedNodes[index]) {
     case Nodes::TextN:
@@ -114,7 +118,8 @@ void BasicChanel::setNode(int index)
         break;
     }
     node->setAffectSize(affectSize);
-
+    connect(node, &BasicNode::changed,
+               this, &BasicChanel::onNodeChanged);
     update();
 }
 

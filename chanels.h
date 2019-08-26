@@ -31,7 +31,8 @@ public slots:
     void setNode(int index);
 
 signals:
-    void sizeChanged();
+//    void sizeChanged();
+    void changed();
 
 protected:
     QVector<Nodes> allowedNodes;
@@ -44,6 +45,7 @@ protected:
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);
+    void onNodeChanged() { emit changed(); }
 };
 
 class DiffuseChanel : public BasicChanel

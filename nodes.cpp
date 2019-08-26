@@ -81,33 +81,36 @@ void ImageNode::reloadImage()
     height->setValue(image->getImage().height());
 
     scale = 1.0;
-    emit scaleChanged(scale);
+//    emit scaleChanged(scale);
 
     if(affectSize) {
         bound->setSize(QSizeF(*width, *height));
     }
+    emit changed();
 }
 
 void ImageNode::changeSizeW(int w)
 {
     scale = qreal(w) / qreal(image->getImage().width()) ;
-    emit scaleChanged(scale);
+//    emit scaleChanged(scale);
     height->setValue(image->getImage().height() * scale);
 
     if(affectSize) {
         bound->setSize(QSizeF(*width, *height));
     }
+    emit changed();
 }
 
 void ImageNode::changeSizeH(int h)
 {
     scale = qreal(h) / qreal(image->getImage().height());
-    emit scaleChanged(scale);
+//    emit scaleChanged(scale);
     width->setValue(image->getImage().width() * scale);
 
     if(affectSize) {
         bound->setSize(QSizeF(*width, *height));
     }
+    emit changed();
 }
 
 // ========[ TextNode ]==================================================
@@ -125,7 +128,7 @@ TextNode::TextNode(BoundRect *br)
 
     font.setPixelSize(20);
     connect(fontSize, &NumberPropertie::numberValueChange,
-            this, [this](int size) { font.setPixelSize(size); });
+            this, [this](int size) { font.setPixelSize(size); emit changed(); });
     properites.push_back(fontSize);
 
     properites.push_back(color);
@@ -147,6 +150,7 @@ void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 void TextNode::stringChanged(QString newStr)
 {
     updateBound = true;
+    emit changed();
 }
 
 FillBasckgroundNode::FillBasckgroundNode(BoundRect *br)

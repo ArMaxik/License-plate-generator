@@ -13,6 +13,9 @@ public:
 
     virtual QLayout *getSettingsLayout() const;
 
+signals:
+    void changed();
+
 protected:
     bool random;
     QString label;

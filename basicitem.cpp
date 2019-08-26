@@ -23,16 +23,22 @@ BasicItem::BasicItem()
     setFlag(QGraphicsItem::ItemIsSelectable);
 
     connect(this, &QGraphicsObject::xChanged,
-            this, [this](){ diffuseCh->setX(x()); });
+            this, [this](){ diffuseCh->setX(x()); emit changed(); });
 
     connect(this, &QGraphicsObject::yChanged,
-            this, [this](){ diffuseCh->setY(y()); });
+            this, [this](){ diffuseCh->setY(y()); emit changed(); });
 
     connect(this, &QGraphicsObject::xChanged,
-            this, [this](){ specularCh->setX(x()); });
+            this, [this](){ specularCh->setX(x()); emit changed(); });
 
     connect(this, &QGraphicsObject::yChanged,
-            this, [this](){ specularCh->setY(y()); });
+            this, [this](){ specularCh->setY(y()); emit changed(); });
+
+    connect(diffuseCh, &BasicChanel::changed,
+            this, &BasicItem::onChanelChanged);
+
+    connect(specularCh, &BasicChanel::changed,
+            this, &BasicItem::onChanelChanged);
 }
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -177,11 +183,6 @@ QLayout *BasicItem::setUpBasicLayout()
             this, &BasicItem::onShownChanelChange);
 
     return vlb;
-}
-
-void BasicItem::onChanelSizeChange()
-{
-    emit sizeChanged();
 }
 
 void BasicItem::onShownChanelChange(int index)

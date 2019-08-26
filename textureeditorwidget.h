@@ -1,7 +1,6 @@
 #ifndef TEXTUREEDITORWIDGET_H
 #define TEXTUREEDITORWIDGET_H
 
-#include "customcentralwidget.h"
 #include "viewwidget.h"
 #include "treemodel.h"
 #include "texturegenerator.h"
@@ -25,10 +24,10 @@ signals:
 private:
     ItemsTreeModel *treeModel;
 
-    SceneViewWidget *controllView;
-    SceneViewWidget *diffuseView;
-    SceneViewWidget *specularView;
-    SceneViewWidget *normalView;
+    CanvasViewWidget *controllView;
+    ImageViewWiget *diffuseView;
+    ImageViewWiget *specularView;
+    ImageViewWiget *normalView;
 
     TextureGenerator *texGen;
 
@@ -36,7 +35,7 @@ private:
     void onItemSelected();
 
 private slots:
-
+    void updateImageViewers();
 };
 
 #endif // TEXTUREEDITORWIDGET_H

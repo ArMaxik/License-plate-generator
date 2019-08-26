@@ -6,10 +6,10 @@
 TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     : QWidget(parent)
     , treeModel(new ItemsTreeModel())
-    , controllView(new SceneViewWidget())
-    , diffuseView(new SceneViewWidget())
-    , specularView(new SceneViewWidget())
-    , normalView(new SceneViewWidget())
+    , controllView(new CanvasViewWidget())
+    , diffuseView(new ImageViewWiget())
+    , specularView(new ImageViewWiget())
+    , normalView(new ImageViewWiget())
     , texGen(new TextureGenerator())
 {
     connect(controllView->getScene(), &QGraphicsScene::selectionChanged,
@@ -24,15 +24,14 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     texGen->setCanvas(canvas);
     treeModel->setCanvas(canvas);
     controllView->setCanvas(canvas);
-    diffuseView->setCanvas(canvas);
-    specularView->setCanvas(canvas);
+
+    updateImageViewers();
 
     setUpLayout();
 }
 
 ItemsTreeModel *TextureEditorWidget::getItemsTreeModel() const
 {
-//    qDebug()<<treeModel->rowCount(treeModel->index(0, 0));
     return treeModel;
 }
 
@@ -42,7 +41,8 @@ void TextureEditorWidget::addItem()
     item->setUpChanels();
     treeModel->addItem(item);
 
-    controllView->addItem(item);
+    connect(item, &BasicItem::changed,
+            this, &TextureEditorWidget::updateImageViewers);
 }
 
 void TextureEditorWidget::setUpLayout()
@@ -67,4 +67,10 @@ void TextureEditorWidget::onItemSelected()
         BasicItem *item = dynamic_cast<BasicItem*>(hmm);
         emit itemSelected(item);
     }
+}
+
+void TextureEditorWidget::updateImageViewers()
+{
+    diffuseView->setImage(texGen->getDiffuseTexture());
+    specularView->setImage(texGen->getSpecularTexture());
 }
