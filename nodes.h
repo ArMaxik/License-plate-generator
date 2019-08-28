@@ -87,7 +87,7 @@ class FillBasckgroundNode : public BasicNode
 {
     Q_OBJECT
 public:
-    FillBasckgroundNode(BoundRect *br);
+    FillBasckgroundNode(BoundRect *br, QColor defaultColor = Qt::black);
 
     virtual void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,

@@ -25,10 +25,11 @@ public:
 
 public slots:
     void changeScale(qreal scale)   { bound->setScale(scale); }
-    void setBoundSize(QSizeF size)  { bound->setSize(size); }
+    void setBoundSize(const QSizeF &size)  { bound->setSize(size); }
     void setAffectSize(bool affect) { affectSize = affect; }
     void addAllowedNode(Nodes node) { allowedNodes.push_back(node); }
     void setNode(int index);
+    void setDefaultColor(const QColor &color) { defaultColor = color; }
 
 signals:
 //    void sizeChanged();
@@ -40,8 +41,11 @@ protected:
     BoundRect *bound;
     bool enable;
     bool affectSize;
-    BasicNode *node;
     qreal chanelSize;
+
+    BasicNode *node;
+
+    QColor defaultColor;
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);
@@ -60,6 +64,13 @@ class SpecularChanel : public BasicChanel
     Q_OBJECT
 public:
     SpecularChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
+};
+
+class NormalChanel : public BasicChanel
+{
+    Q_OBJECT
+public:
+    NormalChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 };
 
 #endif // CHANELS_H

@@ -22,10 +22,11 @@ public:
     QRectF boundingRect() const override;
 
     virtual QLayout *getSettingsLayout();
-    QString getName();
+    QString getName() { return name; }
 
-    BasicChanel *getDiffuseChanel();
-    BasicChanel *getSpecularChanel();
+    BasicChanel *getDiffuseChanel() { return diffuseCh; }
+    BasicChanel *getSpecularChanel() { return specularCh; }
+    BasicChanel *getNormalChanel() { return normalCh; }
 
     BoundRect *getBoundRect() const { return bound; }
 
@@ -34,7 +35,6 @@ public:
     enum Chanels { diffuseC, specularC, normalC };
 
 signals:
-//    void sizeChanged();
     void changed();
 
 protected:
@@ -43,6 +43,7 @@ protected:
 
     BasicChanel *diffuseCh;
     BasicChanel *specularCh;
+    BasicChanel *normalCh;
 
     QLayout *setUpBasicLayout();
 

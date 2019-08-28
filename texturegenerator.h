@@ -13,7 +13,7 @@ public:
 
     QImage *getDiffuseTexture();
     QImage *getSpecularTexture();
-//    QImage *getNormalTexture();
+    QImage *getNormalTexture();
     void setCanvas(Canvas *c);
 
 public slots:
@@ -22,6 +22,7 @@ public slots:
 private:
     QGraphicsScene *diffuseTextureScene;
     QGraphicsScene *specularTextureScene;
+    QGraphicsScene *normalTextureScene;
     Canvas *canvas;
 
     void randomizeChildren(QGraphicsItem *parent);

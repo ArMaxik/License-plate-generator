@@ -153,9 +153,9 @@ void TextNode::stringChanged(QString newStr)
     emit changed();
 }
 
-FillBasckgroundNode::FillBasckgroundNode(BoundRect *br)
+FillBasckgroundNode::FillBasckgroundNode(BoundRect *br, QColor defaultColor)
     : BasicNode(br)
-    , color(new ColorPropertie(tr("Fill color")))
+    , color(new ColorPropertie(tr("Fill color"), defaultColor))
 {
     properites.push_back(color);
 }

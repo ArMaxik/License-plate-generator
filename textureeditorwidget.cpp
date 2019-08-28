@@ -18,8 +18,6 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     Canvas *canvas = new Canvas(QSize(600, 400));
     canvas->setUpChanels();
     controllView->addItem(canvas);
-//    diffuseView->addItem(canvas->getDiffuseChanel());
-//    specularView->addItem(canvas->getSpecularChanel());
 
     texGen->setCanvas(canvas);
     treeModel->setCanvas(canvas);
@@ -56,6 +54,7 @@ void TextureEditorWidget::setUpLayout()
     tw->addTab(controllView, tr("Edit"));
     tw->addTab(diffuseView, tr("Diffuse chanel"));
     tw->addTab(specularView, tr("Specular chanel"));
+    tw->addTab(normalView, tr("Normal chanel"));
 }
 
 void TextureEditorWidget::onItemSelected()
@@ -73,4 +72,5 @@ void TextureEditorWidget::updateImageViewers()
 {
     diffuseView->setImage(texGen->getDiffuseTexture());
     specularView->setImage(texGen->getSpecularTexture());
+    normalView->setImage(texGen->getNormalTexture());
 }

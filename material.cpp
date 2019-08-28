@@ -26,11 +26,11 @@ ImageTexture *MaterialNormalDiffuseSpecular::getNormalTexture() const
     return m_normalTextureImage;
 }
 
-void MaterialNormalDiffuseSpecular::setTextures(QImage *diffuse, QImage *normal)
+void MaterialNormalDiffuseSpecular::setTextures(QImage *diffuse, QImage *specular, QImage *normal)
 {
     m_diffuseTextureImage->setImage(diffuse);
     m_normalTextureImage->setImage(normal);
-//    m_specularTextureImage->setImage(specular);
+    m_specularTextureImage->setImage(specular);
 
     m_diffuseTextureImage->update();
     m_normalTextureImage->update();

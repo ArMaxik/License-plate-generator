@@ -95,7 +95,7 @@ class ColorPropertie : public BasicPropertie
 {
     Q_OBJECT
 public:
-    ColorPropertie(QString labelText);
+    ColorPropertie(QString labelText, QColor c = Qt::black);
 
     QLayout *getSettingsLayout() const override;
 

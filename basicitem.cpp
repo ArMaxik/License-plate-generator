@@ -17,6 +17,7 @@ BasicItem::BasicItem()
     , bound(new BoundRect(QRectF(0.0, 0.0, 0.0, 0.0), this))
     , diffuseCh(new DiffuseChanel(bound))
     , specularCh(new SpecularChanel(bound))
+    , normalCh(new NormalChanel(bound))
     , shownC(Chanels::diffuseC)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -77,31 +78,19 @@ QLayout *BasicItem::getSettingsLayout()
     QGroupBox *basicGroup = new QGroupBox(tr("Basic properties"));
     QGroupBox *diffuseGroup = new QGroupBox(tr("Diffuse chanel"));
     QGroupBox *specularGroup = new QGroupBox(tr("Specular chanel"));
+    QGroupBox *normalGroup = new QGroupBox(tr("Normal chanel"));
 
     basicGroup->setLayout(setUpBasicLayout());
     diffuseGroup->setLayout(diffuseCh->getSettingsLayout());
     specularGroup->setLayout(specularCh->getSettingsLayout());
+    normalGroup->setLayout(normalCh->getSettingsLayout());
 
     mainL->addWidget(basicGroup);
     mainL->addWidget(diffuseGroup);
     mainL->addWidget(specularGroup);
+    mainL->addWidget(normalGroup);
 
     return mainL;
-}
-
-QString BasicItem::getName()
-{
-    return name;
-}
-
-BasicChanel *BasicItem::getDiffuseChanel()
-{
-    return diffuseCh;
-}
-
-BasicChanel *BasicItem::getSpecularChanel()
-{
-    return specularCh;
 }
 
 void BasicItem::setUpChanels()
@@ -115,6 +104,10 @@ void BasicItem::setUpChanels()
     specularCh->addAllowedNode(BasicChanel::ImageN);
     specularCh->addAllowedNode(BasicChanel::TextN);
     specularCh->setNode(0);
+
+    normalCh->addAllowedNode(BasicChanel::ImageN);
+    normalCh->addAllowedNode(BasicChanel::TextN);
+    normalCh->setNode(0);
 }
 
 QLayout *BasicItem::setUpBasicLayout()
@@ -172,7 +165,7 @@ QLayout *BasicItem::setUpBasicLayout()
 
     showCB->addItem(tr("Diffuse"));
     showCB->addItem(tr("Specular"));
-//    showCB->addItem(tr("Normal"));
+    showCB->addItem(tr("Normal"));
     showCB->setCurrentIndex(shownC);
 
     showLO->addWidget(showL);
@@ -201,6 +194,7 @@ void BasicItem::onShownChanelChange(int index)
     update();
 }
 
+// ======================[ Canvas ]============================================
 
 Canvas::Canvas(QSize size)
     : BasicItem ()
@@ -225,6 +219,7 @@ void Canvas::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         specularCh->paint(painter, option, widget);
         break;
     case Chanels::normalC:
+        normalCh->paint(painter, option, widget);
         break;
     }
 }
@@ -236,14 +231,17 @@ QLayout *Canvas::getSettingsLayout()
     QGroupBox *basicGroup = new QGroupBox(tr("Basic properties"));
     QGroupBox *diffuseGroup = new QGroupBox(tr("Diffuse chanel"));
     QGroupBox *specularGroup = new QGroupBox(tr("Specular chanel"));
+    QGroupBox *normalGroup = new QGroupBox(tr("Normal chanel"));
 
     basicGroup->setLayout(setUpBasicLayout());
     diffuseGroup->setLayout(diffuseCh->getSettingsLayout());
     specularGroup->setLayout(specularCh->getSettingsLayout());
+    normalGroup->setLayout(normalCh->getSettingsLayout());
 
     mainL->addWidget(basicGroup);
     mainL->addWidget(diffuseGroup);
     mainL->addWidget(specularGroup);
+    mainL->addWidget(normalGroup);
 
     return mainL;
 }
@@ -252,11 +250,18 @@ void Canvas::setUpChanels()
 {
     diffuseCh->addAllowedNode(BasicChanel::FillBackN);
     diffuseCh->addAllowedNode(BasicChanel::ImageBackN);
+    diffuseCh->setDefaultColor(Qt::white);
     diffuseCh->setNode(0);
 
     specularCh->addAllowedNode(BasicChanel::FillBackN);
     specularCh->addAllowedNode(BasicChanel::ImageBackN);
+    specularCh->setDefaultColor(Qt::black);
     specularCh->setNode(0);
+
+    normalCh->addAllowedNode(BasicChanel::FillBackN);
+    normalCh->addAllowedNode(BasicChanel::ImageBackN);
+    normalCh->setDefaultColor(QColor(127, 127, 255));
+    normalCh->setNode(0);
 }
 
 QLayout *Canvas::setUpBasicLayout()
@@ -309,7 +314,7 @@ QLayout *Canvas::setUpBasicLayout()
 
     showCB->addItem(tr("Diffuse"));
     showCB->addItem(tr("Specular"));
-//    showCB->addItem(tr("Normal"));
+    showCB->addItem(tr("Normal"));
     showCB->setCurrentIndex(shownC);
 
     showLO->addWidget(showL);

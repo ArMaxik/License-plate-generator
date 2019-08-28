@@ -17,7 +17,7 @@ public:
     ImageTexture *getNormalTexture() const;
 
 public slots:
-    void setTextures(QImage* diffuse, QImage* normal);  // Уже не нужен
+    void setTextures(QImage* diffuse,  QImage *specular, QImage* normal);
 
 private:
     ImageTexture *m_diffuseTextureImage;

@@ -47,7 +47,8 @@ void MaterialManager::randomize()
 {
     texGen->randomize();
     mainMat->setTextures(texGen->getDiffuseTexture(),
-                         texGen->getSpecularTexture());
+                         texGen->getSpecularTexture(),
+                         texGen->getNormalTexture());
     texGen->getDiffuseTexture()->save("C:/Users/slava/OneDrive/Qt_projects/PlatesEditor/pic/hi.png");
 }
 

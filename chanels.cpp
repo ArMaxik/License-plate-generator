@@ -14,8 +14,9 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     , bound(br)
     , enable(true)
     , affectSize(false)
-    , node(nullptr)
     , chanelSize(1.0)
+    , node(nullptr)
+    , defaultColor(Qt::white)
 {
 }
 
@@ -114,7 +115,7 @@ void BasicChanel::setNode(int index)
         break;
     case Nodes::FillBackN:
         currentNode = Nodes::ImageN;
-        node = new FillBasckgroundNode(bound);
+        node = new FillBasckgroundNode(bound, defaultColor);
         break;
     }
     node->setAffectSize(affectSize);
@@ -150,4 +151,10 @@ SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
 //    allowedNodes.push_back(Nodes::TextN);
 
 //    setNode(0);
+}
+
+NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
+    : BasicChanel(br, parent)
+{
+
 }

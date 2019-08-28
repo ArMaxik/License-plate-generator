@@ -58,7 +58,6 @@ void SceneController::doFirstRenderStep()
     materialsM->randomize();
     lightsM->randomize();
     cameraM->randomize();
-    cameraM->randomize();
     modelM->randomize();
 
     modelM->setMaterial(materialsM->getMainMaterial());

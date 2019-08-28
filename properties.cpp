@@ -202,8 +202,9 @@ void StringPropertie::onStringChange(QString newStr)
 // ========[ ColorPropertie ]==================================================
 
 
-ColorPropertie::ColorPropertie(QString labelText)
+ColorPropertie::ColorPropertie(QString labelText, QColor c)
     : BasicPropertie(labelText)
+    , color(c)
 {
 
 }
