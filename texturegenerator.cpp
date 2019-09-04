@@ -58,6 +58,7 @@ void TextureGenerator::randomize()
 {
     randomizeChildren(canvas->getDiffuseChanel());
     randomizeChildren(canvas->getSpecularChanel());
+    randomizeChildren(canvas->getNormalChanel());
 }
 
 void TextureGenerator::randomizeChildren(QGraphicsItem *parent)

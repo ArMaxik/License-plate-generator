@@ -23,6 +23,9 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     treeModel->setCanvas(canvas);
     controllView->setCanvas(canvas);
 
+    connect(canvas, &Canvas::changed,
+            this, &TextureEditorWidget::updateImageViewers);
+
     updateImageViewers();
 
     setUpLayout();

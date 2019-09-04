@@ -24,21 +24,29 @@ BasicItem::BasicItem()
     setFlag(QGraphicsItem::ItemIsSelectable);
 
     connect(this, &QGraphicsObject::xChanged,
-            this, [this](){ diffuseCh->setX(x()); emit changed(); });
+            this, [this](){
+        diffuseCh->setX(x());
+        specularCh->setX(x());
+        normalCh->setX(x());
+        emit changed();
+    });
 
     connect(this, &QGraphicsObject::yChanged,
-            this, [this](){ diffuseCh->setY(y()); emit changed(); });
+            this, [this](){
+        diffuseCh->setY(y());
+        specularCh->setY(y());
+        normalCh->setY(y());
+        emit changed();
+    });
 
-    connect(this, &QGraphicsObject::xChanged,
-            this, [this](){ specularCh->setX(x()); emit changed(); });
-
-    connect(this, &QGraphicsObject::yChanged,
-            this, [this](){ specularCh->setY(y()); emit changed(); });
 
     connect(diffuseCh, &BasicChanel::changed,
             this, &BasicItem::onChanelChanged);
 
     connect(specularCh, &BasicChanel::changed,
+            this, &BasicItem::onChanelChanged);
+
+    connect(normalCh, &BasicChanel::changed,
             this, &BasicItem::onChanelChanged);
 }
 
@@ -52,6 +60,7 @@ void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         specularCh->paint(painter, option, widget);
         break;
     case Chanels::normalC:
+        normalCh->paint(painter, option, widget);
         break;
     }
 
@@ -303,9 +312,9 @@ QLayout *Canvas::setUpBasicLayout()
             this, [this](QString text){ if(text.isEmpty()) text = tr("Unnamed Item"); name = text; });
     // Size spinBox affect on object
     connect(wSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, [this](int w){ bound->setWidth(w); });
+            this, [this](int w){ bound->setWidth(w); emit changed(); });
     connect(xSpinBox,  QOverload<int>::of(&QSpinBox::valueChanged),
-            this, [this](int h){ bound->setHeight(h); });
+            this, [this](int h){ bound->setHeight(h); emit changed(); });
 
     // Choose what chanel to show
     QHBoxLayout *showLO = new QHBoxLayout();

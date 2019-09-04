@@ -41,7 +41,7 @@ SceneController::SceneController(QObject *parent)
 void SceneController::setUpRender()
 {
     delete firstRenderStep;
-    delete currentRenderStep;
+//    delete currentRenderStep;
 
     firstRenderStep = new FirstRenderStep(nullptr, nullptr);
     firstRenderStep->renderNum = renderM->getPictureCount();

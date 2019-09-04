@@ -121,6 +121,7 @@ void ItemsTreeModel::addItem(BasicItem *item)
     item->setParentItem(canvas->getItem());
     item->getDiffuseChanel()->setParentItem(canvas->getItem()->getDiffuseChanel());
     item->getSpecularChanel()->setParentItem(canvas->getItem()->getSpecularChanel());
+    item->getNormalChanel()->setParentItem(canvas->getItem()->getNormalChanel());
 
     endInsertRows();
 //    emit layoutChanged();
