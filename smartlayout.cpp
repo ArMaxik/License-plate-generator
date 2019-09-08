@@ -17,13 +17,14 @@ static void RemoveLayout (QLayout* layout) // Эта вещь мне не нра
             }
             else delete item;
         }
-
+        layout->setParent(nullptr);
         delete layout;
     }
 }
 
 void SmartLayout::clear()
 {
+//    return;
     QLayoutItem *item;
     while ((item = this->takeAt(0)) != nullptr){
         if (QLayout* childLayout = item->layout()){

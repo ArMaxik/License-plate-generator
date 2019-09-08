@@ -4,7 +4,6 @@
 
 AbstractManager::AbstractManager(QObject *parent)
     : QObject(parent)
-    , settingsLayout(new SmartLayout())
 {
 
 }
@@ -31,11 +30,11 @@ TextureGenerator *MaterialManager::getGenerator() const
     return texGen;
 }
 
-std::unique_ptr<SmartLayout> &MaterialManager::getSettingsLayout()
+QLayout *MaterialManager::getSettingsLayout()
 {
-    settingsLayout->addWidget(new QLabel("Just a MaterialManager"));
+    settingsLayout.layout()->addWidget(new QLabel("Just a MaterialManager"));
 
-    return settingsLayout;
+    return settingsLayout.layout();
 }
 
 void MaterialManager::setTextureGenerator(TextureGenerator *tg)
@@ -61,11 +60,11 @@ ModelManager::ModelManager(Qt3DCore::QEntity *scene, QObject *parent)
     name = tr("Model Manager");
 }
 
-std::unique_ptr<SmartLayout> &ModelManager::getSettingsLayout()
+QLayout *ModelManager::getSettingsLayout()
 {
-    settingsLayout->addWidget(new QLabel("Just a ModelManager"));
+    settingsLayout.layout()->addWidget(new QLabel("Just a ModelManager"));
 
-    return settingsLayout;
+    return settingsLayout.layout();
 }
 
 void ModelManager::randomize()
@@ -92,11 +91,11 @@ LightManager::LightManager(Qt3DCore::QEntity *scene, QObject *parent)
     ambient2->getLight()->setWorldDirection(QVector3D(0.0, -1.0,  1.0));
 }
 
-std::unique_ptr<SmartLayout> &LightManager::getSettingsLayout()
+QLayout *LightManager::getSettingsLayout()
 {
-    settingsLayout->addWidget(new QLabel("Just a LightManager"));
+    settingsLayout.layout()->addWidget(new QLabel("Just a LightManager"));
 
-    return settingsLayout;
+    return settingsLayout.layout();
 }
 
 void LightManager::randomize()
@@ -123,11 +122,11 @@ CameraManager::CameraManager(Qt3DCore::QEntity *scene, QObject *parent)
     camera->setUpVector(QVector3D(0.0, 1.0, 0.0));
 }
 
-std::unique_ptr<SmartLayout> &CameraManager::getSettingsLayout()
+QLayout *CameraManager::getSettingsLayout()
 {
-    settingsLayout->addWidget(new QLabel("Just a CameraManager"));
+    settingsLayout.layout()->addWidget(new QLabel("Just a CameraManager"));
 
-    return settingsLayout;
+    return settingsLayout.layout();
 }
 
 void CameraManager::randomize()
@@ -147,11 +146,11 @@ RenderManager::RenderManager(Qt3DCore::QEntity *scene, QObject *parent)
     savePath = "C:/Users/slava/OneDrive/Qt_projects/PlatesEditor/pic/";
 }
 
-std::unique_ptr<SmartLayout> &RenderManager::getSettingsLayout()
+QLayout *RenderManager::getSettingsLayout()
 {
-    settingsLayout->addWidget(new QLabel("Just a SettingsManager"));
+    settingsLayout.layout()->addWidget(new QLabel("Just a SettingsManager"));
 
-    return settingsLayout;
+    return settingsLayout.layout();
 }
 
 void RenderManager::randomize()

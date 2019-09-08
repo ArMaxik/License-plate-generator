@@ -23,7 +23,7 @@ public:
                    QWidget *widget) override;
     QRectF boundingRect() const override;
 
-    virtual std::unique_ptr<SmartLayout> &getSettingsLayout();
+    virtual QLayout *getSettingsLayout();
     QString getName() { return name; }
 
     BasicChanel *getDiffuseChanel() { return diffuseCh; }
@@ -49,7 +49,7 @@ protected:
 
     QLayout *setUpBasicLayout();
 //    SmartLayout *settingsLayout;
-    std::unique_ptr<SmartLayout> settingsLayout;
+    SmartLayoutHolder settingsLayout;
 
     Chanels shownC;
 
@@ -68,7 +68,7 @@ public:
     void paint(QPainter *painter,
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
-    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
+    QLayout *getSettingsLayout() override;
 
     void setUpChanels() override;
 

@@ -17,7 +17,6 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     , chanelSize(1.0)
     , node(nullptr)
     , defaultColor(Qt::white)
-    , settingsLayout(new SmartLayout())
 {
 }
 
@@ -39,10 +38,7 @@ void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
 void BasicChanel::formedSettingsLayout()
 {
-    if(!settingsLayout) {
-        return;
-    }
-    settingsLayout->clear();
+    settingsLayout.layout()->clear();
     // Enable check box
     QHBoxLayout *enableLO = new QHBoxLayout();
     QLabel *enableL = new QLabel(tr("Enable"));
@@ -52,7 +48,7 @@ void BasicChanel::formedSettingsLayout()
 
     enableLO->addWidget(enableL);
     enableLO->addWidget(enableCB);
-    settingsLayout->addLayout(enableLO);
+    settingsLayout.layout()->addLayout(enableLO);
     // Node selector
     QHBoxLayout *nodeLO = new QHBoxLayout();
     QLabel *nodeL = new QLabel(tr("Node type"));
@@ -84,18 +80,15 @@ void BasicChanel::formedSettingsLayout()
 
     nodeLO->addWidget(nodeL);
     nodeLO->addWidget(nodeCB);
-    settingsLayout->addLayout(nodeLO);
+    settingsLayout.layout()->addLayout(nodeLO);
 
-    settingsLayout->addLayout(node->getSettingsLayout());
+    settingsLayout.layout()->addLayout(node->getSettingsLayout());
 }
 
-std::unique_ptr<SmartLayout> &BasicChanel::getSettingsLayout()
+QLayout *BasicChanel::getSettingsLayout()
 {
-    if(!settingsLayout) {
-        settingsLayout.reset(new SmartLayout());
-    }
     formedSettingsLayout();
-    return settingsLayout;
+    return settingsLayout.layout();
 }
 
 void BasicChanel::randomize()
@@ -109,6 +102,7 @@ void BasicChanel::setNode(int index)
         disconnect(node, &BasicNode::changed,
                    this, &BasicChanel::onNodeChanged);
         delete node;
+        node = nullptr;
     }
 
     switch (allowedNodes[index]) {

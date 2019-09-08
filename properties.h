@@ -13,7 +13,7 @@ class BasicPropertie : public QObject
 public:
     BasicPropertie(QString labelText);
 
-    virtual QLayout *getSettingsLayout() const;
+    virtual QLayout *getSettingsLayout();
 
 signals:
     void changed();
@@ -29,7 +29,7 @@ class NumberPropertie : public BasicPropertie
 public:
     NumberPropertie(QString labelText, int val, int min_v, int max_v);
 
-    QLayout *getSettingsLayout() const override;
+    QLayout *getSettingsLayout() override;
 
     int getValue() const;
     operator int() const { return value; }
@@ -58,7 +58,7 @@ class ImagePropertie : public BasicPropertie
 public:
     ImagePropertie(QString labelText);
 
-    QLayout *getSettingsLayout() const override;
+    QLayout *getSettingsLayout() override;
     QImage &getImage();
     operator QImage() const { return img; }
 
@@ -78,7 +78,7 @@ class StringPropertie : public BasicPropertie
 public:
     StringPropertie(QString labelText, QString s = "Text");
 
-    QLayout *getSettingsLayout() const override;
+    QLayout *getSettingsLayout() override;
 
     QString &getString();
     operator QString() const { return str; }
@@ -99,7 +99,7 @@ class ColorPropertie : public BasicPropertie
 public:
     ColorPropertie(QString labelText, QColor c = Qt::black);
 
-    QLayout *getSettingsLayout() const override;
+    QLayout *getSettingsLayout() override;
 
     QColor &getColor();
     operator QColor() const { return color; }

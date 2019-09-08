@@ -17,7 +17,7 @@ BasicPropertie::BasicPropertie(QString labelText)
 
 }
 
-QLayout *BasicPropertie::getSettingsLayout() const
+QLayout *BasicPropertie::getSettingsLayout()
 {
     QVBoxLayout *ml = new QVBoxLayout();
 
@@ -48,12 +48,13 @@ NumberPropertie::NumberPropertie(QString labelText, int val, int min_v, int max_
     }
 }
 
-QLayout *NumberPropertie::getSettingsLayout() const
+QLayout *NumberPropertie::getSettingsLayout()
 {
     QVBoxLayout *ml = static_cast<QVBoxLayout*>(BasicPropertie::getSettingsLayout());
 
     QHBoxLayout *numLO = new QHBoxLayout();
     QLabel *numL = new QLabel(label);
+    numSB = new QSpinBox();
 
     numSB->setRange(min, max);
     numSB->setValue(value);
@@ -117,7 +118,7 @@ ImagePropertie::ImagePropertie(QString labelText)
 
 }
 
-QLayout *ImagePropertie::getSettingsLayout() const
+QLayout *ImagePropertie::getSettingsLayout()
 {
     QLayout *ml = BasicPropertie::getSettingsLayout();
 
@@ -170,7 +171,7 @@ StringPropertie::StringPropertie(QString labelText, QString s)
 
 }
 
-QLayout *StringPropertie::getSettingsLayout() const
+QLayout *StringPropertie::getSettingsLayout()
 {
     QLayout *ml = BasicPropertie::getSettingsLayout();
 
@@ -209,7 +210,7 @@ ColorPropertie::ColorPropertie(QString labelText, QColor c)
 
 }
 
-QLayout *ColorPropertie::getSettingsLayout() const
+QLayout *ColorPropertie::getSettingsLayout()
 {
     QLayout *ml = BasicPropertie::getSettingsLayout();
 

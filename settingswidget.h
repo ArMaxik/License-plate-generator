@@ -17,7 +17,7 @@ public slots:
 
 private:
     QFrame *emptyWidget;
-    std::unique_ptr<SmartLayout> *settingsLayout;
+    QLayout *settingsLayout;
 };
 
 #endif // SETTINGSWIDGET_H

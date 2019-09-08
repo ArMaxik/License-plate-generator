@@ -59,7 +59,7 @@ void TreeItem::setSelected(bool selected)
     itemData->setSelected(selected);
 }
 
-std::unique_ptr<SmartLayout> &TreeItem::getSettingsLayout()
+QLayout *TreeItem::getSettingsLayout()
 {
     return itemData->getSettingsLayout();
 }
@@ -102,7 +102,7 @@ void TreeManagerItem::setSelected(bool selected)
     // :(
 }
 
-std::unique_ptr<SmartLayout> &TreeManagerItem::getSettingsLayout()
+QLayout *TreeManagerItem::getSettingsLayout()
 {
     return itemData->getSettingsLayout();
 }

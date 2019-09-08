@@ -15,7 +15,7 @@ class AbstractManager : public QObject
 public:
     AbstractManager(QObject *parent);
 
-    virtual std::unique_ptr<SmartLayout> &getSettingsLayout() = 0;
+    virtual QLayout *getSettingsLayout() = 0;
     const QString &getName() const { return name; }
 
 public slots:
@@ -23,7 +23,7 @@ public slots:
 
 protected:
     QString name;
-    std::unique_ptr<SmartLayout> settingsLayout;
+    SmartLayoutHolder settingsLayout;
 };
 
 class MaterialManager : public AbstractManager
@@ -33,7 +33,7 @@ public:
     MaterialManager(QObject *parent = nullptr);
     TextureGenerator *getGenerator() const;
 
-    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
+    QLayout *getSettingsLayout() override;
 
     void setTextureGenerator(TextureGenerator *tg);
 
@@ -56,7 +56,7 @@ class ModelManager : public AbstractManager
 public:
     ModelManager(Qt3DCore::QEntity *scene = nullptr, QObject *parent = nullptr);
 
-    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
+    QLayout *getSettingsLayout() override;
 
 public slots:
     void randomize() override;
@@ -72,7 +72,7 @@ class LightManager : public AbstractManager
 public:
     LightManager(Qt3DCore::QEntity *scene = nullptr, QObject *parent = nullptr);
 
-    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
+    QLayout *getSettingsLayout() override;
 
 public slots:
     void randomize() override;
@@ -89,7 +89,7 @@ class CameraManager : public AbstractManager
 public:
     CameraManager(Qt3DCore::QEntity *scene = nullptr, QObject *parent = nullptr);
 
-    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
+    QLayout *getSettingsLayout() override;
 
     Qt3DRender::QCamera *getCamera() const { return camera; }
 
@@ -106,7 +106,7 @@ class RenderManager : public AbstractManager
 public:
     RenderManager(Qt3DCore::QEntity *scene = nullptr, QObject *parent = nullptr);
 
-    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
+    QLayout *getSettingsLayout() override;
 
     int getPictureCount() const { return picNum; }
     const QString &getSavePath() const { return savePath; }

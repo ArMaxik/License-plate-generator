@@ -20,7 +20,7 @@ public:
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
 
-    std::unique_ptr<SmartLayout> &getSettingsLayout();
+    QLayout *getSettingsLayout();
     void randomize();
 
     enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN };
@@ -49,7 +49,7 @@ protected:
 
     QColor defaultColor;
 
-    std::unique_ptr<SmartLayout> settingsLayout;
+    SmartLayoutHolder settingsLayout;
     void formedSettingsLayout();
 
 protected slots:
