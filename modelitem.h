@@ -11,7 +11,7 @@ public:
     ~AbstractModelItem();
 
     virtual void setSelected(bool selected) = 0;
-    virtual QLayout *getSettingsLayout() = 0;
+    virtual std::unique_ptr<SmartLayout> &getSettingsLayout() = 0;
     virtual bool isSelected() = 0;
     virtual QVariant data(int column) const = 0;
 
@@ -37,7 +37,7 @@ public:
     BasicItem *getItem() const;
 
     void setSelected(bool selected) override;
-    QLayout *getSettingsLayout() override;
+    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
     bool isSelected() override;
 
 private:
@@ -54,7 +54,7 @@ public:
     AbstractManager *getItem() { return itemData; }
 
     void setSelected(bool selected) override;
-    QLayout *getSettingsLayout() override;
+    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
     bool isSelected() override;
 
 private:

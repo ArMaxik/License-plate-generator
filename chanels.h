@@ -7,6 +7,8 @@
 #include <QLayout>
 #include <QStack>
 
+#include <memory>
+
 class BasicChanel : public QGraphicsObject
 {
     Q_OBJECT
@@ -18,7 +20,7 @@ public:
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
 
-    QLayout *getSettingsLayout();
+    std::unique_ptr<SmartLayout> &getSettingsLayout();
     void randomize();
 
     enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN };
@@ -46,6 +48,9 @@ protected:
     BasicNode *node;
 
     QColor defaultColor;
+
+    std::unique_ptr<SmartLayout> settingsLayout;
+    void formedSettingsLayout();
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);

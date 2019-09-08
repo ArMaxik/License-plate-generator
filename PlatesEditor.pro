@@ -42,6 +42,7 @@ SOURCES += \
         properties.cpp \
         renderableentity.cpp \
         settingswidget.cpp \
+        smartlayout.cpp \
         textureeditorwidget.cpp \
         texturegenerator.cpp \
         toolbar.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
         properties.h \
         renderableentity.h \
         settingswidget.h \
+        smartlayout.h \
         textureeditorwidget.h \
         texturegenerator.h \
         toolbar.h \

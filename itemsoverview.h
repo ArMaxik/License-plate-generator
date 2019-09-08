@@ -20,7 +20,7 @@ public slots:
     void onSelectionChanged();
 
 signals:
-    void itemSelected(QLayout *layout);
+    void itemSelected(AbstractModelItem *item);
 
 private:
     QTreeView *treeView;

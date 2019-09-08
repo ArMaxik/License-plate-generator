@@ -48,7 +48,7 @@ void ItemsOverview::onCurrentChanged(const QModelIndex &current, const QModelInd
     if(current.isValid()) {
         AbstractModelItem *item =  static_cast<AbstractModelItem*>(current.internalPointer());
         item->setSelected(true);
-        emit itemSelected(item->getSettingsLayout());
+        emit itemSelected(item);
     } else {
         emit itemSelected(nullptr);
     }

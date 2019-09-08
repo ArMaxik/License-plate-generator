@@ -18,6 +18,7 @@ BasicItem::BasicItem()
     , diffuseCh(new DiffuseChanel(bound))
     , specularCh(new SpecularChanel(bound))
     , normalCh(new NormalChanel(bound))
+    , settingsLayout(new SmartLayout())
     , shownC(Chanels::diffuseC)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -80,26 +81,28 @@ QRectF BasicItem::boundingRect() const
     return bound->getBound();
 }
 
-QLayout *BasicItem::getSettingsLayout()
+std::unique_ptr<SmartLayout> &BasicItem::getSettingsLayout()
 {
-    QVBoxLayout *mainL = new QVBoxLayout();
-
+//    QVBoxLayout *settingsLayout = new QVBoxLayout();
+    if(!settingsLayout) {
+        settingsLayout.reset(new SmartLayout());
+    }
     QGroupBox *basicGroup = new QGroupBox(tr("Basic properties"));
     QGroupBox *diffuseGroup = new QGroupBox(tr("Diffuse chanel"));
     QGroupBox *specularGroup = new QGroupBox(tr("Specular chanel"));
     QGroupBox *normalGroup = new QGroupBox(tr("Normal chanel"));
 
     basicGroup->setLayout(setUpBasicLayout());
-    diffuseGroup->setLayout(diffuseCh->getSettingsLayout());
-    specularGroup->setLayout(specularCh->getSettingsLayout());
-    normalGroup->setLayout(normalCh->getSettingsLayout());
+    diffuseGroup->setLayout(diffuseCh->getSettingsLayout().get());
+    specularGroup->setLayout(specularCh->getSettingsLayout().get());
+    normalGroup->setLayout(normalCh->getSettingsLayout().get());
 
-    mainL->addWidget(basicGroup);
-    mainL->addWidget(diffuseGroup);
-    mainL->addWidget(specularGroup);
-    mainL->addWidget(normalGroup);
+    settingsLayout->addWidget(basicGroup);
+    settingsLayout->addWidget(diffuseGroup);
+    settingsLayout->addWidget(specularGroup);
+    settingsLayout->addWidget(normalGroup);
 
-    return mainL;
+    return settingsLayout;
 }
 
 void BasicItem::setUpChanels()
@@ -233,26 +236,28 @@ void Canvas::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     }
 }
 
-QLayout *Canvas::getSettingsLayout()
+std::unique_ptr<SmartLayout> &Canvas::getSettingsLayout()
 {
-    QVBoxLayout *mainL = new QVBoxLayout();
-
+//    QVBoxLayout *settingsLayout = new QVBoxLayout();
+    if(!settingsLayout) {
+        settingsLayout.reset(new SmartLayout());
+    }
     QGroupBox *basicGroup = new QGroupBox(tr("Basic properties"));
     QGroupBox *diffuseGroup = new QGroupBox(tr("Diffuse chanel"));
     QGroupBox *specularGroup = new QGroupBox(tr("Specular chanel"));
     QGroupBox *normalGroup = new QGroupBox(tr("Normal chanel"));
 
     basicGroup->setLayout(setUpBasicLayout());
-    diffuseGroup->setLayout(diffuseCh->getSettingsLayout());
-    specularGroup->setLayout(specularCh->getSettingsLayout());
-    normalGroup->setLayout(normalCh->getSettingsLayout());
+    diffuseGroup->setLayout(diffuseCh->getSettingsLayout().get());
+    specularGroup->setLayout(specularCh->getSettingsLayout().get());
+    normalGroup->setLayout(normalCh->getSettingsLayout().get());
 
-    mainL->addWidget(basicGroup);
-    mainL->addWidget(diffuseGroup);
-    mainL->addWidget(specularGroup);
-    mainL->addWidget(normalGroup);
+    settingsLayout->addWidget(basicGroup);
+    settingsLayout->addWidget(diffuseGroup);
+    settingsLayout->addWidget(specularGroup);
+    settingsLayout->addWidget(normalGroup);
 
-    return mainL;
+    return settingsLayout;
 }
 
 void Canvas::setUpChanels()

@@ -1,6 +1,8 @@
 #ifndef PROPERTIES_H
 #define PROPERTIES_H
 
+#include "smartlayout.h"
+
 #include <QLayout>
 #include <QSpinBox>
 

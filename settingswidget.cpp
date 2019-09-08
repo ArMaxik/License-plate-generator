@@ -5,6 +5,7 @@ static void RemoveLayout(QLayout* layout);
 SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     : QDockWidget()
     , emptyWidget(new QFrame(this))
+    , settingsLayout(nullptr)
 {
     setWidget(emptyWidget);
     emptyWidget->setLayout(new QVBoxLayout());
@@ -15,19 +16,24 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     show();
 }
 
-void SettingsWidget::SetSettingsLayout(QLayout *layout)
+void SettingsWidget::SetSettingsLayout(AbstractModelItem *item)
 {
     if(emptyWidget->layout() != nullptr) {
 //        RemoveLayout(widget->layout());
 //        delete this->widget();
         setWidget(emptyWidget);
     }
-    if(layout != nullptr) {
+    if(settingsLayout) {
+        delete settingsLayout->release();
+    }
+
+    if(item != nullptr) {
+        settingsLayout = &item->getSettingsLayout();
 //        widget->setLayout(item->getSettingsLayout());
         QFrame *w = new QFrame();
         w->setFrameStyle(QFrame::Panel | QFrame::Raised);
         w->setLineWidth(2);
-        w->setLayout(layout);
+        w->setLayout(settingsLayout->get());
         setWidget(w);
     }
 }

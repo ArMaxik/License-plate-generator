@@ -3,6 +3,8 @@
 
 #include "chanels.h"
 
+#include <memory>
+
 #include <QGraphicsItem>
 #include <QVBoxLayout>
 #include <QFont>
@@ -21,7 +23,7 @@ public:
                    QWidget *widget) override;
     QRectF boundingRect() const override;
 
-    virtual QLayout *getSettingsLayout();
+    virtual std::unique_ptr<SmartLayout> &getSettingsLayout();
     QString getName() { return name; }
 
     BasicChanel *getDiffuseChanel() { return diffuseCh; }
@@ -46,6 +48,8 @@ protected:
     BasicChanel *normalCh;
 
     QLayout *setUpBasicLayout();
+//    SmartLayout *settingsLayout;
+    std::unique_ptr<SmartLayout> settingsLayout;
 
     Chanels shownC;
 
@@ -64,7 +68,7 @@ public:
     void paint(QPainter *painter,
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
-    QLayout *getSettingsLayout() override;
+    std::unique_ptr<SmartLayout> &getSettingsLayout() override;
 
     void setUpChanels() override;
 
