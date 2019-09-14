@@ -3,7 +3,8 @@
 // ====================== AbstractModelItem ==========================
 
 AbstractModelItem::AbstractModelItem(AbstractModelItem *parent)
-    : parent(parent)
+    : QObject()
+    , parent(parent)
 {
 
 }
@@ -52,7 +53,12 @@ void AbstractModelItem::appendChild(AbstractModelItem *item)
 TreeItem::TreeItem(BasicItem *item, AbstractModelItem *parent)
     : AbstractModelItem(parent)
     , itemData(item)
-{}
+{
+    if(itemData != nullptr) {
+        connect(itemData, &BasicItem::layoutChanged,
+                this, [this](){ emit layoutChanged(); });
+    }
+}
 
 void TreeItem::setSelected(bool selected)
 {

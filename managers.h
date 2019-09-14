@@ -23,7 +23,6 @@ public slots:
 
 protected:
     QString name;
-    SmartLayoutHolder settingsLayout;
 };
 
 class MaterialManager : public AbstractManager

@@ -6,6 +6,7 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     : QDockWidget()
     , emptyWidget(new QFrame(this))
     , settingsLayout(nullptr)
+    , currentItem(nullptr)
 {
     setWidget(emptyWidget);
     emptyWidget->setLayout(new QVBoxLayout());
@@ -16,25 +17,39 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     show();
 }
 
-void SettingsWidget::SetSettingsLayout(AbstractModelItem *item)
+void SettingsWidget::SetAbstractItem(AbstractModelItem *item)
 {
+    if(currentItem != nullptr) {
+        disconnect(currentItem, &AbstractModelItem::layoutChanged,
+                   this, &SettingsWidget::SetSettingsLayout);
+    }
+    currentItem = item;
+    if(currentItem != nullptr) {
+        connect(currentItem, &AbstractModelItem::layoutChanged,
+                this, &SettingsWidget::SetSettingsLayout, Qt::QueuedConnection);
+    }
+    SetSettingsLayout();
+}
+
+void SettingsWidget::SetSettingsLayout()
+{
+    if(widget() != nullptr){
+        RemoveLayout(widget()->layout());
+    }
     if(emptyWidget->layout() != nullptr) {
         setWidget(emptyWidget);
     }
-    if(settingsLayout) {
-        delete settingsLayout;
-        settingsLayout = nullptr;
+    if(currentItem == nullptr) {
+        return;
     }
+    QLayout* layout = currentItem->getSettingsLayout();
 
-    if(item != nullptr) {
-        settingsLayout = item->getSettingsLayout();
-//        widget->setLayout(item->getSettingsLayout());
-        QFrame *w = new QFrame();
-        w->setFrameStyle(QFrame::Panel | QFrame::Raised);
-        w->setLineWidth(2);
-        w->setLayout(settingsLayout);
-        setWidget(w);
-    }
+    QFrame *w = new QFrame();
+    w->setFrameStyle(QFrame::Panel | QFrame::Raised);
+    w->setLineWidth(2);
+    w->setLayout(layout);
+    setWidget(w);
+
 }
 
 static void RemoveLayout (QLayout* layout) // Эта вещь мне не нравится

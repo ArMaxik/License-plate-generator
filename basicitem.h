@@ -38,6 +38,7 @@ public:
 
 signals:
     void changed();
+    void layoutChanged();
 
 protected:
     QString name;
@@ -49,7 +50,6 @@ protected:
 
     QLayout *setUpBasicLayout();
 //    SmartLayout *settingsLayout;
-    SmartLayoutHolder settingsLayout;
 
     Chanels shownC;
 

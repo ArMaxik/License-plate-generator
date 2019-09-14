@@ -4,8 +4,9 @@
 #include "basicitem.h"
 #include "managers.h"
 
-class AbstractModelItem
+class AbstractModelItem : public QObject
 {
+    Q_OBJECT
 public:
     AbstractModelItem(AbstractModelItem *parent);
     ~AbstractModelItem();
@@ -21,6 +22,9 @@ public:
     int columnCount() const;
     int row() const;
     AbstractModelItem *parentItem();
+
+signals:
+    void layoutChanged();
 
 protected:
     QVector<AbstractModelItem*> childItems;

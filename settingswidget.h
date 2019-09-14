@@ -13,11 +13,14 @@ public:
     SettingsWidget(QMainWindow *parent = nullptr, Qt::WindowFlags flags = 0);
 
 public slots:
-    void SetSettingsLayout(AbstractModelItem *item);
+    void SetAbstractItem(AbstractModelItem *item);
+//    void SetSettingsLayout(AbstractModelItem *item);
+    void SetSettingsLayout();
 
 private:
     QFrame *emptyWidget;
     QLayout *settingsLayout;
+    AbstractModelItem *currentItem;
 };
 
 #endif // SETTINGSWIDGET_H

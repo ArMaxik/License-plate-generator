@@ -36,6 +36,7 @@ public slots:
 signals:
 //    void sizeChanged();
     void changed();
+    void layoutChanged();
 
 protected:
     QVector<Nodes> allowedNodes;
@@ -49,8 +50,7 @@ protected:
 
     QColor defaultColor;
 
-    SmartLayoutHolder settingsLayout;
-    void formedSettingsLayout();
+    QLayout *formedSettingsLayout();
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);

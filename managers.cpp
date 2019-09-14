@@ -32,9 +32,10 @@ TextureGenerator *MaterialManager::getGenerator() const
 
 QLayout *MaterialManager::getSettingsLayout()
 {
-    settingsLayout.layout()->addWidget(new QLabel("Just a MaterialManager"));
+    QVBoxLayout *l = new QVBoxLayout();
+    l->addWidget(new QLabel("Just a MaterialManager"));
 
-    return settingsLayout.layout();
+    return l;
 }
 
 void MaterialManager::setTextureGenerator(TextureGenerator *tg)
@@ -62,9 +63,10 @@ ModelManager::ModelManager(Qt3DCore::QEntity *scene, QObject *parent)
 
 QLayout *ModelManager::getSettingsLayout()
 {
-    settingsLayout.layout()->addWidget(new QLabel("Just a ModelManager"));
+    QVBoxLayout *l = new QVBoxLayout();
+    l->addWidget(new QLabel("Just a ModelManager"));
 
-    return settingsLayout.layout();
+    return l;
 }
 
 void ModelManager::randomize()
@@ -93,9 +95,10 @@ LightManager::LightManager(Qt3DCore::QEntity *scene, QObject *parent)
 
 QLayout *LightManager::getSettingsLayout()
 {
-    settingsLayout.layout()->addWidget(new QLabel("Just a LightManager"));
+    QVBoxLayout *l = new QVBoxLayout();
+    l->addWidget(new QLabel("Just a LightManager"));
 
-    return settingsLayout.layout();
+    return l;
 }
 
 void LightManager::randomize()
@@ -124,9 +127,10 @@ CameraManager::CameraManager(Qt3DCore::QEntity *scene, QObject *parent)
 
 QLayout *CameraManager::getSettingsLayout()
 {
-    settingsLayout.layout()->addWidget(new QLabel("Just a CameraManager"));
+    QVBoxLayout *l = new QVBoxLayout();
+    l->addWidget(new QLabel("Just a CameraManager"));
 
-    return settingsLayout.layout();
+    return l;
 }
 
 void CameraManager::randomize()
@@ -148,9 +152,10 @@ RenderManager::RenderManager(Qt3DCore::QEntity *scene, QObject *parent)
 
 QLayout *RenderManager::getSettingsLayout()
 {
-    settingsLayout.layout()->addWidget(new QLabel("Just a SettingsManager"));
+    QVBoxLayout *l = new QVBoxLayout();
+    l->addWidget(new QLabel("Just a SettingsManager"));
 
-    return settingsLayout.layout();
+    return l;
 }
 
 void RenderManager::randomize()

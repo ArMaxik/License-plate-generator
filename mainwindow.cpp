@@ -52,7 +52,7 @@ void MainWindow::setUpDockWidgets()
             itemsOverview, &ItemsOverview::onSelectionChanged);
 
     connect(itemsOverview, &ItemsOverview::itemSelected,
-            sw, &SettingsWidget::SetSettingsLayout);
+            sw, &SettingsWidget::SetAbstractItem);
 
     addDockWidget(Qt::RightDockWidgetArea, itemsOverview);
 }
