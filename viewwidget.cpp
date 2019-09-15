@@ -115,6 +115,8 @@ void ImageViewWiget::setImage(const QImage *img)
     image->setPixmap(QPixmap::fromImage(*img));
     contentBound = img->rect();
     SceneViewWidget::recalulateSceneRect();
+
+    delete img;
 }
 
 ScaleWidget::ScaleWidget(QWidget *parent)
