@@ -36,9 +36,10 @@ void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->restore();
 }
 
-QLayout *BasicChanel::getSettingsLayout()
+QLayout *BasicChanel::formedSettingsLayout()
 {
-    QVBoxLayout *mL = new QVBoxLayout();
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->addStretch();
     // Enable check box
     QHBoxLayout *enableLO = new QHBoxLayout();
     QLabel *enableL = new QLabel(tr("Enable"));
@@ -48,7 +49,7 @@ QLayout *BasicChanel::getSettingsLayout()
 
     enableLO->addWidget(enableL);
     enableLO->addWidget(enableCB);
-    mL->addLayout(enableLO);
+    layout->addLayout(enableLO);
     // Node selector
     QHBoxLayout *nodeLO = new QHBoxLayout();
     QLabel *nodeL = new QLabel(tr("Node type"));
@@ -77,14 +78,23 @@ QLayout *BasicChanel::getSettingsLayout()
 
     connect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &BasicChanel::setNode);
+    connect(nodeCB, &QObject::destroyed,
+            this, [=](){ disconnect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                                    this, &BasicChanel::setNode); });
 
     nodeLO->addWidget(nodeL);
     nodeLO->addWidget(nodeCB);
-    mL->addLayout(nodeLO);
+    layout->addLayout(nodeLO);
 
-    mL->addLayout(node->getSettingsLayout());
+    layout->addLayout(node->getSettingsLayout());
+    layout->addStretch();
 
-    return mL;
+    return layout;
+}
+
+QLayout *BasicChanel::getSettingsLayout()
+{
+    return formedSettingsLayout();
 }
 
 void BasicChanel::randomize()
@@ -98,6 +108,7 @@ void BasicChanel::setNode(int index)
         disconnect(node, &BasicNode::changed,
                    this, &BasicChanel::onNodeChanged);
         delete node;
+        node = nullptr;
     }
 
     switch (allowedNodes[index]) {
@@ -122,6 +133,7 @@ void BasicChanel::setNode(int index)
     connect(node, &BasicNode::changed,
                this, &BasicChanel::onNodeChanged);
     update();
+    emit layoutChanged();
 }
 
 void BasicChanel::onNodeChangeScale(qreal factor, QSizeF size)

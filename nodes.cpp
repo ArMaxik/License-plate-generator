@@ -1,4 +1,4 @@
-#include "nodes.h"
+    #include "nodes.h"
 
 #include <QPainter>
 #include <QSize>
@@ -29,7 +29,7 @@ QLayout *BasicNode::getSettingsLayout()
 //    frame->setFrameStyle(QFrame::Panel | QFrame::Raised);
 //    frame->setLineWidth(1);
 
-    foreach (const BasicPropertie *p, properites) {
+    foreach (BasicPropertie *p, properites) {
         ml->addLayout(p->getSettingsLayout());
     }
 

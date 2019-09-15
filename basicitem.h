@@ -3,6 +3,8 @@
 
 #include "chanels.h"
 
+#include <memory>
+
 #include <QGraphicsItem>
 #include <QVBoxLayout>
 #include <QFont>
@@ -36,6 +38,7 @@ public:
 
 signals:
     void changed();
+    void layoutChanged();
 
 protected:
     QString name;
@@ -46,6 +49,7 @@ protected:
     BasicChanel *normalCh;
 
     QLayout *setUpBasicLayout();
+//    SmartLayout *settingsLayout;
 
     Chanels shownC;
 

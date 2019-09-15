@@ -7,6 +7,8 @@
 #include <QLayout>
 #include <QStack>
 
+#include <memory>
+
 class BasicChanel : public QGraphicsObject
 {
     Q_OBJECT
@@ -34,6 +36,7 @@ public slots:
 signals:
 //    void sizeChanged();
     void changed();
+    void layoutChanged();
 
 protected:
     QVector<Nodes> allowedNodes;
@@ -46,6 +49,8 @@ protected:
     BasicNode *node;
 
     QColor defaultColor;
+
+    QLayout *formedSettingsLayout();
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);
