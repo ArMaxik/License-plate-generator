@@ -76,4 +76,5 @@ void TextureEditorWidget::updateImageViewers()
     diffuseView->setImage(texGen->getDiffuseTexture());
     specularView->setImage(texGen->getSpecularTexture());
     normalView->setImage(texGen->getNormalTexture());
+    qDebug() << "Hoba";
 }

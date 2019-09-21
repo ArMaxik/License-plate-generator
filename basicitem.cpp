@@ -1,4 +1,5 @@
 #include "basicitem.h"
+#include "heigthtonormalgraphicseffect.h"
 
 #include <QPainter>
 #include <QLabel>
@@ -41,22 +42,23 @@ BasicItem::BasicItem()
 
     // Chanel changed, not layout
     connect(diffuseCh, &BasicChanel::changed,
-            this, &BasicItem::onChanelChanged);
+            this, &BasicItem::changed);
 
     connect(specularCh, &BasicChanel::changed,
-            this, &BasicItem::onChanelChanged);
+            this, &BasicItem::changed);
 
     connect(normalCh, &BasicChanel::changed,
-            this, &BasicItem::onChanelChanged);
+            this, &BasicItem::changed);
+    // Если все подцепить на changed(), то при смене ноды все красиво обновляется :/
     // Layout changed
     connect(diffuseCh, &BasicChanel::layoutChanged,
-            this, [this](){ emit layoutChanged(); });
+            this, &BasicItem::layoutChanged);
 
     connect(specularCh, &BasicChanel::layoutChanged,
-            this, [this](){ emit layoutChanged(); });
+            this, &BasicItem::layoutChanged);
 
     connect(normalCh, &BasicChanel::layoutChanged,
-            this, [this](){ emit layoutChanged(); });
+            this, &BasicItem::layoutChanged);
 }
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -126,6 +128,7 @@ void BasicItem::setUpChanels()
     normalCh->addAllowedNode(BasicChanel::ImageN);
     normalCh->addAllowedNode(BasicChanel::TextN);
     normalCh->setNode(0);
+//    normalCh->setGraphicsEffect(new HeigthToNormalGraphicsEffect());
 }
 
 QLayout *BasicItem::setUpBasicLayout()

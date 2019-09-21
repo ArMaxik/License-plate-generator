@@ -2,6 +2,7 @@
 #define CHANELS_H
 
 #include "nodes.h"
+#include <QtDebug>
 
 #include <QGraphicsObject>
 #include <QLayout>
@@ -20,7 +21,7 @@ public:
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
 
-    QLayout *getSettingsLayout();
+    virtual QLayout *getSettingsLayout();
     void randomize();
 
     enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN };
@@ -31,10 +32,10 @@ public slots:
     void setAffectSize(bool affect) { affectSize = affect; }
     void addAllowedNode(Nodes node) { allowedNodes.push_back(node); }
     void setNode(int index);
+    void setNode(Nodes nodeType);
     void setDefaultColor(const QColor &color) { defaultColor = color; }
 
 signals:
-//    void sizeChanged();
     void changed();
     void layoutChanged();
 
@@ -54,7 +55,7 @@ protected:
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);
-    void onNodeChanged() { emit changed(); }
+//    void onNodeChanged() { qDebug()<<"Hoba"; emit changed(); }
 };
 
 class DiffuseChanel : public BasicChanel
@@ -62,6 +63,8 @@ class DiffuseChanel : public BasicChanel
     Q_OBJECT
 public:
     DiffuseChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
+
+    QLayout *getSettingsLayout() override { return BasicChanel::getSettingsLayout(); }
 };
 
 class SpecularChanel : public BasicChanel
@@ -69,6 +72,8 @@ class SpecularChanel : public BasicChanel
     Q_OBJECT
 public:
     SpecularChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
+
+    QLayout *getSettingsLayout() override { return BasicChanel::getSettingsLayout(); }
 };
 
 class NormalChanel : public BasicChanel
@@ -76,6 +81,12 @@ class NormalChanel : public BasicChanel
     Q_OBJECT
 public:
     NormalChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
+
+    QLayout *getSettingsLayout() override;
+
+private:
+    enum DefineBy { NormalMap, HeightMap };  // Order is restricted!
+    DefineBy chanelDefBy;
 };
 
 #endif // CHANELS_H

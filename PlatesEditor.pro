@@ -28,6 +28,7 @@ SOURCES += \
         basicitem.cpp \
         boundrect.cpp \
         chanels.cpp \
+        heigthtonormalgraphicseffect.cpp \
         imagetexture.cpp \
         itemsoverview.cpp \
         lights.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
         basicitem.h \
         boundrect.h \
         chanels.h \
+        heigthtonormalgraphicseffect.h \
         imagetexture.h \
         itemsoverview.h \
         lights.h \
