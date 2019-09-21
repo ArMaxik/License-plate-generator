@@ -29,6 +29,9 @@ QRectF BasicChanel::boundingRect() const
 
 void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    if(!enable) {
+        return;
+    }
     painter->save();
 
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
@@ -47,48 +50,17 @@ QLayout *BasicChanel::getSettingsLayout()
     QLabel *enableL = new QLabel(tr("Enable"));
     QCheckBox *enableCB = new QCheckBox();
 
-    enableCB->setCheckState(Qt::Checked);
+    enableCB->setCheckState(enable ? Qt::Checked : Qt::Unchecked);
+
+    connect(enableCB, &QCheckBox::stateChanged,
+            this, [this](int i) { enable = i == Qt::Checked; emit layoutChanged(); } );
 
     enableLO->addWidget(enableL);
     enableLO->addWidget(enableCB);
     layout->addLayout(enableLO);
-    // Node selector
-    QHBoxLayout *nodeLO = new QHBoxLayout();
-    QLabel *nodeL = new QLabel(tr("Node type"));
-    QComboBox *nodeCB = new QComboBox();
 
-    foreach(Nodes node, allowedNodes) {
-        switch (node) {
-        case Nodes::TextN:
-            nodeCB->addItem(tr("Text"));
-            break;
-        case Nodes::ImageN:
-            nodeCB->addItem(tr("Image"));
-            break;
-        case Nodes::ShapeN:
-            nodeCB->addItem(tr("Shape"));
-            break;
-        case Nodes::ImageBackN:
-            nodeCB->addItem(tr("Tilled Image"));
-            break;
-        case Nodes::FillBackN:
-            nodeCB->addItem(tr("Fill color"));
-            break;
-        }
-    }
-    nodeCB->setCurrentIndex(currentNode);
+    layout->addWidget(formedSettingsFrame());
 
-    connect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, QOverload<int>::of(&BasicChanel::setNode));
-    connect(nodeCB, &QObject::destroyed,
-            this, [=](){ disconnect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
-                                    this, QOverload<int>::of(&BasicChanel::setNode)); });
-
-    nodeLO->addWidget(nodeL);
-    nodeLO->addWidget(nodeCB);
-    layout->addLayout(nodeLO);
-
-    layout->addLayout(node->getSettingsLayout());
     layout->addStretch();
 
     return layout;
@@ -96,7 +68,15 @@ QLayout *BasicChanel::getSettingsLayout()
 
 void BasicChanel::randomize()
 {
-//    node->randomize()
+    //    node->randomize()
+}
+
+void BasicChanel::setAffectSize(bool affect)
+{
+     affectSize = affect;
+     if(node != nullptr) {
+         node->setAffectSize(affect);
+     }
 }
 
 void BasicChanel::setNode(int index)
@@ -138,6 +118,55 @@ void BasicChanel::setNode(Nodes nodeType)
     emit layoutChanged();
 }
 
+QFrame *BasicChanel::formedSettingsFrame()
+{
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setMargin(0);
+    // Node selector
+    QHBoxLayout *nodeLO = new QHBoxLayout();
+    QLabel *nodeL = new QLabel(tr("Node type"));
+    QComboBox *nodeCB = new QComboBox();
+
+    foreach(Nodes node, allowedNodes) {
+        switch (node) {
+        case Nodes::TextN:
+            nodeCB->addItem(tr("Text"));
+            break;
+        case Nodes::ImageN:
+            nodeCB->addItem(tr("Image"));
+            break;
+        case Nodes::ShapeN:
+            nodeCB->addItem(tr("Shape"));
+            break;
+        case Nodes::ImageBackN:
+            nodeCB->addItem(tr("Tilled Image"));
+            break;
+        case Nodes::FillBackN:
+            nodeCB->addItem(tr("Fill color"));
+            break;
+        }
+    }
+    nodeCB->setCurrentIndex(currentNode);
+
+    connect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, QOverload<int>::of(&BasicChanel::setNode));
+    connect(nodeCB, &QObject::destroyed,
+            this, [=](){ disconnect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                                    this, QOverload<int>::of(&BasicChanel::setNode)); });
+
+    nodeLO->addWidget(nodeL);
+    nodeLO->addWidget(nodeCB);
+    layout->addLayout(nodeLO);
+
+    layout->addLayout(node->getSettingsLayout());
+
+    QFrame *frame = new QFrame();
+    frame->setLayout(layout);
+    frame->setEnabled(enable);
+
+    return frame;
+}
+
 void BasicChanel::onNodeChangeScale(qreal factor, QSizeF size)
 {
     chanelSize = factor;
@@ -174,20 +203,11 @@ NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     //    setGraphicsEffect(new HeigthToNormalGraphicsEffect());
 }
 
-QLayout *NormalChanel::getSettingsLayout()
+QFrame *NormalChanel::formedSettingsFrame()
 {
     QVBoxLayout *layout = new QVBoxLayout();
-    layout->addStretch();
-    // Enable check box
-    QHBoxLayout *enableLO = new QHBoxLayout();
-    QLabel *enableL = new QLabel(tr("Enable"));
-    QCheckBox *enableCB = new QCheckBox();
+    layout->setMargin(0);
 
-    enableCB->setCheckState(Qt::Checked);
-
-    enableLO->addWidget(enableL);
-    enableLO->addWidget(enableCB);
-    layout->addLayout(enableLO);
     // Normal type
     QHBoxLayout *typeLO = new QHBoxLayout();
     QLabel *typeL = new QLabel(tr("Define normal chanel by"));
@@ -249,5 +269,9 @@ QLayout *NormalChanel::getSettingsLayout()
     layout->addLayout(node->getSettingsLayout());
     layout->addStretch();
 
-    return layout;
+    QFrame *frame = new QFrame();
+    frame->setLayout(layout);
+    frame->setEnabled(enable);
+
+    return frame;
 }

@@ -9,6 +9,7 @@
 #include <QGroupBox>
 #include <QFrame>
 #include <QComboBox>
+#include <QListWidget>
 
 #include <QDebug>
 
@@ -20,6 +21,7 @@ BasicItem::BasicItem()
     , specularCh(new SpecularChanel(bound))
     , normalCh(new NormalChanel(bound))
     , shownC(Chanels::diffuseC)
+    , sizeAffectedCh(Chanels::diffuseC)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -99,6 +101,9 @@ QLayout *BasicItem::getSettingsLayout()
     QGroupBox *diffuseGroup = new QGroupBox(tr("Diffuse chanel"));
     QGroupBox *specularGroup = new QGroupBox(tr("Specular chanel"));
     QGroupBox *normalGroup = new QGroupBox(tr("Normal chanel"));
+
+//    diffuseGroup->setObjectName("myObject");
+//    diffuseGroup->setStyleSheet("border: 1px solid red");
 
     basicGroup->setLayout(setUpBasicLayout());
     diffuseGroup->setLayout(diffuseCh->getSettingsLayout());
@@ -181,6 +186,7 @@ QLayout *BasicItem::setUpBasicLayout()
 
     // Choose what chanel to show
     QHBoxLayout *showLO = new QHBoxLayout();
+
     QLabel *showL = new QLabel(tr("Show chanel in edit"));
     QComboBox *showCB = new QComboBox();
 
@@ -196,7 +202,53 @@ QLayout *BasicItem::setUpBasicLayout()
     connect(showCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &BasicItem::onShownChanelChange);
 
+    // SizeAffect
+    QHBoxLayout *affSizeLO = new QHBoxLayout();
+    QLabel *affSizeL = new QLabel(tr("Size affected chanel"));
+    QComboBox *affSizeCB = new QComboBox();
+
+    affSizeCB->addItem(tr("Diffuse"));
+    affSizeCB->addItem(tr("Specular"));
+    affSizeCB->addItem(tr("Normal"));
+    affSizeCB->setCurrentIndex(sizeAffectedCh);
+
+    connect(affSizeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, &BasicItem::changeSizeAffectedCh);
+
+    affSizeLO->addWidget(affSizeL);
+    affSizeLO->addWidget(affSizeCB);
+    vlb->addLayout(affSizeLO);
+
     return vlb;
+}
+
+void BasicItem::changeSizeAffectedCh(int newCh)
+{
+    switch (sizeAffectedCh) {
+    case Chanels::diffuseC:
+        diffuseCh->setAffectSize(false);
+        break;
+    case Chanels::specularC:
+        specularCh->setAffectSize(false);
+        break;
+    case Chanels::normalC:
+        normalCh->setAffectSize(false);
+        break;
+    }
+    switch (newCh) {
+    case Chanels::diffuseC:
+        diffuseCh->setAffectSize(true);
+        sizeAffectedCh = Chanels::diffuseC;
+        break;
+    case Chanels::specularC:
+        specularCh->setAffectSize(true);
+        sizeAffectedCh = Chanels::specularC;
+        break;
+    case Chanels::normalC:
+        normalCh->setAffectSize(true);
+        sizeAffectedCh = Chanels::normalC;
+        break;
+    }
 }
 
 void BasicItem::onShownChanelChange(int index)

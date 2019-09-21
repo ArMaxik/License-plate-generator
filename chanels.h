@@ -7,6 +7,7 @@
 #include <QGraphicsObject>
 #include <QLayout>
 #include <QStack>
+#include <QFrame>
 
 #include <memory>
 
@@ -29,7 +30,7 @@ public:
 public slots:
     void changeScale(qreal scale)   { bound->setScale(scale); }
     void setBoundSize(const QSizeF &size)  { bound->setSize(size); }
-    void setAffectSize(bool affect) { affectSize = affect; }
+    void setAffectSize(bool affect);
     void addAllowedNode(Nodes node) { allowedNodes.push_back(node); }
     void setNode(int index);
     void setNode(Nodes nodeType);
@@ -51,7 +52,7 @@ protected:
 
     QColor defaultColor;
 
-    QLayout *formedSettingsLayout();
+    virtual QFrame *formedSettingsFrame();
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);
@@ -63,8 +64,6 @@ class DiffuseChanel : public BasicChanel
     Q_OBJECT
 public:
     DiffuseChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
-
-    QLayout *getSettingsLayout() override { return BasicChanel::getSettingsLayout(); }
 };
 
 class SpecularChanel : public BasicChanel
@@ -72,8 +71,6 @@ class SpecularChanel : public BasicChanel
     Q_OBJECT
 public:
     SpecularChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
-
-    QLayout *getSettingsLayout() override { return BasicChanel::getSettingsLayout(); }
 };
 
 class NormalChanel : public BasicChanel
@@ -82,11 +79,11 @@ class NormalChanel : public BasicChanel
 public:
     NormalChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 
-    QLayout *getSettingsLayout() override;
-
 private:
     enum DefineBy { NormalMap, HeightMap };  // Order is restricted!
     DefineBy chanelDefBy;
+
+    QFrame *formedSettingsFrame() override;
 };
 
 #endif // CHANELS_H

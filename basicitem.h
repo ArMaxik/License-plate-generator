@@ -43,19 +43,20 @@ signals:
 protected:
     QString name;
     BoundRect *bound;
+    Chanels sizeAffectedCh;
 
     BasicChanel *diffuseCh;
     BasicChanel *specularCh;
     BasicChanel *normalCh;
 
     QLayout *setUpBasicLayout();
-//    SmartLayout *settingsLayout;
 
     Chanels shownC;
 
 protected slots:
     void onChanelChanged() { emit changed(); }
     void onShownChanelChange(int index);
+    void changeSizeAffectedCh(int newCh);
 
 };
 
