@@ -70,7 +70,7 @@ public:
     void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
-    void setAffectSize(bool affect) override { affectSize = affect; _updateBound(); }
+    void setAffectSize(bool affect) override { affectSize = affect; updateBound(); }
 
 
 protected:
@@ -79,9 +79,8 @@ protected:
     ColorPropertie *color;
     QFont font;
     QPen pen;
-    bool updateBound;
 
-    void _updateBound();
+    void updateBound();
 
 protected slots:
     void stringChanged(QString newStr);

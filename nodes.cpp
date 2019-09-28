@@ -120,7 +120,6 @@ TextNode::TextNode(BoundRect *br)
     , string(new StringPropertie(tr("Text")))
     , fontSize(new NumberPropertie(tr("Text size"), 20, 1, 10000))
     , color(new ColorPropertie(tr("Text Color")))
-    , updateBound(true)
 {
     connect(string, &StringPropertie::stringChange,
             this, &TextNode::stringChanged);
@@ -128,13 +127,13 @@ TextNode::TextNode(BoundRect *br)
 
     font.setPixelSize(20);
     connect(fontSize, &NumberPropertie::numberValueChange,
-            this, [this](int size) { font.setPixelSize(size); _updateBound(); emit changed(); });
+            this, [this](int size) { font.setPixelSize(size); updateBound(); emit changed(); });
     properites.push_back(fontSize);
 
     properites.push_back(color);
     connect(color, &BasicPropertie::changed,
             this, &BasicNode::changed);
-    _updateBound();
+    updateBound();
 }
 
 
@@ -150,7 +149,7 @@ void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawText(bound->getBound(), *string);
 }
 
-void TextNode::_updateBound()
+void TextNode::updateBound()
 {
     if(affectSize) {
         QSize imgS;
@@ -173,7 +172,7 @@ void TextNode::_updateBound()
 void TextNode::stringChanged(QString newStr)
 {
 //    updateBound = true;
-    _updateBound();
+    updateBound();
     emit changed();
 }
 

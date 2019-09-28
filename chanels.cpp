@@ -19,7 +19,7 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     , chanelSize(1.0)
     , chanelBuffer(QImage())
     , node(nullptr)
-    , effect(new BaseGraphicsEffect())
+    , effect(new BasicGraphicsEffect())
     , needRedraw(true)
     , defaultColor(Qt::white)
 {
@@ -39,6 +39,12 @@ void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     }
     if(needRedraw){
         QImage base = QImage(QSize(boundingRect().size().width(), boundingRect().size().height()), QImage::Format_RGBA8888);
+        if(base.isNull()) {
+            chanelBuffer.fill(0);
+            painter->drawImage(0, 0, chanelBuffer);
+            return;
+        }
+
         base.fill(0);
         QPainter painterBase(&base);
 
@@ -217,8 +223,6 @@ NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel(br, parent)
     , chanelDefBy(NormalMap)
 {
-    effect = new NormalHeightGraphicsEffect(effect);
-    //    setGraphicsEffect(new HeigthToNormalGraphicsEffect());
 }
 
 QFrame *NormalChanel::formedSettingsFrame()
@@ -238,7 +242,17 @@ QFrame *NormalChanel::formedSettingsFrame()
     connect(typeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, [this](int index) {
                 chanelDefBy = DefineBy(index);
-                if(chanelDefBy == NormalMap) setNode(Nodes::ImageN);
+                if(chanelDefBy == NormalMap) {
+                    if(currentNode != Nodes::ImageN){
+                        setNode(Nodes::ImageN);
+                    }
+                    delete effect;
+                    effect = new BasicGraphicsEffect();
+                } else {
+                    delete effect;
+                    effect = new NormalHeightGraphicsEffect();
+                }
+                needRedraw = true;
                 emit layoutChanged();
             });
 

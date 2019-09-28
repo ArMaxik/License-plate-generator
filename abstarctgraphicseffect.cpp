@@ -5,6 +5,14 @@
 
 static QVector<int> getBlackNeighComps(const QImage &img, int x, int y);
 
+BasicDecoratorGraphicsEffect::BasicDecoratorGraphicsEffect(AbstarctGraphicsEffect *wrap)
+    : effect(wrap)
+{
+    if(effect == nullptr) {
+        effect = new BasicGraphicsEffect;
+    }
+}
+
 QImage NormalHeightGraphicsEffect::apply(QImage *img)
 {
     QImage height = effect->apply(img);
@@ -49,7 +57,7 @@ static QVector<int> getBlackNeighComps(const QImage &img, int x, int y)
         QPoint( 0, -1), // 7
         QPoint(+1, -1)  // 8
     };
-    QVector<int> res(9, 0);
+    QVector<int> res(9, 255);
     for(int i = 0; i < 9; i++) {
         if(indexes[i].x() + x >= img.width()) continue;
         if(indexes[i].y() + y >= img.height()) continue;
@@ -60,8 +68,9 @@ static QVector<int> getBlackNeighComps(const QImage &img, int x, int y)
     return res;
 }
 
-QImage BaseGraphicsEffect::apply(QImage *img)
+QImage BasicGraphicsEffect::apply(QImage *img)
 {
     QImage newimg = QImage(*img);
     return newimg;
 }
+

@@ -13,21 +13,20 @@ public:
     virtual QImage apply(QImage *img) = 0;
 };
 
-class BaseGraphicsEffect : public AbstarctGraphicsEffect
+class BasicGraphicsEffect : public AbstarctGraphicsEffect
 {
 public:
-    BaseGraphicsEffect() {}
-    ~BaseGraphicsEffect() override {}
+    BasicGraphicsEffect() {}
+    ~BasicGraphicsEffect() override {}
 
     QImage apply(QImage *img) override;
 };
 
-class BaseDecoratorGraphicsEffect : public AbstarctGraphicsEffect
+class BasicDecoratorGraphicsEffect : public AbstarctGraphicsEffect
 {
 public:
-    BaseDecoratorGraphicsEffect(AbstarctGraphicsEffect *wrap = nullptr)
-        : effect(wrap) {}
-    ~BaseDecoratorGraphicsEffect() override {}
+    BasicDecoratorGraphicsEffect(AbstarctGraphicsEffect *wrap = nullptr);
+    ~BasicDecoratorGraphicsEffect() override { delete effect; }
 
     QImage apply(QImage *img) override = 0;
 
@@ -35,11 +34,11 @@ protected:
     AbstarctGraphicsEffect *effect;
 };
 
-class NormalHeightGraphicsEffect : public BaseDecoratorGraphicsEffect
+class NormalHeightGraphicsEffect : public BasicDecoratorGraphicsEffect
 {
 public:
     NormalHeightGraphicsEffect(AbstarctGraphicsEffect *wrap = nullptr)
-        : BaseDecoratorGraphicsEffect(wrap) {}
+        : BasicDecoratorGraphicsEffect(wrap) {}
     ~NormalHeightGraphicsEffect() override {}
 
     virtual QImage apply(QImage *img) override;

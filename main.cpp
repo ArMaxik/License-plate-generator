@@ -14,6 +14,10 @@ int main(int argc, char *argv[])
 //    QString style( styleFile.readAll() );
 //    a.setStyleSheet( style );
 
+//    qDebug() << QString("sffsdf     + wef-fsdfsdf*(31234) /dsfgse + 32/1")
+//                .remove(QRegularExpression("\\s"))
+//                .replace(QRegularExpression("\\w+"), "<ид>");
+
     MainWindow w;
     w.show();
 
