@@ -236,5 +236,5 @@ QColor &ColorPropertie::getColor()
 void ColorPropertie::onColorChange()
 {
     color = QColorDialog::getColor();
-    emit colorChange(color);
+    emit changed();
 }

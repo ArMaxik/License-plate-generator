@@ -2,6 +2,8 @@
 #define CHANELS_H
 
 #include "nodes.h"
+#include "abstarctgraphicseffect.h"
+
 #include <QtDebug>
 
 #include <QGraphicsObject>
@@ -48,7 +50,10 @@ protected:
     bool affectSize;
     qreal chanelSize;
 
+    QImage chanelBuffer;
     BasicNode *node;
+    AbstarctGraphicsEffect *effect;
+    bool needRedraw;
 
     QColor defaultColor;
 
@@ -56,6 +61,7 @@ protected:
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);
+    void redrawChanel();
 //    void onNodeChanged() { qDebug()<<"Hoba"; emit changed(); }
 };
 

@@ -128,10 +128,13 @@ TextNode::TextNode(BoundRect *br)
 
     font.setPixelSize(20);
     connect(fontSize, &NumberPropertie::numberValueChange,
-            this, [this](int size) { font.setPixelSize(size); emit changed(); });
+            this, [this](int size) { font.setPixelSize(size); _updateBound(); emit changed(); });
     properites.push_back(fontSize);
 
     properites.push_back(color);
+    connect(color, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+    _updateBound();
 }
 
 
@@ -140,16 +143,37 @@ void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->setFont(font);
     painter->setPen(*color);
 
-    if(updateBound && affectSize) {
-        QRectF newR = painter->boundingRect(bound->getBound(), Qt::AlignLeft, *string);
+//    if(updateBound && affectSize) {
+//        QRectF newR = painter->boundingRect(bound->getBound(), Qt::AlignLeft, *string);
+//        bound->setSize(newR.size());
+//    }
+    painter->drawText(bound->getBound(), *string);
+}
+
+void TextNode::_updateBound()
+{
+    if(affectSize) {
+        QSize imgS;
+        QRectF currBound = bound->getBound();
+        if(currBound.width() == 0) {
+            imgS = QSize(500, 500);
+        } else {
+            imgS = QSize(bound->getBound().width() * 1.5,
+                         bound->getBound().height());
+        }
+
+        QPixmap img = QPixmap(imgS);
+        QPainter p(&img);
+        p.setFont(font);
+        QRectF newR = p.boundingRect(bound->getBound(), Qt::AlignLeft, *string);
         bound->setSize(newR.size());
     }
-    painter->drawText(bound->getBound(), *string);
 }
 
 void TextNode::stringChanged(QString newStr)
 {
-    updateBound = true;
+//    updateBound = true;
+    _updateBound();
     emit changed();
 }
 

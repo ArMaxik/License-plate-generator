@@ -21,7 +21,7 @@ public:
     virtual void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void setAffectSize(bool affect) { affectSize = affect; }
+    virtual void setAffectSize(bool affect) { affectSize = affect; }
     qreal getScale() const { return scale; }
 
 signals:
@@ -67,9 +67,11 @@ public:
     TextNode(BoundRect *br);
 //    ~TextNode() override;
 
-    virtual void paint(QPainter *painter,
+    void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
+    void setAffectSize(bool affect) override { affectSize = affect; _updateBound(); }
+
 
 protected:
     StringPropertie *string;
@@ -78,6 +80,8 @@ protected:
     QFont font;
     QPen pen;
     bool updateBound;
+
+    void _updateBound();
 
 protected slots:
     void stringChanged(QString newStr);

@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        abstarctgraphicseffect.cpp \
         basicitem.cpp \
         boundrect.cpp \
         chanels.cpp \
@@ -50,6 +51,7 @@ SOURCES += \
         viewwidget.cpp
 
 HEADERS += \
+        abstarctgraphicseffect.h \
         basicitem.h \
         boundrect.h \
         chanels.h \

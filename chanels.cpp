@@ -1,5 +1,5 @@
 #include "chanels.h"
-#include "heigthtonormalgraphicseffect.h"
+//#include "heigthtonormalgraphicseffect.h"
 
 #include <QPainter>
 #include <QCheckBox>
@@ -17,9 +17,14 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     , enable(true)
     , affectSize(false)
     , chanelSize(1.0)
+    , chanelBuffer(QImage())
     , node(nullptr)
+    , effect(new BaseGraphicsEffect())
+    , needRedraw(true)
     , defaultColor(Qt::white)
 {
+    connect(this, &BasicChanel::changed,
+            this, &BasicChanel::redrawChanel);
 }
 
 QRectF BasicChanel::boundingRect() const
@@ -32,13 +37,18 @@ void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     if(!enable) {
         return;
     }
-    painter->save();
+    if(needRedraw){
+        QImage base = QImage(QSize(boundingRect().size().width(), boundingRect().size().height()), QImage::Format_RGBA8888);
+        base.fill(0);
+        QPainter painterBase(&base);
 
-    painter->setRenderHint(QPainter::SmoothPixmapTransform);
-    painter->scale(node->getScale(), node->getScale());
-    node->paint(painter, option, widget);
-
-    painter->restore();
+        painterBase.setRenderHint(QPainter::SmoothPixmapTransform);
+        painterBase.scale(node->getScale(), node->getScale());
+        node->paint(&painterBase, option, widget);
+        chanelBuffer = effect->apply(&base);
+        needRedraw = false;
+    }
+    painter->drawImage(0, 0, chanelBuffer);
 }
 
 QLayout *BasicChanel::getSettingsLayout()
@@ -53,7 +63,7 @@ QLayout *BasicChanel::getSettingsLayout()
     enableCB->setCheckState(enable ? Qt::Checked : Qt::Unchecked);
 
     connect(enableCB, &QCheckBox::stateChanged,
-            this, [this](int i) { enable = i == Qt::Checked; emit layoutChanged(); } );
+            this, [this](int i) { enable = i == Qt::Checked; emit changed(); emit layoutChanged(); } );
 
     enableLO->addWidget(enableL);
     enableLO->addWidget(enableCB);
@@ -114,8 +124,10 @@ void BasicChanel::setNode(Nodes nodeType)
     node->setAffectSize(affectSize);
     connect(node, &BasicNode::changed,
                this, &BasicChanel::changed);
+    needRedraw = true;
     update();
     emit layoutChanged();
+    emit changed();
 }
 
 QFrame *BasicChanel::formedSettingsFrame()
@@ -175,6 +187,11 @@ void BasicChanel::onNodeChangeScale(qreal factor, QSizeF size)
     }
 }
 
+void BasicChanel::redrawChanel()
+{
+    needRedraw = true;
+}
+
 DiffuseChanel::DiffuseChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
 {
@@ -200,6 +217,7 @@ NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel(br, parent)
     , chanelDefBy(NormalMap)
 {
+    effect = new NormalHeightGraphicsEffect(effect);
     //    setGraphicsEffect(new HeigthToNormalGraphicsEffect());
 }
 

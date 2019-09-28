@@ -65,6 +65,7 @@ BasicItem::BasicItem()
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    QImage res;
     switch (shownC) {
     case Chanels::diffuseC:
         diffuseCh->paint(painter, option, widget);

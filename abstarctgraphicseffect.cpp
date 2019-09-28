@@ -1,21 +1,13 @@
-#include "heigthtonormalgraphicseffect.h"
+#include "abstarctgraphicseffect.h"
 
 #include <QPainter>
 #include <QVector3D>
 
-HeigthToNormalGraphicsEffect::HeigthToNormalGraphicsEffect(QObject *parent)
-    : QGraphicsEffect(parent)
-{
-
-}
-
 static QVector<int> getBlackNeighComps(const QImage &img, int x, int y);
 
-void HeigthToNormalGraphicsEffect::draw(QPainter *painter)
+QImage NormalHeightGraphicsEffect::apply(QImage *img)
 {
-//    const QPixmap pixmap = sourcePixmap();
-    QImage height = sourcePixmap().toImage();
-
+    QImage height = effect->apply(img);
     QImage normal = QImage(height.size(), QImage::Format_RGB32);
     QPainter painterD(&normal);
 
@@ -40,9 +32,8 @@ void HeigthToNormalGraphicsEffect::draw(QPainter *painter)
             normal.setPixelColor(j, i, QColor(n.x(), n.y(), n.z()));
         }
     }
-    painter->setBrush(Qt::red);
-    painter->drawRect(sourceBoundingRect());
-//    painter->drawImage(0, 0, height);
+
+    return normal;
 }
 
 static QVector<int> getBlackNeighComps(const QImage &img, int x, int y)
@@ -67,4 +58,10 @@ static QVector<int> getBlackNeighComps(const QImage &img, int x, int y)
         res[i] = img.pixelColor(indexes[i] + QPoint(x, y)).black();
     }
     return res;
+}
+
+QImage BaseGraphicsEffect::apply(QImage *img)
+{
+    QImage newimg = QImage(*img);
+    return newimg;
 }
