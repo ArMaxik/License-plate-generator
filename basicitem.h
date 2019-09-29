@@ -57,7 +57,8 @@ protected slots:
     void onChanelChanged() { emit changed(); }
     void onShownChanelChange(int index);
     void changeSizeAffectedCh(int newCh);
-
+    void updateAllChanels();
+    void answerChanelAskForNode(BasicChanel *chanel, BasicChanel::DefineBy node);
 };
 
 class Canvas : public BasicItem

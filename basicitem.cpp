@@ -44,14 +44,16 @@ BasicItem::BasicItem()
 
     // Chanel changed, not layout
     connect(diffuseCh, &BasicChanel::changed,
-            this, &BasicItem::changed);
+            this, &BasicItem::updateAllChanels);
 
     connect(specularCh, &BasicChanel::changed,
-            this, &BasicItem::changed);
+            this, &BasicItem::updateAllChanels);
 
     connect(normalCh, &BasicChanel::changed,
-            this, &BasicItem::changed);
-    // Если все подцепить на changed(), то при смене ноды все красиво обновляется :/
+            this, &BasicItem::updateAllChanels);
+    //
+//    connect(this, &BasicItem::changed,
+//            this, &BasicItem::updateAllChanels);
     // Layout changed
     connect(diffuseCh, &BasicChanel::layoutChanged,
             this, &BasicItem::layoutChanged);
@@ -61,6 +63,9 @@ BasicItem::BasicItem()
 
     connect(normalCh, &BasicChanel::layoutChanged,
             this, &BasicItem::layoutChanged);
+    // If chanel want node of other chanel
+    connect(normalCh, &BasicChanel::askForNode,
+            this, &BasicItem::answerChanelAskForNode);
 }
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -248,6 +253,24 @@ void BasicItem::changeSizeAffectedCh(int newCh)
     case Chanels::normalC:
         normalCh->setAffectSize(true);
         sizeAffectedCh = Chanels::normalC;
+        break;
+    }
+}
+
+void BasicItem::updateAllChanels()
+{
+    diffuseCh->update();
+    specularCh->update();
+    normalCh->update();
+    update();
+    emit changed();
+}
+
+void BasicItem::answerChanelAskForNode(BasicChanel *chanel, BasicChanel::DefineBy node)
+{
+    switch(node){
+    case BasicChanel::DefineBy::SpecularChanel:
+        chanel->setNode(specularCh->getNode());
         break;
     }
 }

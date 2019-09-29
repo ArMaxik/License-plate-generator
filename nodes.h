@@ -8,6 +8,7 @@
 #include <QImage>
 #include <QGraphicsItem>
 #include <QPen>
+#include <QPointer>
 
 class BasicNode : public QObject
 {
@@ -35,6 +36,26 @@ protected:
     BoundRect *bound;
     bool affectSize;
     qreal scale;
+};
+
+class NodeHolder : public QObject
+{
+    Q_OBJECT
+public:
+    NodeHolder(BasicNode *initNode = nullptr)
+        : node(initNode) {}
+
+    void setNode(BasicNode *initNode) {
+        node.clear();
+        node = QPointer<BasicNode>(initNode);
+    }
+
+    const BasicNode *getNode() {
+        return node.data();
+    }
+
+private:
+    QPointer<BasicNode> node;
 };
 
 class ImageNode : public BasicNode

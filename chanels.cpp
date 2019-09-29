@@ -18,6 +18,7 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     , affectSize(false)
     , chanelSize(1.0)
     , chanelBuffer(QImage())
+    , chanelDefBy(NONE)
     , node(nullptr)
     , effect(new BasicGraphicsEffect())
     , needRedraw(true)
@@ -102,21 +103,20 @@ void BasicChanel::setNode(int index)
 
 void BasicChanel::setNode(Nodes nodeType)
 {
-    if(node != nullptr) {
-        disconnect(node, &BasicNode::changed,
+    if(!node.isNull()) {
+        disconnect(node.data(), &BasicNode::changed,
                    this, &BasicChanel::changed);
-        delete node;
-        node = nullptr;
+        node.clear();
     }
 
     switch (nodeType) {
     case Nodes::TextN:
          currentNode = Nodes::TextN;
-         node = new TextNode(bound);
+         node = QSharedPointer<BasicNode>(new TextNode(bound));
         break;
     case Nodes::ImageN:
         currentNode = Nodes::ImageN;
-         node = new ImageNode(bound);
+         node = QSharedPointer<BasicNode>(new ImageNode(bound));
         break;
     case Nodes::ImageBackN:
         currentNode = Nodes::ImageN;
@@ -124,16 +124,30 @@ void BasicChanel::setNode(Nodes nodeType)
         break;
     case Nodes::FillBackN:
         currentNode = Nodes::ImageN;
-        node = new FillBasckgroundNode(bound, defaultColor);
+        node = QSharedPointer<BasicNode>(new FillBasckgroundNode(bound, defaultColor));
         break;
     }
     node->setAffectSize(affectSize);
-    connect(node, &BasicNode::changed,
+    connect(node.data(), &BasicNode::changed,
                this, &BasicChanel::changed);
     needRedraw = true;
     update();
     emit layoutChanged();
     emit changed();
+}
+
+void BasicChanel::setNode(BasicNode *initNode)
+{
+    node.clear();
+    node = QSharedPointer<BasicNode>(initNode);
+    emit layoutChanged();
+}
+
+void BasicChanel::setNode(QSharedPointer<BasicNode> initNode)
+{
+    node.clear();
+    node = initNode;
+    emit layoutChanged();
 }
 
 QFrame *BasicChanel::formedSettingsFrame()
@@ -221,8 +235,8 @@ SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
 
 NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel(br, parent)
-    , chanelDefBy(NormalMap)
 {
+    chanelDefBy = BasicChanel::DefineBy::NormalMap;
 }
 
 QFrame *NormalChanel::formedSettingsFrame()
@@ -237,24 +251,11 @@ QFrame *NormalChanel::formedSettingsFrame()
 
     typeCB->addItem(tr("Normal map")); // Order is restricted!
     typeCB->addItem(tr("Height map")); // Order is restricted!
+    typeCB->addItem(tr("Specular Chanel")); // Order is restricted!
     typeCB->setCurrentIndex(chanelDefBy);
 
     connect(typeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, [this](int index) {
-                chanelDefBy = DefineBy(index);
-                if(chanelDefBy == NormalMap) {
-                    if(currentNode != Nodes::ImageN){
-                        setNode(Nodes::ImageN);
-                    }
-                    delete effect;
-                    effect = new BasicGraphicsEffect();
-                } else {
-                    delete effect;
-                    effect = new NormalHeightGraphicsEffect();
-                }
-                needRedraw = true;
-                emit layoutChanged();
-            });
+            this, &NormalChanel::onDefinaBychange);
 
     typeLO->addWidget(typeL);
     typeLO->addWidget(typeCB);
@@ -297,13 +298,36 @@ QFrame *NormalChanel::formedSettingsFrame()
         nodeLO->addWidget(nodeCB);
         layout->addLayout(nodeLO);
     }
-
-    layout->addLayout(node->getSettingsLayout());
-    layout->addStretch();
-
+    if(chanelDefBy != SpecularChanel){
+        layout->addLayout(node->getSettingsLayout());
+        layout->addStretch();
+    }
     QFrame *frame = new QFrame();
     frame->setLayout(layout);
     frame->setEnabled(enable);
 
     return frame;
+}
+
+void NormalChanel::onDefinaBychange(int index)
+{
+    chanelDefBy = DefineBy(index);
+    if(chanelDefBy == DefineBy::NormalMap) {
+        delete effect;
+        effect = new BasicGraphicsEffect();
+    } else {
+        delete effect;
+        effect = new NormalHeightGraphicsEffect();
+    }
+
+    if(chanelDefBy == DefineBy::SpecularChanel) {
+        emit askForNode(this, DefineBy::SpecularChanel);
+    } else {
+        setNode(Nodes::ImageN);
+
+    }
+
+    needRedraw = true;
+    emit layoutChanged();
+    emit changed();
 }
