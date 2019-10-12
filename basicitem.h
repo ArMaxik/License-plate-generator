@@ -59,7 +59,7 @@ protected slots:
     void onShownChanelChange(int index);
     void changeSizeAffectedCh(int newCh);
     void updateAllChanels();
-    void answerChanelAskForNode(BasicChanel *chanel, BasicChanel::DefineBy node);
+    void answerChanelAskForNode(BasicChanel *chanel, NormalChanel::DefineBy node);
     void answerChanelAskForDiffuseNode(BasicChanel *chanel);
 };
 

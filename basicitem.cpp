@@ -65,10 +65,12 @@ BasicItem::BasicItem()
     connect(normalCh, &BasicChanel::layoutChanged,
             this, &BasicItem::layoutChanged);
     // If chanel want node of other chanel
-    connect(normalCh, &BasicChanel::askForNode,
-            this, &BasicItem::answerChanelAskForNode);
+//    connect(normalCh, &NormalChanel::askForNode,
+//            this, &BasicItem::answerChanelAskForNode);
     // If chanel want node of other chanel
     connect(specularCh, &BasicChanel::askForDiffuseNode,
+            this, &BasicItem::answerChanelAskForDiffuseNode);
+    connect(normalCh, &BasicChanel::askForDiffuseNode,
             this, &BasicItem::answerChanelAskForDiffuseNode);
 }
 
@@ -272,13 +274,13 @@ void BasicItem::updateAllChanels()
     emit changed();
 }
 
-void BasicItem::answerChanelAskForNode(BasicChanel *chanel, BasicChanel::DefineBy node)
+void BasicItem::answerChanelAskForNode(BasicChanel *chanel, NormalChanel::DefineBy node)
 {
-    switch(node){
-    case BasicChanel::DefineBy::SpecularChanel:
-        chanel->setNode(specularCh->getNode());
-        break;
-    }
+//    switch(node){
+//    case NormalChanel::DefineBy::SpecularChanel:
+//        chanel->setNode(specularCh->getNode());
+//        break;
+//    }
 }
 
 void BasicItem::answerChanelAskForDiffuseNode(BasicChanel *chanel)

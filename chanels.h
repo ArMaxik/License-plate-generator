@@ -29,7 +29,6 @@ public:
     void randomize();
 
     enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN, DiffuseChanelLinkN };
-    enum DefineBy { NormalMap, HeightMap, SpecularChanel, NONE };  // Order is restricted!
 
 
 public slots:
@@ -48,7 +47,6 @@ public slots:
 signals:
     void changed();
     void layoutChanged();
-    void askForNode(BasicChanel *chanel, DefineBy defNode);
     void askForDiffuseNode(BasicChanel *chanel);
 
 protected:
@@ -60,7 +58,6 @@ protected:
     qreal chanelSize;
 
     QImage chanelBuffer;
-    DefineBy chanelDefBy;
 //    BasicNode *node;
 //    QSharedPointer<BasicNode> node;
 //    QPointer<NodeHolder> nodeHolder;
@@ -98,8 +95,16 @@ class NormalChanel : public BasicChanel
 public:
     NormalChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 
+    enum DefineBy { NormalMap, HeightMap, NONE };  // Order is restricted!
+
+signals:
+    void askForNode(BasicChanel *chanel, DefineBy defNode);
+
 private:
     QFrame *formedSettingsFrame() override;
+    DefineBy chanelDefBy;
+
+
 
 private slots:
     void onDefinaBychange(int index);

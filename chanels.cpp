@@ -20,7 +20,6 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     , affectSize(false)
     , chanelSize(1.0)
     , chanelBuffer(QImage())
-    , chanelDefBy(NONE)
     , nodeHolder(new NodeHolder())
     , effect(new BasicGraphicsEffect())
     , needRedraw(true)
@@ -208,6 +207,7 @@ QFrame *BasicChanel::formedSettingsFrame()
 
     if(currentNode != Nodes::DiffuseChanelLinkN){
         layout->addLayout(nodeHolder->getNode()->getSettingsLayout());
+        layout->addStretch();
     }
 
     QFrame *frame = new QFrame();
@@ -254,9 +254,10 @@ SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
 
 NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel(br, parent)
+    , chanelDefBy(DefineBy::NormalMap)
 {
 //    addAllowedNode(Nodes::DiffuseChanelLinkN);
-    chanelDefBy = BasicChanel::DefineBy::NormalMap;
+    chanelDefBy = NormalChanel::DefineBy::NormalMap;
 }
 
 QFrame *NormalChanel::formedSettingsFrame()
@@ -271,7 +272,7 @@ QFrame *NormalChanel::formedSettingsFrame()
 
     typeCB->addItem(tr("Normal map"));      // Order is restricted!
     typeCB->addItem(tr("Height map"));      // Order is restricted!
-    typeCB->addItem(tr("Specular Chanel")); // Order is restricted!
+//    typeCB->addItem(tr("Specular Chanel")); // Order is restricted!
     typeCB->setCurrentIndex(chanelDefBy);
 
     connect(typeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -321,10 +322,12 @@ QFrame *NormalChanel::formedSettingsFrame()
         nodeLO->addWidget(nodeCB);
         layout->addLayout(nodeLO);
     }
-    if(chanelDefBy != SpecularChanel){
+
+    if(currentNode != Nodes::DiffuseChanelLinkN){
         layout->addLayout(nodeHolder->getNode()->getSettingsLayout());
         layout->addStretch();
     }
+
     QFrame *frame = new QFrame();
     frame->setLayout(layout);
     frame->setEnabled(enable);
@@ -343,12 +346,12 @@ void NormalChanel::onDefinaBychange(int index)
         effect = new NormalHeightGraphicsEffect();
     }
 
-    if(chanelDefBy == DefineBy::SpecularChanel) {
-        emit askForNode(this, DefineBy::SpecularChanel);
-    } else {
-        setNode(Nodes::ImageN);
+//    if(chanelDefBy == DefineBy::SpecularChanel) {
+//        emit askForNode(this, DefineBy::SpecularChanel);
+//    } else {
+    setNode(Nodes::ImageN);
 
-    }
+//    }
 
     needRedraw = true;
     emit layoutChanged();
