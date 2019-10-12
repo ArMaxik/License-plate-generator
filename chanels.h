@@ -25,10 +25,10 @@ public:
                QWidget *widget) override;
 
     virtual QLayout *getSettingsLayout();
-    QSharedPointer<BasicNode> getNode() { return node; }
+    QPointer<NodeHolder> getNode() { return nodeHolder; }
     void randomize();
 
-    enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN };
+    enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN, DiffuseChanelLinkN };
     enum DefineBy { NormalMap, HeightMap, SpecularChanel, NONE };  // Order is restricted!
 
 
@@ -41,13 +41,15 @@ public slots:
     void setNode(int index);
     void setNode(Nodes nodeType);
     void setNode(BasicNode *initNode);
-    void setNode(QSharedPointer<BasicNode> initNode);
+//    void setNode(QPointer<NodeHolder> initNode);
+    void setNode(NodeHolder *initNode);
     void setDefaultColor(const QColor &color) { defaultColor = color; }
 
 signals:
     void changed();
     void layoutChanged();
     void askForNode(BasicChanel *chanel, DefineBy defNode);
+    void askForDiffuseNode(BasicChanel *chanel);
 
 protected:
     QVector<Nodes> allowedNodes;
@@ -60,7 +62,9 @@ protected:
     QImage chanelBuffer;
     DefineBy chanelDefBy;
 //    BasicNode *node;
-    QSharedPointer<BasicNode> node;
+//    QSharedPointer<BasicNode> node;
+//    QPointer<NodeHolder> nodeHolder;
+    NodeHolder *nodeHolder;
     AbstarctGraphicsEffect *effect;
     bool needRedraw;
 

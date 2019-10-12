@@ -11,6 +11,8 @@
 
 #include <QGraphicsBlurEffect>
 
+// НУЖНО ОТРЕВЬЮРИТЬ
+
 BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     : QGraphicsObject (parent)
     , bound(br)
@@ -19,7 +21,7 @@ BasicChanel::BasicChanel(BoundRect *br, QGraphicsItem *parent)
     , chanelSize(1.0)
     , chanelBuffer(QImage())
     , chanelDefBy(NONE)
-    , node(nullptr)
+    , nodeHolder(new NodeHolder())
     , effect(new BasicGraphicsEffect())
     , needRedraw(true)
     , defaultColor(Qt::white)
@@ -50,8 +52,8 @@ void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         QPainter painterBase(&base);
 
         painterBase.setRenderHint(QPainter::SmoothPixmapTransform);
-        painterBase.scale(node->getScale(), node->getScale());
-        node->paint(&painterBase, option, widget);
+        painterBase.scale(nodeHolder->getNode()->getScale(), nodeHolder->getNode()->getScale());
+        nodeHolder->getNode()->paint(&painterBase, option, widget);
         chanelBuffer = effect->apply(&base);
         needRedraw = false;
     }
@@ -91,8 +93,8 @@ void BasicChanel::randomize()
 void BasicChanel::setAffectSize(bool affect)
 {
      affectSize = affect;
-     if(node != nullptr) {
-         node->setAffectSize(affect);
+     if(nodeHolder != nullptr) {
+         nodeHolder->getNode()->setAffectSize(affect);
      }
 }
 
@@ -103,32 +105,39 @@ void BasicChanel::setNode(int index)
 
 void BasicChanel::setNode(Nodes nodeType)
 {
-    if(!node.isNull()) {
-        disconnect(node.data(), &BasicNode::changed,
+    if(nodeHolder != nullptr) {
+        disconnect(nodeHolder->getNode(), &BasicNode::changed,
                    this, &BasicChanel::changed);
-        node.clear();
+//        nodeHolder->clear();  // set nullptr
     }
-
+    if(currentNode == Nodes::DiffuseChanelLinkN) {
+        nodeHolder = new NodeHolder();
+    }
     switch (nodeType) {
     case Nodes::TextN:
          currentNode = Nodes::TextN;
-         node = QSharedPointer<BasicNode>(new TextNode(bound));
+         nodeHolder->setNode(new TextNode(bound));
         break;
     case Nodes::ImageN:
         currentNode = Nodes::ImageN;
-         node = QSharedPointer<BasicNode>(new ImageNode(bound));
+         nodeHolder->setNode(new ImageNode(bound));
         break;
     case Nodes::ImageBackN:
         currentNode = Nodes::ImageN;
 //        node = new ImageNode(bound);
         break;
     case Nodes::FillBackN:
-        currentNode = Nodes::ImageN;
-        node = QSharedPointer<BasicNode>(new FillBasckgroundNode(bound, defaultColor));
+        currentNode = Nodes::FillBackN;
+        nodeHolder->setNode(new FillBasckgroundNode(bound, defaultColor));
+        break;
+    case Nodes::DiffuseChanelLinkN:
+        currentNode = Nodes::DiffuseChanelLinkN;
+        emit askForDiffuseNode(this);
+        return; // BAD!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         break;
     }
-    node->setAffectSize(affectSize);
-    connect(node.data(), &BasicNode::changed,
+    nodeHolder->getNode()->setAffectSize(affectSize);
+    connect(nodeHolder->getNode(), &BasicNode::changed,
                this, &BasicChanel::changed);
     needRedraw = true;
     update();
@@ -138,15 +147,17 @@ void BasicChanel::setNode(Nodes nodeType)
 
 void BasicChanel::setNode(BasicNode *initNode)
 {
-    node.clear();
-    node = QSharedPointer<BasicNode>(initNode);
+//    nodeHolder.clear();
+    nodeHolder->setNode(initNode);
+    needRedraw = true;
+    update();
+    emit changed();
     emit layoutChanged();
 }
 
-void BasicChanel::setNode(QSharedPointer<BasicNode> initNode)
+void BasicChanel::setNode(NodeHolder *initNode)
 {
-    node.clear();
-    node = initNode;
+    nodeHolder = initNode;
     emit layoutChanged();
 }
 
@@ -160,6 +171,7 @@ QFrame *BasicChanel::formedSettingsFrame()
     QComboBox *nodeCB = new QComboBox();
 
     foreach(Nodes node, allowedNodes) {
+        qDebug() << node;
         switch (node) {
         case Nodes::TextN:
             nodeCB->addItem(tr("Text"));
@@ -176,9 +188,13 @@ QFrame *BasicChanel::formedSettingsFrame()
         case Nodes::FillBackN:
             nodeCB->addItem(tr("Fill color"));
             break;
+        case Nodes::DiffuseChanelLinkN:
+            nodeCB->addItem(tr("Diffuse chanel"));
         }
     }
-    nodeCB->setCurrentIndex(currentNode);
+    nodeCB->setCurrentIndex(allowedNodes.indexOf(currentNode));
+    qDebug() << "C" << currentNode;
+    qDebug() << "I" << allowedNodes.indexOf(currentNode);
 
     connect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, QOverload<int>::of(&BasicChanel::setNode));
@@ -190,7 +206,9 @@ QFrame *BasicChanel::formedSettingsFrame()
     nodeLO->addWidget(nodeCB);
     layout->addLayout(nodeLO);
 
-    layout->addLayout(node->getSettingsLayout());
+    if(currentNode != Nodes::DiffuseChanelLinkN){
+        layout->addLayout(nodeHolder->getNode()->getSettingsLayout());
+    }
 
     QFrame *frame = new QFrame();
     frame->setLayout(layout);
@@ -231,11 +249,13 @@ SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
 //    allowedNodes.push_back(Nodes::TextN);
 
 //    setNode(0);
+//    addAllowedNode(Nodes::DiffuseChanelLinkN);
 }
 
 NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel(br, parent)
 {
+//    addAllowedNode(Nodes::DiffuseChanelLinkN);
     chanelDefBy = BasicChanel::DefineBy::NormalMap;
 }
 
@@ -249,8 +269,8 @@ QFrame *NormalChanel::formedSettingsFrame()
     QLabel *typeL = new QLabel(tr("Define normal chanel by"));
     QComboBox *typeCB = new QComboBox();
 
-    typeCB->addItem(tr("Normal map")); // Order is restricted!
-    typeCB->addItem(tr("Height map")); // Order is restricted!
+    typeCB->addItem(tr("Normal map"));      // Order is restricted!
+    typeCB->addItem(tr("Height map"));      // Order is restricted!
     typeCB->addItem(tr("Specular Chanel")); // Order is restricted!
     typeCB->setCurrentIndex(chanelDefBy);
 
@@ -284,9 +304,12 @@ QFrame *NormalChanel::formedSettingsFrame()
             case Nodes::FillBackN:
                 nodeCB->addItem(tr("Fill color"));
                 break;
+            case Nodes::DiffuseChanelLinkN:
+                nodeCB->addItem(tr("Diffuse chanel"));
+                break;
             }
         }
-        nodeCB->setCurrentIndex(currentNode);
+        nodeCB->setCurrentIndex(allowedNodes.indexOf(currentNode));
 
         connect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
                 this, QOverload<int>::of(&BasicChanel::setNode));
@@ -299,7 +322,7 @@ QFrame *NormalChanel::formedSettingsFrame()
         layout->addLayout(nodeLO);
     }
     if(chanelDefBy != SpecularChanel){
-        layout->addLayout(node->getSettingsLayout());
+        layout->addLayout(nodeHolder->getNode()->getSettingsLayout());
         layout->addStretch();
     }
     QFrame *frame = new QFrame();

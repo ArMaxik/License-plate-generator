@@ -52,6 +52,7 @@ protected:
     QLayout *setUpBasicLayout();
 
     Chanels shownC;
+    bool diffuseChToSpec;
 
 protected slots:
     void onChanelChanged() { emit changed(); }
@@ -59,6 +60,7 @@ protected slots:
     void changeSizeAffectedCh(int newCh);
     void updateAllChanels();
     void answerChanelAskForNode(BasicChanel *chanel, BasicChanel::DefineBy node);
+    void answerChanelAskForDiffuseNode(BasicChanel *chanel);
 };
 
 class Canvas : public BasicItem

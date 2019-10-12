@@ -9,6 +9,7 @@
 #include <QGraphicsItem>
 #include <QPen>
 #include <QPointer>
+#include <QDebug>
 
 class BasicNode : public QObject
 {
@@ -46,16 +47,20 @@ public:
         : node(initNode) {}
 
     void setNode(BasicNode *initNode) {
-        node.clear();
-        node = QPointer<BasicNode>(initNode);
+//        if(!node.isNull()) node.clear();
+//        node = QPointer<BasicNode>(initNode);
+        if(node != nullptr) delete node;
+        node = initNode;
+        qDebug() << initNode;
     }
 
-    const BasicNode *getNode() {
-        return node.data();
+    BasicNode *getNode() {
+        return node;
     }
 
 private:
-    QPointer<BasicNode> node;
+//    QPointer<BasicNode> node;
+    BasicNode *node;
 };
 
 class ImageNode : public BasicNode

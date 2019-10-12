@@ -176,11 +176,15 @@ void TextNode::stringChanged(QString newStr)
     emit changed();
 }
 
+// ========[ FillBasckgroundNode ]==================================================
+
 FillBasckgroundNode::FillBasckgroundNode(BoundRect *br, QColor defaultColor)
     : BasicNode(br)
     , color(new ColorPropertie(tr("Fill color"), defaultColor))
 {
     properites.push_back(color);
+    connect(color, &BasicPropertie::changed,
+            this, &BasicNode::changed);
 }
 
 void FillBasckgroundNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

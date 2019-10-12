@@ -17,11 +17,12 @@ BasicItem::BasicItem()
     : QGraphicsObject()
     , name(QObject::tr("Unnamed Item"))
     , bound(new BoundRect(QRectF(0.0, 0.0, 0.0, 0.0), this))
+    , sizeAffectedCh(Chanels::diffuseC)
     , diffuseCh(new DiffuseChanel(bound))
     , specularCh(new SpecularChanel(bound))
     , normalCh(new NormalChanel(bound))
     , shownC(Chanels::diffuseC)
-    , sizeAffectedCh(Chanels::diffuseC)
+    , diffuseChToSpec(false)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -66,6 +67,9 @@ BasicItem::BasicItem()
     // If chanel want node of other chanel
     connect(normalCh, &BasicChanel::askForNode,
             this, &BasicItem::answerChanelAskForNode);
+    // If chanel want node of other chanel
+    connect(specularCh, &BasicChanel::askForDiffuseNode,
+            this, &BasicItem::answerChanelAskForDiffuseNode);
 }
 
 void BasicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -126,19 +130,21 @@ QLayout *BasicItem::getSettingsLayout()
 
 void BasicItem::setUpChanels()
 {
-    diffuseCh->setAffectSize(true);
 
     diffuseCh->addAllowedNode(BasicChanel::ImageN);
     diffuseCh->addAllowedNode(BasicChanel::TextN);
-    diffuseCh->setNode(0);
+    diffuseCh->setNode(BasicChanel::ImageN);
+    diffuseCh->setAffectSize(true);
 
     specularCh->addAllowedNode(BasicChanel::ImageN);
     specularCh->addAllowedNode(BasicChanel::TextN);
-    specularCh->setNode(0);
+    specularCh->addAllowedNode(BasicChanel::DiffuseChanelLinkN);
+    specularCh->setNode(BasicChanel::ImageN);
 
     normalCh->addAllowedNode(BasicChanel::ImageN);
     normalCh->addAllowedNode(BasicChanel::TextN);
-    normalCh->setNode(0);
+    normalCh->addAllowedNode(BasicChanel::DiffuseChanelLinkN);
+    normalCh->setNode(BasicChanel::ImageN);
 //    normalCh->setGraphicsEffect(new HeigthToNormalGraphicsEffect());
 }
 
@@ -275,6 +281,11 @@ void BasicItem::answerChanelAskForNode(BasicChanel *chanel, BasicChanel::DefineB
     }
 }
 
+void BasicItem::answerChanelAskForDiffuseNode(BasicChanel *chanel)
+{
+    chanel->setNode(diffuseCh->getNode());
+}
+
 void BasicItem::onShownChanelChange(int index)
 {
     switch (index) {
@@ -348,17 +359,17 @@ void Canvas::setUpChanels()
     diffuseCh->addAllowedNode(BasicChanel::FillBackN);
     diffuseCh->addAllowedNode(BasicChanel::ImageBackN);
     diffuseCh->setDefaultColor(Qt::white);
-    diffuseCh->setNode(0);
+    diffuseCh->setNode(BasicChanel::FillBackN);
 
     specularCh->addAllowedNode(BasicChanel::FillBackN);
     specularCh->addAllowedNode(BasicChanel::ImageBackN);
     specularCh->setDefaultColor(Qt::black);
-    specularCh->setNode(0);
+    specularCh->setNode(BasicChanel::FillBackN);
 
     normalCh->addAllowedNode(BasicChanel::FillBackN);
     normalCh->addAllowedNode(BasicChanel::ImageBackN);
     normalCh->setDefaultColor(QColor(127, 127, 255));
-    normalCh->setNode(0);
+    normalCh->setNode(BasicChanel::FillBackN);
 }
 
 QLayout *Canvas::setUpBasicLayout()
@@ -400,9 +411,9 @@ QLayout *Canvas::setUpBasicLayout()
             this, [this](QString text){ if(text.isEmpty()) text = tr("Unnamed Item"); name = text; });
     // Size spinBox affect on object
     connect(wSpinBox, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, [this](int w){ bound->setWidth(w); emit changed(); });
+            this, [this](int w){ bound->setWidth(w); updateAllChanels(); });
     connect(xSpinBox,  QOverload<int>::of(&QSpinBox::valueChanged),
-            this, [this](int h){ bound->setHeight(h); emit changed(); });
+            this, [this](int h){ bound->setHeight(h); updateAllChanels(); });
 
     // Choose what chanel to show
     QHBoxLayout *showLO = new QHBoxLayout();
