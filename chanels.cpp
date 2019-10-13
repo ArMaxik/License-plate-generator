@@ -55,6 +55,8 @@ void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         nodeHolder->getNode()->paint(&painterBase, option, widget);
         chanelBuffer = effect->apply(&base);
         needRedraw = false;
+        qDebug() << this;
+
     }
     painter->drawImage(0, 0, chanelBuffer);
 }
@@ -86,7 +88,7 @@ QLayout *BasicChanel::getSettingsLayout()
 
 void BasicChanel::randomize()
 {
-    //    node->randomize()
+    nodeHolder->getNode()->randomize();
 }
 
 void BasicChanel::setAffectSize(bool affect)
@@ -138,6 +140,8 @@ void BasicChanel::setNode(Nodes nodeType)
     nodeHolder->getNode()->setAffectSize(affectSize);
     connect(nodeHolder->getNode(), &BasicNode::changed,
                this, &BasicChanel::changed);
+    connect(nodeHolder->getNode(), &BasicNode::layoutChanged,
+            this, &BasicChanel::layoutChanged);
     needRedraw = true;
     update();
     emit layoutChanged();
@@ -170,7 +174,6 @@ QFrame *BasicChanel::formedSettingsFrame()
     QComboBox *nodeCB = new QComboBox();
 
     foreach(Nodes node, allowedNodes) {
-        qDebug() << node;
         switch (node) {
         case Nodes::TextN:
             nodeCB->addItem(tr("Text"));
@@ -192,8 +195,6 @@ QFrame *BasicChanel::formedSettingsFrame()
         }
     }
     nodeCB->setCurrentIndex(allowedNodes.indexOf(currentNode));
-    qDebug() << "C" << currentNode;
-    qDebug() << "I" << allowedNodes.indexOf(currentNode);
 
     connect(nodeCB, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, QOverload<int>::of(&BasicChanel::setNode));
@@ -234,29 +235,18 @@ DiffuseChanel::DiffuseChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
 {
 
-//    allowedNodes.push_back(Nodes::ImageN);
-//    allowedNodes.push_back(Nodes::TextN);
-//    allowedNodes.push_back(Nodes::ShapeN);
-
-//    setNode(0);
 }
 
 
 SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
 {
-//    allowedNodes.push_back(Nodes::ImageN);
-//    allowedNodes.push_back(Nodes::TextN);
-
-//    setNode(0);
-//    addAllowedNode(Nodes::DiffuseChanelLinkN);
 }
 
 NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel(br, parent)
     , chanelDefBy(DefineBy::NormalMap)
 {
-//    addAllowedNode(Nodes::DiffuseChanelLinkN);
     chanelDefBy = NormalChanel::DefineBy::NormalMap;
 }
 
@@ -346,12 +336,7 @@ void NormalChanel::onDefinaBychange(int index)
         effect = new NormalHeightGraphicsEffect();
     }
 
-//    if(chanelDefBy == DefineBy::SpecularChanel) {
-//        emit askForNode(this, DefineBy::SpecularChanel);
-//    } else {
     setNode(Nodes::ImageN);
-
-//    }
 
     needRedraw = true;
     emit layoutChanged();

@@ -26,17 +26,23 @@ public:
     virtual void setAffectSize(bool affect) { affectSize = affect; }
     qreal getScale() const { return scale; }
 
+public slots:
+    void randomize();
+
 signals:
 //    void scaleChanged(qreal factor, QSizeF size);
 //    void scaleChanged(qreal newScale);
 //    void boundSizeChanged(QSizeF size);
     void changed();
+    void layoutChanged();
 
 protected:
     QList<BasicPropertie*> properites;
     BoundRect *bound;
     bool affectSize;
     qreal scale;
+
+    void makeAllConnections();
 };
 
 class NodeHolder : public QObject
@@ -51,7 +57,6 @@ public:
 //        node = QPointer<BasicNode>(initNode);
         if(node != nullptr) delete node;
         node = initNode;
-        qDebug() << initNode;
     }
 
     BasicNode *getNode() {
@@ -82,8 +87,8 @@ protected:
 
 protected slots:
     void reloadImage();
-    void changeSizeW(int w);
-    void changeSizeH(int h);
+    void changeSizeW();
+    void changeSizeH();
 };
 
 class TextNode : public BasicNode

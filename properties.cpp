@@ -7,6 +7,10 @@
 #include <QPushButton>
 #include <QImage>
 #include <QColorDialog>
+#include <QRandomGenerator>
+
+#include <QDebug>
+
 // ========[ BasicPropertie ]==================================================
 
 BasicPropertie::BasicPropertie(QString labelText)
@@ -31,7 +35,31 @@ QLayout *BasicPropertie::getSettingsLayout()
     chbLO->addWidget(cb);
     ml->addLayout(chbLO);
 
+    connect(cb, &QCheckBox::stateChanged,
+            this, [this](int state){ random = (state == Qt::Checked); emit layoutChanged(); });
+
+    if(random) {
+        makeRandomLayout(ml);
+    } else {
+        makeNotRandomLayout(ml);
+    }
+
     return ml;
+}
+
+void BasicPropertie::randomize()
+{
+
+}
+
+void BasicPropertie::makeNotRandomLayout(QVBoxLayout *ml)
+{
+
+}
+
+void BasicPropertie::makeRandomLayout(QVBoxLayout *ml)
+{
+
 }
 
 // ========[ NumberPropertie ]==================================================
@@ -41,20 +69,20 @@ NumberPropertie::NumberPropertie(QString labelText, int val, int min_v, int max_
     , value(val)
     , min(min_v)
     , max(max_v)
-    , numSB(new QSpinBox)
+//    , numSB(new QSpinBox)
 {
     if(min > max) {
         min = max;
     }
 }
 
-QLayout *NumberPropertie::getSettingsLayout()
+void NumberPropertie::makeNotRandomLayout(QVBoxLayout *ml)
 {
-    QVBoxLayout *ml = static_cast<QVBoxLayout*>(BasicPropertie::getSettingsLayout());
+//    QVBoxLayout *ml = static_cast<QVBoxLayout*>(BasicPropertie::getSettingsLayout());
 
     QHBoxLayout *numLO = new QHBoxLayout();
     QLabel *numL = new QLabel(label);
-    numSB = new QSpinBox();
+    QSpinBox *numSB = new QSpinBox();
 
     numSB->setRange(min, max);
     numSB->setValue(value);
@@ -67,16 +95,39 @@ QLayout *NumberPropertie::getSettingsLayout()
     connect(numSB, QOverload<int>::of(&QSpinBox::valueChanged),
             this, &NumberPropertie::onValueChange);
 
-//    QVBoxLayout *fl = new QVBoxLayout();
+    //    return ml;
+}
 
-//    QFrame *frame = new QFrame();
-//    frame->setLayout(ml);
-//    frame->setFrameStyle(QFrame::Panel | QFrame::Raised);
-//    frame->setLineWidth(1);
+void NumberPropertie::makeRandomLayout(QVBoxLayout *ml)
+{
+    QHBoxLayout *numLO = new QHBoxLayout();
+    QLabel *numL = new QLabel(label);
+    numLO->addWidget(numL);
+    ml->addLayout(numLO);
 
-//    fl->addWidget(frame);
+    QHBoxLayout *numLOmin = new QHBoxLayout();
+    QLabel *numLmin = new QLabel(tr("min value"));
+    QSpinBox *numSBmin = new QSpinBox();
+    numSBmin->setRange(1, INT_MAX);
+    numSBmin->setValue(min);
+    numLOmin->addWidget(numLmin);
+    numLOmin->addWidget(numSBmin);
 
-    return ml;
+    QHBoxLayout *numLOmax = new QHBoxLayout();
+    QLabel *numLmax = new QLabel(tr("max value"));
+    QSpinBox *numSBmax = new QSpinBox();
+    numSBmax->setRange(1, INT_MAX);
+    numSBmax->setValue(max);
+    numLOmax->addWidget(numLmax);
+    numLOmax->addWidget(numSBmax);
+
+    ml->addLayout(numLOmin);
+    ml->addLayout(numLOmax);
+
+    connect(numSBmin, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [=](int v){ min = v; numSBmax->setMinimum(v); });
+    connect(numSBmax, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [=](int v){ max = v; numSBmin->setMaximum(v); });
 }
 
 int NumberPropertie::getValue() const
@@ -84,20 +135,31 @@ int NumberPropertie::getValue() const
     return value;
 }
 
-void NumberPropertie::setValue(int newValue)
+void NumberPropertie::setValue(int newValue, bool silent)
 {
     value = newValue;
-    if(numSB != nullptr) {
-        numSB->setValue(value);
-    }
+    if(!silent)
+        emit changed();
+    emit layoutChanged();
+//    if(numSB != nullptr) {
+//        numSB->setValue(value);
+//    }
 }
 
 void NumberPropertie::setRange(int min, int max)
 {
     this->min = min;
     this->max = max;
-    if(numSB != nullptr) {
-        numSB->setRange(min, max);
+//    if(numSB != nullptr) {
+//        numSB->setRange(min, max);
+//    }
+}
+
+void NumberPropertie::randomize()
+{
+    if(random) {
+        setValue(QRandomGenerator::global()->bounded(min, max));
+        qDebug() << min << " " << max << " " << value;
     }
 }
 
@@ -105,7 +167,7 @@ void NumberPropertie::onValueChange(int newValue)
 {
     if(newValue != value) {
         value = newValue;
-        emit numberValueChange(value);
+        emit changed();
     }
 }
 

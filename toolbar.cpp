@@ -8,9 +8,11 @@ ToolBar::ToolBar(const QString &title, QWidget *parent)
 
     addItemAction = new QAction(tr("Add Item"), parent);
     switchEditorsAction = new QAction(tr("Switch Editors"), parent);
+    randomizeAction = new QAction(tr("Randomize"), parent);
 
     addAction(addItemAction);
     addAction(switchEditorsAction);
+    addAction(randomizeAction);
 }
 
 QAction *ToolBar::getAddItemAction() const
@@ -21,4 +23,9 @@ QAction *ToolBar::getAddItemAction() const
 QAction *ToolBar::getSwitchEditorsAction() const
 {
     return  switchEditorsAction;
+}
+
+QAction *ToolBar::getrandomizeAction() const
+{
+    return randomizeAction;
 }

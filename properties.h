@@ -13,12 +13,19 @@ public:
 
     virtual QLayout *getSettingsLayout();
 
+public slots:
+    virtual void randomize();
+
 signals:
     void changed();
+    void layoutChanged();
 
 protected:
     bool random;
     QString label;
+
+    virtual void makeNotRandomLayout(QVBoxLayout *ml);
+    virtual void makeRandomLayout(QVBoxLayout *ml);
 };
 
 class NumberPropertie : public BasicPropertie
@@ -27,14 +34,16 @@ class NumberPropertie : public BasicPropertie
 public:
     NumberPropertie(QString labelText, int val, int min_v, int max_v);
 
-    QLayout *getSettingsLayout() override;
+//    QLayout *getSettingsLayout() override;
 
     int getValue() const;
     operator int() const { return value; }
 
 public slots:
-    void setValue(int newValue);
+    void setValue(int newValue, bool silent = false);
     void setRange(int min, int max);
+    virtual void randomize();
+
 
 signals:
     void numberValueChange(int newValue);
@@ -44,7 +53,11 @@ protected:
     int min;
     int max;
 
-    QSpinBox *numSB;
+//    QSpinBox *numSB;
+
+    virtual void makeNotRandomLayout(QVBoxLayout *ml) override;
+    virtual void makeRandomLayout(QVBoxLayout *ml) override;
+
 
 protected slots:
     void onValueChange(int newValue);

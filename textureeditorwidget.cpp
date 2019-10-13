@@ -46,6 +46,12 @@ void TextureEditorWidget::addItem()
             this, &TextureEditorWidget::updateImageViewers);
 }
 
+void TextureEditorWidget::randomize()
+{
+    texGen->randomize();
+    updateImageViewers();
+}
+
 void TextureEditorWidget::setUpLayout()
 {
     QVBoxLayout *mainL = new QVBoxLayout();

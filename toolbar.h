@@ -11,10 +11,12 @@ public:
 
     QAction *getAddItemAction() const;
     QAction *getSwitchEditorsAction() const;
+    QAction *getrandomizeAction() const;
 
 private:
    QAction *addItemAction;
    QAction *switchEditorsAction;
+   QAction *randomizeAction;
 };
 
 #endif // TOOLBAR_H

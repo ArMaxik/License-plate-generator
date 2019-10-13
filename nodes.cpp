@@ -2,6 +2,7 @@
 
 #include <QPainter>
 #include <QSize>
+#include <QFrame>
 
 #include <QtDebug>
 
@@ -30,6 +31,11 @@ QLayout *BasicNode::getSettingsLayout()
 //    frame->setLineWidth(1);
 
     foreach (BasicPropertie *p, properites) {
+        QFrame *line;
+        line = new QFrame();
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+        ml->addWidget(line);
         ml->addLayout(p->getSettingsLayout());
     }
 
@@ -45,6 +51,23 @@ void BasicNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 }
 
+void BasicNode::randomize()
+{
+    foreach (BasicPropertie *p, properites) {
+        p->randomize();
+    }
+}
+
+void BasicNode::makeAllConnections()
+{
+    foreach (BasicPropertie *p, properites) {
+        connect(p, &BasicPropertie::layoutChanged,
+                this, &BasicNode::layoutChanged);
+        connect(p, &BasicPropertie::changed,
+                this, &BasicNode::changed);
+    }
+}
+
 // ========[ ImageNode ]==================================================
 
 ImageNode::ImageNode(BoundRect *br)
@@ -57,13 +80,14 @@ ImageNode::ImageNode(BoundRect *br)
             this, &ImageNode::reloadImage);
     properites.push_back(image);
 
-    connect(width, &NumberPropertie::numberValueChange,
+    connect(width, &NumberPropertie::changed,
             this, &ImageNode::changeSizeW);
     properites.push_back(width);
 
-    connect(height, &NumberPropertie::numberValueChange,
+    connect(height, &NumberPropertie::changed,
             this, &ImageNode::changeSizeH);
     properites.push_back(height);
+    makeAllConnections();
 }
 
 void ImageNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -89,11 +113,12 @@ void ImageNode::reloadImage()
     emit changed();
 }
 
-void ImageNode::changeSizeW(int w)
+void ImageNode::changeSizeW()
 {
+    int w = *width;
     scale = qreal(w) / qreal(image->getImage().width()) ;
-//    emit scaleChanged(scale);
-    height->setValue(image->getImage().height() * scale);
+
+    height->setValue(image->getImage().height() * scale, true);
 
     if(affectSize) {
         bound->setSize(QSizeF(*width, *height));
@@ -101,11 +126,12 @@ void ImageNode::changeSizeW(int w)
     emit changed();
 }
 
-void ImageNode::changeSizeH(int h)
+void ImageNode::changeSizeH()
 {
+    int h = *height;
     scale = qreal(h) / qreal(image->getImage().height());
-//    emit scaleChanged(scale);
-    width->setValue(image->getImage().width() * scale);
+
+    width->setValue(image->getImage().width() * scale, true);
 
     if(affectSize) {
         bound->setSize(QSizeF(*width, *height));
@@ -126,14 +152,15 @@ TextNode::TextNode(BoundRect *br)
     properites.push_back(string);
 
     font.setPixelSize(20);
-    connect(fontSize, &NumberPropertie::numberValueChange,
-            this, [this](int size) { font.setPixelSize(size); updateBound(); emit changed(); });
+    connect(fontSize, &NumberPropertie::changed,
+            this, [this] () { font.setPixelSize(*fontSize); updateBound(); emit changed(); });
     properites.push_back(fontSize);
 
     properites.push_back(color);
     connect(color, &BasicPropertie::changed,
             this, &BasicNode::changed);
     updateBound();
+    makeAllConnections();
 }
 
 
@@ -185,6 +212,7 @@ FillBasckgroundNode::FillBasckgroundNode(BoundRect *br, QColor defaultColor)
     properites.push_back(color);
     connect(color, &BasicPropertie::changed,
             this, &BasicNode::changed);
+    makeAllConnections();
 }
 
 void FillBasckgroundNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

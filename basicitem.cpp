@@ -164,16 +164,23 @@ QLayout *BasicItem::setUpBasicLayout()
     xSpinBox->setValue(x());
     ySpinBox->setValue(y());
 
+    QSpinBox *zSpinBox = new QSpinBox();
+    zSpinBox->setRange(0, 100);
+    zSpinBox->setValue(zValue());
+
     QLabel *xposL = new QLabel(tr("X position"));
     QLabel *yposL = new QLabel(tr("Y position"));
+    QLabel *zposL = new QLabel(tr("Z index"));
 
     QHBoxLayout *nameLt = new QHBoxLayout();
     QHBoxLayout *xPosLt = new QHBoxLayout();
     QHBoxLayout *yPosLt = new QHBoxLayout();
+    QHBoxLayout *zPosLt = new QHBoxLayout();
 
     vlb->addLayout(nameLt);
     vlb->addLayout(xPosLt);
     vlb->addLayout(yPosLt);
+    vlb->addLayout(zPosLt);
 
     nameLt->addWidget(nameL);
     nameLt->addWidget(nameLE);
@@ -184,6 +191,9 @@ QLayout *BasicItem::setUpBasicLayout()
     yPosLt->addWidget(yposL);
     yPosLt->addWidget(ySpinBox);
 
+    zPosLt->addWidget(zposL);
+    zPosLt->addWidget(zSpinBox);
+
     // Name change
     connect(nameLE, &QLineEdit::textChanged,
             this, [this](QString text){ if(text.isEmpty()) text = tr("Unnamed Item"); name = text; });
@@ -192,11 +202,14 @@ QLayout *BasicItem::setUpBasicLayout()
             this, [this](int x){ setX(x); });
     connect(ySpinBox,  QOverload<int>::of(&QSpinBox::valueChanged),
             this, [this](int y){ setY(y); });
+    connect(zSpinBox,  QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int z){ setZValue(z); });
     // Object position affect in spinBox
     connect(this, &QGraphicsObject::xChanged,
             xSpinBox, [this, xSpinBox](){xSpinBox->setValue(x());});
     connect(this, &QGraphicsObject::yChanged,
             ySpinBox, [this, ySpinBox](){ySpinBox->setValue(y());});
+
 
     // Choose what chanel to show
     QHBoxLayout *showLO = new QHBoxLayout();
