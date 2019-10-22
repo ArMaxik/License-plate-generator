@@ -7,11 +7,19 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     , emptyWidget(new QFrame(this))
     , settingsLayout(nullptr)
     , currentItem(nullptr)
+    , scrollArea(new QScrollArea())
 {
-    setWidget(emptyWidget);
+    setWidget(scrollArea);
+    scrollArea->setWidget(emptyWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
+
     emptyWidget->setLayout(new QVBoxLayout());
     emptyWidget->setFrameStyle(QFrame::Panel | QFrame::Raised);
     emptyWidget->setLineWidth(2);
+    emptyWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Maximum);
+    emptyWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Maximum);
     setWindowTitle(tr("Settings"));
 
     show();
@@ -34,22 +42,16 @@ void SettingsWidget::SetAbstractItem(AbstractModelItem *item)
 void SettingsWidget::SetSettingsLayout()
 {
     if(widget() != nullptr){
-        RemoveLayout(widget()->layout());
-    }
-    if(emptyWidget->layout() != nullptr) {
-        setWidget(emptyWidget);
+        RemoveLayout(emptyWidget->layout());
     }
     if(currentItem == nullptr) {
         return;
     }
     QLayout* layout = currentItem->getSettingsLayout();
 
-    QFrame *w = new QFrame();
-    w->setFrameStyle(QFrame::Panel | QFrame::Raised);
-    w->setLineWidth(2);
-    w->setLayout(layout);
-    setWidget(w);
-
+//    QScrollArea *sa =new QScrollArea();
+    //sa->setWidget(w);
+    emptyWidget->setLayout(layout);
 }
 
 static void RemoveLayout (QLayout* layout) // Эта вещь мне не нравится
@@ -67,7 +69,6 @@ static void RemoveLayout (QLayout* layout) // Эта вещь мне не нра
             }
             else delete item;
         }
-
         delete layout;
     }
 }

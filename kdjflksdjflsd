@@ -1,0 +1,36 @@
+* [31m89707b7[m -[33m (HEAD -> develop)[m added randomize for number property [32m(9 days ago) [1;34m<Slava Eliseev>[m
+* [31m3c90d24[m -[33m[m Add diffuse node comnnection to normal chanel [32m(10 days ago) [1;34m<Slava Eliseev>[m
+* [31m06a9ec5[m -[33m[m Add node connecting. Only from diffuse chanel to specular [32m(10 days ago) [1;34m<Slava Eliseev>[m
+* [31m4a401dc[m -[33m[m Normal chanel, added nodes from other chanel insertion [32m(3 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m6edcae4[m -[33m[m update normal effect [32m(3 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m5c7c8ee[m -[33m[m Added normalGeneratorEffect [32m(3 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m0e11fe9[m -[33m[m Make enable checkboxes workable. Add combobox for choose affected size chanel [32m(4 weeks ago) [1;34m<Slava Eliseev>[m
+* [31mc9c229d[m -[33m[m Add to normal chanel combobox for choose what defins this chanel [32m(4 weeks ago) [1;34m<Slava Eliseev>[m
+*   [31mc7c175b[m -[33m[m Merge branch 'signalLayoutChanged' into develop [32m(5 weeks ago) [1;34m<Slava Eliseev>[m
+[32m|[m[33m\[m  
+[32m|[m * [31m2a1bee2[m -[33m (signalLayoutChanged)[m Add dynamic settings layout change on change node type [32m(5 weeks ago) [1;34m<Slava Eliseev>[m
+[32m|[m * [31m79e3948[m -[33m[m added SmartLayoutHolder. It works badly [32m(6 weeks ago) [1;34m<Slava Eliseev>[m
+[32m|[m * [31m92bfde3[m -[33m[m bad realisation with unique_ptr [32m(6 weeks ago) [1;34m<Slava Eliseev>[m
+* [33m|[m [31ma5ccb81[m -[33m[m big memory leak fixed [32m(5 weeks ago) [1;34m<Slava Eliseev>[m
+[33m|[m[33m/[m  
+* [31m1785fa2[m -[33m[m some bugs were fixed [32m(7 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m37c9cf2[m -[33m[m add normal chanel [32m(8 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m35f2296[m -[33m[m added ImageViewWiget class. repair Diffuse and Specular chanel tabs. add changed() signal from BasicPropertie to BasicItem [32m(8 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m8d06f44[m -[33m[m added model editor. now programm can render simple images [32m(8 weeks ago) [1;34m<Slava Eliseev>[m
+* [31mf676e6b[m -[33m[m fix bug with editors switching [32m(9 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m5cbadf4[m -[33m[m Started added 3d editor. Now don't works view/model system when switch editors [32m(9 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m73f246c[m -[33m[m add view scale indicator [32m(9 weeks ago) [1;34m<Slava Eliseev>[m
+* [31macefeb0[m -[33m[m fixed list overview. Added zooming [32m(9 weeks ago) [1;34m<Slava Eliseev>[m
+* [31mc40e1f5[m -[33m[m Added canvas [32m(9 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m4d43ee6[m -[33m[m added specular chanel. Add canvas. Canvas is braking programm a little bit [32m(9 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m7892614[m -[33m[m remove ControllItem class [32m(9 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m5dc6ae0[m -[33m[m add item overview dockwidget [32m(10 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m20403a9[m -[33m[m Added TextNode and some new properties [32m(10 weeks ago) [1;34m<Slava Eliseev>[m
+* [31mda468e2[m -[33m[m update ImagePropertie [32m(10 weeks ago) [1;34m<Slava Eliseev>[m
+* [31mfc72bcd[m -[33m[m rewrite imageNode size changing [32m(10 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m1c19793[m -[33m[m Rewrite and added basics classes [32m(10 weeks ago) [1;34m<Slava Eliseev>[m
+* [31m9f675dc[m -[33m[m add StaticTextItem [32m(3 months ago) [1;34m<Slava Eliseev>[m
+* [31m98a747a[m -[33m[m items overview add selection [32m(3 months ago) [1;34m<Slava Eliseev>[m
+* [31m1381378[m -[33m[m items overview added [32m(3 months ago) [1;34m<Slava Eliseev>[m
+* [31mee19c90[m -[33m[m First steps [32m(3 months ago) [1;34m<Slava Eliseev>[m
+* [31mea855c1[m -[33m (master)[m Init commi [32m(3 months ago) [1;34m<Slava Eliseev>[m

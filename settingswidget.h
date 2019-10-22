@@ -5,6 +5,7 @@
 
 #include <QDockWidget>
 #include <QFrame>
+#include <QScrollArea>
 
 class SettingsWidget :public QDockWidget
 {
@@ -21,6 +22,7 @@ private:
     QFrame *emptyWidget;
     QLayout *settingsLayout;
     AbstractModelItem *currentItem;
+    QScrollArea *scrollArea;
 };
 
 #endif // SETTINGSWIDGET_H
