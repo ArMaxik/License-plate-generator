@@ -4,6 +4,13 @@
 
 int main(int argc, char *argv[])
 {
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setVersion(4, 1);
+    format.setSamples(16);
+    QSurfaceFormat::setDefaultFormat(format);
+
     QApplication a(argc, argv);
 
 //    // Load an application style
@@ -17,6 +24,7 @@ int main(int argc, char *argv[])
 //    qDebug() << QString("sffsdf     + wef-fsdfsdf*(31234) /dsfgse + 32/1")
 //                .remove(QRegularExpression("\\s"))
 //                .replace(QRegularExpression("\\w+"), "<ид>");
+
 
     MainWindow w;
     w.show();

@@ -15,7 +15,7 @@ TextureRenderTarget::TextureRenderTarget(Qt3DCore::QNode *parent,
     output->setAttachmentPoint(attatchmentPoint);
 
     // Create a texture to render into.
-    texture = new Qt3DRender::QTexture2DMultisample (output);
+    texture = new Qt3DRender::QTexture2DMultisample(output);
     texture->setSize(size.width(), size.height());
     texture->setFormat(Qt3DRender::QAbstractTexture::RGB8_UNorm);
     texture->setMinificationFilter(Qt3DRender::QAbstractTexture::Linear);
