@@ -52,6 +52,11 @@ void TextureEditorWidget::randomize()
     updateImageViewers();
 }
 
+void TextureEditorWidget::clear()
+{
+    treeModel->clear();
+}
+
 void TextureEditorWidget::setUpLayout()
 {
     QVBoxLayout *mainL = new QVBoxLayout();

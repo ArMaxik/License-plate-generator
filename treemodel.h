@@ -38,6 +38,9 @@ public:
     void addItem(BasicItem *item);
     void setCanvas(Canvas *c);
 
+public slots:
+    void clear();
+
 private:
     TreeItem *canvas;
 };

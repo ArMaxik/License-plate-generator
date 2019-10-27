@@ -18,6 +18,7 @@ public:
 public slots:
     void addItem();
     void randomize();
+    void clear();
 
 signals:
     void itemSelected(BasicItem *item);

@@ -9,7 +9,7 @@ class AbstractModelItem : public QObject
     Q_OBJECT
 public:
     AbstractModelItem(AbstractModelItem *parent);
-    ~AbstractModelItem();
+    virtual ~AbstractModelItem();
 
     virtual void setSelected(bool selected) = 0;
     virtual QLayout *getSettingsLayout() = 0;
@@ -23,6 +23,8 @@ public:
     int row() const;
     AbstractModelItem *parentItem();
 
+    void clear();
+
 signals:
     void layoutChanged();
 
@@ -35,6 +37,7 @@ class TreeItem : public AbstractModelItem
 {
 public:
     explicit TreeItem(BasicItem *item, AbstractModelItem *parent);
+    ~TreeItem() override { delete itemData; qDebug() << "Deleted TI";}
 
     QVariant data(int column) const override;
 

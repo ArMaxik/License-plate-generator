@@ -9,23 +9,14 @@ ToolBar::ToolBar(const QString &title, QWidget *parent)
     addItemAction = new QAction(tr("Add Item"), parent);
     switchEditorsAction = new QAction(tr("Switch Editors"), parent);
     randomizeAction = new QAction(tr("Randomize"), parent);
+    clearAllAction = new QAction(tr("Clear All"), parent);
+    saveSceneAction = new QAction(tr("Save Scene"), parent);
+    loadSceneAction = new QAction(tr("Load Scene"), parent);
 
     addAction(addItemAction);
     addAction(switchEditorsAction);
     addAction(randomizeAction);
-}
-
-QAction *ToolBar::getAddItemAction() const
-{
-    return addItemAction;
-}
-
-QAction *ToolBar::getSwitchEditorsAction() const
-{
-    return  switchEditorsAction;
-}
-
-QAction *ToolBar::getrandomizeAction() const
-{
-    return randomizeAction;
+    addAction(clearAllAction);
+    addAction(saveSceneAction);
+    addAction(loadSceneAction);
 }

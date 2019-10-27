@@ -9,14 +9,18 @@ class ToolBar : public QToolBar
 public:
     ToolBar(const QString &title, QWidget *parent);
 
-    QAction *getAddItemAction() const;
-    QAction *getSwitchEditorsAction() const;
-    QAction *getrandomizeAction() const;
+    QAction *getAddItemAction() const       { return addItemAction; }
+    QAction *getSwitchEditorsAction() const { return switchEditorsAction; }
+    QAction *getrandomizeAction() const     { return randomizeAction; }
+    QAction *getClearAllAction() const      { return clearAllAction; }
 
 private:
    QAction *addItemAction;
    QAction *switchEditorsAction;
    QAction *randomizeAction;
+   QAction *clearAllAction;
+   QAction *saveSceneAction;
+   QAction *loadSceneAction;
 };
 
 #endif // TOOLBAR_H

@@ -16,6 +16,13 @@ class BasicItem : public QGraphicsObject
     Q_OBJECT
 public:
     BasicItem();
+    ~BasicItem() override {
+        delete bound;
+        delete diffuseCh;
+        delete specularCh;
+        delete normalCh;
+        qDebug() << "Deleted";
+    }
     friend BoundRect;
 
     virtual void paint(QPainter *painter,

@@ -37,6 +37,9 @@ void MainWindow::setUpToolBar()
     connect(tb->getrandomizeAction(), &QAction::triggered,
             textureEdit, &TextureEditorWidget::randomize);
 
+    connect(tb->getClearAllAction(), &QAction::triggered,
+            textureEdit, &TextureEditorWidget::clear);
+
 
     addToolBar(tb);
 }

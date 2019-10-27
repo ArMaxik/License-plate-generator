@@ -139,6 +139,21 @@ void ItemsTreeModel::setCanvas(Canvas *c)
     emit layoutChanged();
 }
 
+void ItemsTreeModel::clear()
+{
+    emit layoutAboutToBeChanged();
+    int num = rowCount(index(0, 0, QModelIndex()));
+    if(num == 0) {
+        return;
+    }
+    beginRemoveRows(index(0, 0, QModelIndex()), 0, num - 1);
+
+    canvas->clear();
+
+    endRemoveRows();
+    emit layoutChanged();
+}
+
 // ============== SceneTreeModel ==============
 
 SceneTreeModel::SceneTreeModel(QObject *parent)

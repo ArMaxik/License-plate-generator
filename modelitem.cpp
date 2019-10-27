@@ -35,6 +35,14 @@ AbstractModelItem *AbstractModelItem::parentItem()
     return parent;
 }
 
+void AbstractModelItem::clear()
+{
+    foreach (auto &child, childItems) {
+        delete child;
+    }
+    childItems.clear();
+}
+
 int AbstractModelItem::row() const
 {
     if (parent)
