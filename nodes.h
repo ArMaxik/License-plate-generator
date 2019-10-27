@@ -10,6 +10,7 @@
 #include <QPen>
 #include <QPointer>
 #include <QDebug>
+#include <QXmlStreamWriter>
 
 class BasicNode : public QObject
 {
@@ -26,13 +27,13 @@ public:
     virtual void setAffectSize(bool affect) { affectSize = affect; }
     qreal getScale() const { return scale; }
 
+    void toXml(QXmlStreamWriter &stream, int type);
+
+
 public slots:
     void randomize();
 
 signals:
-//    void scaleChanged(qreal factor, QSizeF size);
-//    void scaleChanged(qreal newScale);
-//    void boundSizeChanged(QSizeF size);
     void changed();
     void layoutChanged();
 
@@ -79,7 +80,6 @@ public:
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
 
-
 protected:
     ImagePropertie *image;
     NumberPropertie *width;
@@ -103,7 +103,6 @@ public:
                    QWidget *widget) override;
     void setAffectSize(bool affect) override { affectSize = affect; updateBound(); }
 
-
 protected:
     StringPropertie *string;
     NumberPropertie *fontSize;
@@ -126,6 +125,7 @@ public:
     virtual void paint(QPainter *painter,
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
+
 protected:
     ColorPropertie *color;
 };

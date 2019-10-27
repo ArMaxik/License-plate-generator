@@ -154,6 +154,18 @@ void ItemsTreeModel::clear()
     emit layoutChanged();
 }
 
+void ItemsTreeModel::save(QIODevice *output)
+{
+    QXmlStreamWriter stream(output);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+    canvas->getItem()->toXml(stream);
+    for(int i = 0; i < canvas->childCount(); i++) {
+        static_cast<TreeItem*>(canvas->child(i))->getItem()->toXml(stream);
+    }
+    stream.writeEndDocument();
+}
+
 // ============== SceneTreeModel ==============
 
 SceneTreeModel::SceneTreeModel(QObject *parent)

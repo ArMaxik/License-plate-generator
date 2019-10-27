@@ -29,7 +29,7 @@ void MainWindow::setUpToolBar()
     ToolBar *tb = new ToolBar(tr("Tool Bar"), this);
 
     connect(tb->getAddItemAction(), &QAction::triggered,
-            textureEdit, &TextureEditorWidget::addItem);
+            textureEdit, QOverload<>::of(&TextureEditorWidget::addItem));
 
     connect(tb->getSwitchEditorsAction(), &QAction::triggered,
             this, &MainWindow::switchEditors);
@@ -39,6 +39,9 @@ void MainWindow::setUpToolBar()
 
     connect(tb->getClearAllAction(), &QAction::triggered,
             textureEdit, &TextureEditorWidget::clear);
+
+    connect(tb->getSaveSceneAction(), &QAction::triggered,
+            textureEdit, &TextureEditorWidget::save);
 
 
     addToolBar(tb);

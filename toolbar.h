@@ -13,6 +13,7 @@ public:
     QAction *getSwitchEditorsAction() const { return switchEditorsAction; }
     QAction *getrandomizeAction() const     { return randomizeAction; }
     QAction *getClearAllAction() const      { return clearAllAction; }
+    QAction *getSaveSceneAction() const     { return saveSceneAction; }
 
 private:
    QAction *addItemAction;

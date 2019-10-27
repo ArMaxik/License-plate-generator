@@ -147,7 +147,20 @@ void BasicItem::setUpChanels()
     normalCh->addAllowedNode(BasicChanel::TextN);
     normalCh->addAllowedNode(BasicChanel::DiffuseChanelLinkN);
     normalCh->setNode(BasicChanel::ImageN);
-//    normalCh->setGraphicsEffect(new HeigthToNormalGraphicsEffect());
+    //    normalCh->setGraphicsEffect(new HeigthToNormalGraphicsEffect());
+}
+
+void BasicItem::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("BasicItem");
+    stream.writeAttribute("name", name);
+    stream.writeTextElement("X", QString::number(boundingRect().x()));
+    stream.writeTextElement("Y", QString::number(boundingRect().y()));
+    stream.writeTextElement("Z", QString::number(zValue()));
+    diffuseCh->toXml(stream);
+    specularCh->toXml(stream);
+    normalCh->toXml(stream);
+    stream.writeEndElement();
 }
 
 QLayout *BasicItem::setUpBasicLayout()
@@ -385,6 +398,16 @@ void Canvas::setUpChanels()
     normalCh->addAllowedNode(BasicChanel::ImageBackN);
     normalCh->setDefaultColor(QColor(127, 127, 255));
     normalCh->setNode(BasicChanel::FillBackN);
+}
+
+void Canvas::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("Canvas");
+    stream.writeAttribute("name", name);
+    diffuseCh->toXml(stream);
+    specularCh->toXml(stream);
+    normalCh->toXml(stream);
+    stream.writeEndElement();
 }
 
 QLayout *Canvas::setUpBasicLayout()

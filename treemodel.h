@@ -40,6 +40,7 @@ public:
 
 public slots:
     void clear();
+    void save(QIODevice *device);
 
 private:
     TreeItem *canvas;

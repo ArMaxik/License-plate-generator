@@ -2,6 +2,7 @@
 
 #include <QVBoxLayout>
 #include <QTabWidget>
+#include <QFileDialog>
 
 TextureEditorWidget::TextureEditorWidget(QWidget *parent)
     : QWidget(parent)
@@ -46,6 +47,14 @@ void TextureEditorWidget::addItem()
             this, &TextureEditorWidget::updateImageViewers);
 }
 
+void TextureEditorWidget::addItem(BasicItem *item)
+{
+    treeModel->addItem(item);
+
+    connect(item, &BasicItem::changed,
+            this, &TextureEditorWidget::updateImageViewers);
+}
+
 void TextureEditorWidget::randomize()
 {
     texGen->randomize();
@@ -55,6 +64,18 @@ void TextureEditorWidget::randomize()
 void TextureEditorWidget::clear()
 {
     treeModel->clear();
+}
+
+void TextureEditorWidget::save()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save Template"), "",
+            tr("LiscensePlateXML (*.lp.xml);;All Files (*)"));
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+        return;
+    }
+    treeModel->save(&file);
 }
 
 void TextureEditorWidget::setUpLayout()

@@ -135,6 +135,16 @@ int NumberPropertie::getValue() const
     return value;
 }
 
+void NumberPropertie::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("NumberPropertie");
+    stream.writeAttribute("label", label);
+    stream.writeTextElement("value", QString::number(value));
+    stream.writeTextElement("min", QString::number(min));
+    stream.writeTextElement("max", QString::number(max));
+    stream.writeEndElement();
+}
+
 void NumberPropertie::setValue(int newValue, bool silent)
 {
     value = newValue;
@@ -214,13 +224,21 @@ QImage &ImagePropertie::getImage()
     return img;
 }
 
+void ImagePropertie::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("ImagePropertie");
+    stream.writeAttribute("label", label);
+    stream.writeTextElement("imgPath", imgPath);
+    stream.writeEndElement();
+}
+
 void ImagePropertie::onPathButtonPush()
 {
-    QString path = QFileDialog::getOpenFileName(nullptr,
+    imgPath = QFileDialog::getOpenFileName(nullptr,
                                                  tr("Open Image"),
                                                  "/home/",
                                                  tr("Image Files (*.png *.jpg *.bmp)"));
-    img = QImage(path);
+    img = QImage(imgPath);
     emit imageChange();
 }
 
@@ -254,6 +272,14 @@ QLayout *StringPropertie::getSettingsLayout()
 QString &StringPropertie::getString()
 {
     return str;
+}
+
+void StringPropertie::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("StringPropertie");
+    stream.writeAttribute("label", label);
+    stream.writeTextElement("str", str);
+    stream.writeEndElement();
 }
 
 void StringPropertie::onStringChange(QString newStr)
@@ -293,6 +319,16 @@ QLayout *ColorPropertie::getSettingsLayout()
 QColor &ColorPropertie::getColor()
 {
     return color;
+}
+
+void ColorPropertie::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("ColorPropertie");
+    stream.writeAttribute("label", label);
+    stream.writeTextElement("red", QString::number(color.red()));
+    stream.writeTextElement("green", QString::number(color.green()));
+    stream.writeTextElement("blue", QString::number(color.blue()));
+    stream.writeEndElement();
 }
 
 void ColorPropertie::onColorChange()

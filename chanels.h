@@ -10,6 +10,8 @@
 #include <QLayout>
 #include <QStack>
 #include <QFrame>
+#include <QXmlStreamWriter>
+
 
 #include <memory>
 
@@ -27,6 +29,8 @@ public:
     virtual QLayout *getSettingsLayout();
     QPointer<NodeHolder> getNode() { return nodeHolder; }
     void randomize();
+    virtual void toXml(QXmlStreamWriter &stream) = 0;
+
 
     enum Nodes { ImageN, TextN, ShapeN, FillBackN, ImageBackN, DiffuseChanelLinkN };
 
@@ -37,11 +41,14 @@ public slots:
     void setBoundSize(const QSizeF &size)  { bound->setSize(size); }
     void setAffectSize(bool affect);
     void addAllowedNode(Nodes node) { allowedNodes.push_back(node); }
+
     void setNode(int index);
     void setNode(Nodes nodeType);
     void setNode(BasicNode *initNode);
-//    void setNode(QPointer<NodeHolder> initNode);
     void setNode(NodeHolder *initNode);
+
+    void setCurrentNode(Nodes currNode) { currentNode = currNode; }
+
     void setDefaultColor(const QColor &color) { defaultColor = color; }
 
 signals:
@@ -58,9 +65,6 @@ protected:
     qreal chanelSize;
 
     QImage chanelBuffer;
-//    BasicNode *node;
-//    QSharedPointer<BasicNode> node;
-//    QPointer<NodeHolder> nodeHolder;
     NodeHolder *nodeHolder;
     AbstarctGraphicsEffect *effect;
     bool needRedraw;
@@ -78,6 +82,8 @@ protected slots:
 class DiffuseChanel : public BasicChanel
 {
     Q_OBJECT
+    void toXml(QXmlStreamWriter &stream) override;
+
 public:
     DiffuseChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 };
@@ -85,6 +91,8 @@ public:
 class SpecularChanel : public BasicChanel
 {
     Q_OBJECT
+    void toXml(QXmlStreamWriter &stream) override;
+
 public:
     SpecularChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 };
@@ -96,6 +104,8 @@ public:
     NormalChanel(BoundRect *br, QGraphicsItem *parent = nullptr);
 
     enum DefineBy { NormalMap, HeightMap, NONE };  // Order is restricted!
+    void toXml(QXmlStreamWriter &stream) override;
+
 
 signals:
     void askForNode(BasicChanel *chanel, DefineBy defNode);

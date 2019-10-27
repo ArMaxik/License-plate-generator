@@ -3,6 +3,7 @@
 
 #include <QLayout>
 #include <QSpinBox>
+#include <QXmlStreamWriter>
 
 
 class BasicPropertie : public QObject
@@ -12,6 +13,9 @@ public:
     BasicPropertie(QString labelText);
 
     virtual QLayout *getSettingsLayout();
+
+    virtual void toXml(QXmlStreamWriter &stream) = 0;
+
 
 public slots:
     virtual void randomize();
@@ -38,6 +42,7 @@ public:
 
     int getValue() const;
     operator int() const { return value; }
+    void toXml(QXmlStreamWriter &stream) override;
 
 public slots:
     void setValue(int newValue, bool silent = false);
@@ -73,11 +78,14 @@ public:
     QImage &getImage();
     operator QImage() const { return img; }
 
+    void toXml(QXmlStreamWriter &stream) override;
+
 signals:
     void imageChange() const;
 
 protected:
     QImage img;
+    QString imgPath;
 
 protected slots:
     void onPathButtonPush();
@@ -93,6 +101,8 @@ public:
 
     QString &getString();
     operator QString() const { return str; }
+
+    void toXml(QXmlStreamWriter &stream) override;
 
 signals:
     void stringChange(QString newStr);
@@ -114,6 +124,8 @@ public:
 
     QColor &getColor();
     operator QColor() const { return color; }
+
+    void toXml(QXmlStreamWriter &stream) override;
 
 signals:
     void colorChange(QColor newColor);

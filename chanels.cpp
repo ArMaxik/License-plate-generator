@@ -231,12 +231,28 @@ void BasicChanel::redrawChanel()
     needRedraw = true;
 }
 
+void DiffuseChanel::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("DiffuseChanel");
+    stream.writeAttribute("enable", enable?QString("true"):QString("false"));
+    nodeHolder->getNode()->toXml(stream, currentNode);
+    stream.writeEndElement();
+}
+
 DiffuseChanel::DiffuseChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
 {
 
 }
 
+
+void SpecularChanel::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("SpecularChanel");
+    stream.writeAttribute("enable", enable?QString("true"):QString("false"));
+    nodeHolder->getNode()->toXml(stream, currentNode);
+    stream.writeEndElement();
+}
 
 SpecularChanel::SpecularChanel(BoundRect *br, QGraphicsItem *parent)
     : BasicChanel (br, parent)
@@ -248,6 +264,15 @@ NormalChanel::NormalChanel(BoundRect *br, QGraphicsItem *parent)
     , chanelDefBy(DefineBy::NormalMap)
 {
     chanelDefBy = NormalChanel::DefineBy::NormalMap;
+}
+
+void NormalChanel::toXml(QXmlStreamWriter &stream)
+{
+    stream.writeStartElement("NormalChanel");
+    stream.writeAttribute("enable", enable?QString("true"):QString("false"));
+    stream.writeAttribute("defineBy", QString::number(chanelDefBy));
+    nodeHolder->getNode()->toXml(stream, currentNode);
+    stream.writeEndElement();
 }
 
 QFrame *NormalChanel::formedSettingsFrame()

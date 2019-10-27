@@ -9,6 +9,8 @@
 #include <QVBoxLayout>
 #include <QFont>
 #include <QVector2D>
+#include <QXmlStreamWriter>
+
 #include <QDebug>
 
 class BasicItem : public QGraphicsObject
@@ -21,7 +23,6 @@ public:
         delete diffuseCh;
         delete specularCh;
         delete normalCh;
-        qDebug() << "Deleted";
     }
     friend BoundRect;
 
@@ -33,15 +34,21 @@ public:
     virtual QLayout *getSettingsLayout();
     QString getName() { return name; }
 
-    BasicChanel *getDiffuseChanel() { return diffuseCh; }
+    BasicChanel *getDiffuseChanel()  { return diffuseCh; }
     BasicChanel *getSpecularChanel() { return specularCh; }
-    BasicChanel *getNormalChanel() { return normalCh; }
+    BasicChanel *getNormalChanel()   { return normalCh; }
 
-    BoundRect *getBoundRect() const { return bound; }
+    BoundRect *getBoundRect() const  { return bound; }
+
+    void setDiffuseChanel(BasicChanel *dChanel) { diffuseCh = dChanel; }
+    void setSpecularChanel(BasicChanel *sChanel) { specularCh = sChanel; }
+    void setNormalChanel(BasicChanel *nChanel) {normalCh = nChanel; }
 
     virtual void setUpChanels();
 
     enum Chanels { diffuseC, specularC, normalC };
+
+    virtual void toXml(QXmlStreamWriter &stream);
 
 signals:
     void changed();
@@ -82,6 +89,8 @@ public:
     QLayout *getSettingsLayout() override;
 
     void setUpChanels() override;
+
+    void toXml(QXmlStreamWriter &stream) override;
 
 protected:
     QLayout *setUpBasicLayout();

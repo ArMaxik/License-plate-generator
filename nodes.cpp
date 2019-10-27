@@ -1,4 +1,4 @@
-    #include "nodes.h"
+#include "nodes.h"
 
 #include <QPainter>
 #include <QSize>
@@ -49,6 +49,16 @@ void BasicNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 //    return QSize(0, 0);
 //    qDebug() <<"BasicNode " << boundingRect();
 
+}
+
+void BasicNode::toXml(QXmlStreamWriter &stream, int type)
+{
+    stream.writeStartElement("BasicNode");
+    stream.writeAttribute("type", QString::number(type));
+    foreach (BasicPropertie *p, properites) {
+        p->toXml(stream);
+    }
+    stream.writeEndElement();
 }
 
 void BasicNode::randomize()
