@@ -45,6 +45,7 @@ public:
     void setNormalChanel(BasicChanel *nChanel) {normalCh = nChanel; }
 
     virtual void setUpChanels();
+    void setName(const QString &newName) { name = newName; }
 
     enum Chanels { diffuseC, specularC, normalC };
 

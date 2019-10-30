@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     , modelEdit(new ModelEditorWidget(textureEdit->getTextureGenerator(), this))
     , texS(new QItemSelectionModel(textureEdit->getItemsTreeModel()))
     , modelS(new QItemSelectionModel(modelEdit->getSceneTreeModel()))
+    , sceneLoader(new SceneLoader(textureEdit, this))
 {
     setUpEditors();
     setUpToolBar();
@@ -42,6 +43,9 @@ void MainWindow::setUpToolBar()
 
     connect(tb->getSaveSceneAction(), &QAction::triggered,
             textureEdit, &TextureEditorWidget::save);
+
+    connect(tb->getLoadSceneAction(), &QAction::triggered,
+            sceneLoader, &SceneLoader::loadScene);
 
 
     addToolBar(tb);

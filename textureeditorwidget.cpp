@@ -53,6 +53,9 @@ void TextureEditorWidget::addItem(BasicItem *item)
 
     connect(item, &BasicItem::changed,
             this, &TextureEditorWidget::updateImageViewers);
+    item->getNormalChanel()->redrawChanel();
+    item->update();
+    emit updateImageViewers();
 }
 
 void TextureEditorWidget::randomize()
@@ -69,7 +72,7 @@ void TextureEditorWidget::clear()
 void TextureEditorWidget::save()
 {
     QString fileName = QFileDialog::getSaveFileName(this,
-            tr("Save Template"), "",
+            tr("Save Scene"), "",
             tr("LiscensePlateXML (*.lp.xml);;All Files (*)"));
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){

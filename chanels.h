@@ -46,10 +46,13 @@ public slots:
     void setNode(Nodes nodeType);
     void setNode(BasicNode *initNode);
     void setNode(NodeHolder *initNode);
+    void setNewNode(BasicNode *initNode);
 
     void setCurrentNode(Nodes currNode) { currentNode = currNode; }
 
     void setDefaultColor(const QColor &color) { defaultColor = color; }
+    void redrawChanel();
+
 
 signals:
     void changed();
@@ -75,7 +78,6 @@ protected:
 
 protected slots:
     void onNodeChangeScale(qreal factor, QSizeF size);
-    void redrawChanel();
 //    void onNodeChanged() { qDebug()<<"Hoba"; emit changed(); }
 };
 

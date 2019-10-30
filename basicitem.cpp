@@ -154,8 +154,8 @@ void BasicItem::toXml(QXmlStreamWriter &stream)
 {
     stream.writeStartElement("BasicItem");
     stream.writeAttribute("name", name);
-    stream.writeTextElement("X", QString::number(boundingRect().x()));
-    stream.writeTextElement("Y", QString::number(boundingRect().y()));
+    stream.writeTextElement("X", QString::number(x()));
+    stream.writeTextElement("Y", QString::number(y()));
     stream.writeTextElement("Z", QString::number(zValue()));
     diffuseCh->toXml(stream);
     specularCh->toXml(stream);
@@ -404,6 +404,8 @@ void Canvas::toXml(QXmlStreamWriter &stream)
 {
     stream.writeStartElement("Canvas");
     stream.writeAttribute("name", name);
+    stream.writeTextElement("width", QString::number(boundingRect().width()));
+    stream.writeTextElement("height", QString::number(boundingRect().height()));
     diffuseCh->toXml(stream);
     specularCh->toXml(stream);
     normalCh->toXml(stream);

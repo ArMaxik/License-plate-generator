@@ -20,6 +20,7 @@ public slots:
     void setScale(qreal scale);
     void setWidth(qreal width) { setSize(QSizeF(width, bound.height())); }
     void setHeight(qreal height) { setSize(QSizeF(bound.width(), height)); }
+    void setPosition(float x, float y) { bound.moveTo(x, y); }
 
 signals:
     void sizeChanged(QRectF bound);

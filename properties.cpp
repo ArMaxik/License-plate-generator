@@ -224,6 +224,13 @@ QImage &ImagePropertie::getImage()
     return img;
 }
 
+void ImagePropertie::setImagePath(const QString &path)
+{
+    imgPath = path;
+    img = QImage(imgPath);
+    emit imageChange();
+}
+
 void ImagePropertie::toXml(QXmlStreamWriter &stream)
 {
     stream.writeStartElement("ImagePropertie");

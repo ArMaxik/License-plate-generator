@@ -141,7 +141,7 @@ void BasicChanel::setNode(Nodes nodeType)
     connect(nodeHolder->getNode(), &BasicNode::changed,
                this, &BasicChanel::changed);
     connect(nodeHolder->getNode(), &BasicNode::layoutChanged,
-            this, &BasicChanel::layoutChanged);
+               this, &BasicChanel::layoutChanged);
     needRedraw = true;
     update();
     emit layoutChanged();
@@ -161,6 +161,20 @@ void BasicChanel::setNode(BasicNode *initNode)
 void BasicChanel::setNode(NodeHolder *initNode)
 {
     nodeHolder = initNode;
+    emit layoutChanged();
+}
+
+void BasicChanel::setNewNode(BasicNode *initNode)
+{
+    nodeHolder->setNode(initNode);
+    nodeHolder->getNode()->setAffectSize(affectSize);
+    connect(nodeHolder->getNode(), &BasicNode::changed,
+               this, &BasicChanel::changed);
+    connect(nodeHolder->getNode(), &BasicNode::layoutChanged,
+            this, &BasicChanel::layoutChanged);
+    needRedraw = true;
+    update();
+    emit changed();
     emit layoutChanged();
 }
 

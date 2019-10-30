@@ -80,6 +80,10 @@ public:
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
 
+    void setImageProperie(ImagePropertie *img);
+    void setWidthProperie(NumberPropertie *w);
+    void setHeightPropertie(NumberPropertie *h);
+
 protected:
     ImagePropertie *image;
     NumberPropertie *width;
@@ -102,6 +106,11 @@ public:
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
     void setAffectSize(bool affect) override { affectSize = affect; updateBound(); }
+
+    void setStringProperie(StringPropertie *str);
+    void setFontSizeProperie(NumberPropertie *size);
+    void setColortPropertie(ColorPropertie *c);
+
 
 protected:
     StringPropertie *string;

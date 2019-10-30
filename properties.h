@@ -78,6 +78,8 @@ public:
     QImage &getImage();
     operator QImage() const { return img; }
 
+    void setImagePath(const QString &path);
+
     void toXml(QXmlStreamWriter &stream) override;
 
 signals:

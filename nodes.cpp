@@ -17,7 +17,7 @@ BasicNode::BasicNode(BoundRect *br)
 
 BasicNode::~BasicNode()
 {
-    qDeleteAll(properites);
+//    qDeleteAll(properites);
 }
 
 QLayout *BasicNode::getSettingsLayout()
@@ -109,6 +109,78 @@ void ImageNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->drawImage(0, 0, *image);
 }
 
+void ImageNode::setImageProperie(ImagePropertie *img)
+{
+    disconnect(image, &ImagePropertie::imageChange,
+            this, &ImageNode::reloadImage);
+    disconnect(image, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    disconnect(image, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+
+    int i = properites.indexOf(image);
+    delete properites[i];
+    properites.removeAt(i);
+
+    image = img;
+    connect(image, &ImagePropertie::imageChange,
+            this, &ImageNode::reloadImage);
+    connect(image, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    connect(image, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+    properites.push_back(image);
+    reloadImage();
+}
+
+void ImageNode::setWidthProperie(NumberPropertie *w)
+{
+    disconnect(width, &NumberPropertie::changed,
+            this, &ImageNode::changeSizeW);
+    disconnect(width, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    disconnect(width, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+
+    int i = properites.indexOf(width);
+    delete properites[i];
+    properites.removeAt(i);
+
+    width = w;
+    connect(width, &NumberPropertie::changed,
+            this, &ImageNode::changeSizeW);
+    connect(width, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    connect(width, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+    properites.push_back(width);
+    changeSizeW();
+}
+
+void ImageNode::setHeightPropertie(NumberPropertie *h)
+{
+    disconnect(height, &NumberPropertie::changed,
+            this, &ImageNode::changeSizeW);
+    disconnect(height, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    disconnect(height, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+
+    int i = properites.indexOf(height);
+    delete properites[i];
+    properites.removeAt(i);
+
+    height = h;
+    connect(height, &NumberPropertie::changed,
+            this, &ImageNode::changeSizeH);
+    connect(height, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    connect(height, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+    properites.push_back(height);
+    changeSizeH();
+}
+
 void ImageNode::reloadImage()
 {
     width->setValue(image->getImage().width());
@@ -184,6 +256,73 @@ void TextNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 //        bound->setSize(newR.size());
 //    }
     painter->drawText(bound->getBound(), *string);
+}
+
+void TextNode::setStringProperie(StringPropertie *str)
+{
+    disconnect(string, &StringPropertie::stringChange,
+            this, &TextNode::stringChanged);
+    disconnect(string, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    disconnect(string, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+
+    int i = properites.indexOf(string);
+    delete properites[i];
+    properites.removeAt(i);
+
+    string = str;
+    connect(string, &StringPropertie::stringChange,
+            this, &TextNode::stringChanged);
+    connect(string, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    connect(string, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+    properites.push_back(string);
+    updateBound();
+}
+
+void TextNode::setFontSizeProperie(NumberPropertie *size)
+{
+    disconnect(fontSize, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    disconnect(fontSize, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+
+    int i = properites.indexOf(fontSize);
+    delete properites[i];
+    properites.removeAt(i);
+
+    fontSize = size;
+    connect(fontSize, &NumberPropertie::changed,
+            this, [this] () { font.setPixelSize(*fontSize); updateBound(); emit changed(); });
+    connect(fontSize, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    connect(fontSize, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+    properites.push_back(fontSize);
+    font.setPixelSize(*fontSize);
+    updateBound();
+}
+
+void TextNode::setColortPropertie(ColorPropertie *c)
+{
+    disconnect(color, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    disconnect(color, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+
+    int i = properites.indexOf(color);
+    delete properites[i];
+    properites.removeAt(i);
+
+    color = c;
+    connect(color, &BasicPropertie::layoutChanged,
+            this, &BasicNode::layoutChanged);
+    connect(color, &BasicPropertie::changed,
+            this, &BasicNode::changed);
+    properites.push_back(color);
+    updateBound();
 }
 
 void TextNode::updateBound()

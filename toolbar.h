@@ -14,6 +14,7 @@ public:
     QAction *getrandomizeAction() const     { return randomizeAction; }
     QAction *getClearAllAction() const      { return clearAllAction; }
     QAction *getSaveSceneAction() const     { return saveSceneAction; }
+    QAction *getLoadSceneAction() const     { return loadSceneAction; }
 
 private:
    QAction *addItemAction;

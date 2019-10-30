@@ -4,6 +4,7 @@
 #include "textureeditorwidget.h"
 #include "modeleditorwidget.h"
 #include "itemsoverview.h"
+#include "sceneloader.h"
 
 #include <QMainWindow>
 #include <QTabWidget>
@@ -28,6 +29,8 @@ private:
     QItemSelectionModel *modelS;
 
     ItemsOverview *itemsOverview;
+
+    SceneLoader *sceneLoader;
 
 private slots:
     void switchEditors();

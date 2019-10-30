@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui 3dcore 3drender 3dinput 3dextras
+QT       += core gui xml 3dcore 3drender 3dinput 3dextras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -43,6 +43,7 @@ SOURCES += \
         offscreenengine.cpp \
         properties.cpp \
         renderableentity.cpp \
+        sceneloader.cpp \
         settingswidget.cpp \
         textureeditorwidget.cpp \
         texturegenerator.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
         offscreenengine.h \
         properties.h \
         renderableentity.h \
+        sceneloader.h \
         settingswidget.h \
         textureeditorwidget.h \
         texturegenerator.h \
