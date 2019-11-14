@@ -108,14 +108,14 @@ public:
     QLayout *getSettingsLayout() override;
 
     int getPictureCount() const { return picNum; }
-    const QString &getSavePath() const { return savePath; }
+    const QString &getSavePath() const { return savingPath; }
 
 public slots:
     void randomize() override;
 
 private:
     int picNum;
-    QString savePath;
+    QString savingPath;
 
 };
 

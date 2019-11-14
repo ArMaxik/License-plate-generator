@@ -55,7 +55,7 @@ void BasicChanel::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         nodeHolder->getNode()->paint(&painterBase, option, widget);
         chanelBuffer = effect->apply(&base);
         needRedraw = false;
-        qDebug() << this;
+//        qDebug() << this;
 
     }
     painter->drawImage(0, 0, chanelBuffer);

@@ -6,11 +6,11 @@
 #include <QXmlStreamWriter>
 
 
-class BasicPropertie : public QObject
+class BasicProperty : public QObject
 {
     Q_OBJECT
 public:
-    BasicPropertie(QString labelText);
+    BasicProperty(QString labelText);
 
     virtual QLayout *getSettingsLayout();
 
@@ -32,11 +32,11 @@ protected:
     virtual void makeRandomLayout(QVBoxLayout *ml);
 };
 
-class NumberPropertie : public BasicPropertie
+class NumberProperty : public BasicProperty
 {
     Q_OBJECT
 public:
-    NumberPropertie(QString labelText, int val, int min_v, int max_v);
+    NumberProperty(QString labelText, int val, int min_v, int max_v);
 
 //    QLayout *getSettingsLayout() override;
 
@@ -68,11 +68,11 @@ protected slots:
     void onValueChange(int newValue);
 };
 
-class ImagePropertie : public BasicPropertie
+class ImageProperty : public BasicProperty
 {
     Q_OBJECT
 public:
-    ImagePropertie(QString labelText);
+    ImageProperty(QString labelText);
 
     QLayout *getSettingsLayout() override;
     QImage &getImage();
@@ -93,11 +93,11 @@ protected slots:
     void onPathButtonPush();
 };
 
-class StringPropertie : public BasicPropertie
+class StringProperty : public BasicProperty
 {
     Q_OBJECT
 public:
-    StringPropertie(QString labelText, QString s = "Text");
+    StringProperty(QString labelText, QString s = "Text");
 
     QLayout *getSettingsLayout() override;
 
@@ -116,11 +116,11 @@ protected slots:
     void onStringChange(QString newStr);
 };
 
-class ColorPropertie : public BasicPropertie
+class ColorProperty : public BasicProperty
 {
     Q_OBJECT
 public:
-    ColorPropertie(QString labelText, QColor c = Qt::black);
+    ColorProperty(QString labelText, QColor c = Qt::black);
 
     QLayout *getSettingsLayout() override;
 

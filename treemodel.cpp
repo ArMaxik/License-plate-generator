@@ -101,6 +101,27 @@ Qt::DropActions AbstractTreeModel::supportedDragActions() const
     return Qt::CopyAction | Qt::MoveAction;
 }
 
+QModelIndex AbstractTreeModel::findWhoNeedDeleted(QModelIndex start)
+{
+//    if(start.isValid()) {
+//        if(static_cast<AbstractModelItem*>(start.internalPointer())->isSelected()) {
+//            return start;
+//        }
+//    }
+//    for(int i = 0; i < treeView->model()->rowCount(start); i++) {
+//        QModelIndex res = findSelected(treeView->model()->index(i, 0, start));
+//        if(res.isValid()) {
+//            return res;
+//        }
+//    }
+    return QModelIndex();
+}
+
+void AbstractTreeModel::DeleterWhoNeed()
+{
+
+}
+
 // ============== ItemsTreeModel ==============
 
 ItemsTreeModel::ItemsTreeModel(QObject *parent)
@@ -116,7 +137,10 @@ void ItemsTreeModel::addItem(BasicItem *item)
     int pos = rowCount(index(0, 0, QModelIndex()));
     beginInsertRows(index(0, 0, QModelIndex()), pos, pos);
 
-    canvas->appendChild(new TreeItem(item, canvas));
+    TreeItem *treeItem = new TreeItem(item, canvas);
+    canvas->appendChild(treeItem);
+    connect(item, &BasicItem::needDelete,
+            treeItem, &AbstractModelItem::Delete);
 
     item->setParentItem(canvas->getItem());
     item->getDiffuseChanel()->setParentItem(canvas->getItem()->getDiffuseChanel());

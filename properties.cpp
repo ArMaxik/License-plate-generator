@@ -13,7 +13,7 @@
 
 // ========[ BasicPropertie ]==================================================
 
-BasicPropertie::BasicPropertie(QString labelText)
+BasicProperty::BasicProperty(QString labelText)
     : QObject()
     , random(false)
     , label(labelText)
@@ -21,7 +21,7 @@ BasicPropertie::BasicPropertie(QString labelText)
 
 }
 
-QLayout *BasicPropertie::getSettingsLayout()
+QLayout *BasicProperty::getSettingsLayout()
 {
     QVBoxLayout *ml = new QVBoxLayout();
 
@@ -47,25 +47,25 @@ QLayout *BasicPropertie::getSettingsLayout()
     return ml;
 }
 
-void BasicPropertie::randomize()
+void BasicProperty::randomize()
 {
 
 }
 
-void BasicPropertie::makeNotRandomLayout(QVBoxLayout *ml)
+void BasicProperty::makeNotRandomLayout(QVBoxLayout *ml)
 {
 
 }
 
-void BasicPropertie::makeRandomLayout(QVBoxLayout *ml)
+void BasicProperty::makeRandomLayout(QVBoxLayout *ml)
 {
 
 }
 
 // ========[ NumberPropertie ]==================================================
 
-NumberPropertie::NumberPropertie(QString labelText, int val, int min_v, int max_v)
-    : BasicPropertie (labelText)
+NumberProperty::NumberProperty(QString labelText, int val, int min_v, int max_v)
+    : BasicProperty (labelText)
     , value(val)
     , min(min_v)
     , max(max_v)
@@ -76,7 +76,7 @@ NumberPropertie::NumberPropertie(QString labelText, int val, int min_v, int max_
     }
 }
 
-void NumberPropertie::makeNotRandomLayout(QVBoxLayout *ml)
+void NumberProperty::makeNotRandomLayout(QVBoxLayout *ml)
 {
 //    QVBoxLayout *ml = static_cast<QVBoxLayout*>(BasicPropertie::getSettingsLayout());
 
@@ -93,12 +93,12 @@ void NumberPropertie::makeNotRandomLayout(QVBoxLayout *ml)
     ml->addLayout(numLO);
 
     connect(numSB, QOverload<int>::of(&QSpinBox::valueChanged),
-            this, &NumberPropertie::onValueChange);
+            this, &NumberProperty::onValueChange);
 
     //    return ml;
 }
 
-void NumberPropertie::makeRandomLayout(QVBoxLayout *ml)
+void NumberProperty::makeRandomLayout(QVBoxLayout *ml)
 {
     QHBoxLayout *numLO = new QHBoxLayout();
     QLabel *numL = new QLabel(label);
@@ -130,12 +130,12 @@ void NumberPropertie::makeRandomLayout(QVBoxLayout *ml)
             this, [=](int v){ max = v; numSBmin->setMaximum(v); });
 }
 
-int NumberPropertie::getValue() const
+int NumberProperty::getValue() const
 {
     return value;
 }
 
-void NumberPropertie::toXml(QXmlStreamWriter &stream)
+void NumberProperty::toXml(QXmlStreamWriter &stream)
 {
     stream.writeStartElement("NumberPropertie");
     stream.writeAttribute("label", label);
@@ -145,7 +145,7 @@ void NumberPropertie::toXml(QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
-void NumberPropertie::setValue(int newValue, bool silent)
+void NumberProperty::setValue(int newValue, bool silent)
 {
     value = newValue;
     if(!silent)
@@ -156,7 +156,7 @@ void NumberPropertie::setValue(int newValue, bool silent)
 //    }
 }
 
-void NumberPropertie::setRange(int min, int max)
+void NumberProperty::setRange(int min, int max)
 {
     this->min = min;
     this->max = max;
@@ -165,15 +165,15 @@ void NumberPropertie::setRange(int min, int max)
 //    }
 }
 
-void NumberPropertie::randomize()
+void NumberProperty::randomize()
 {
     if(random) {
         setValue(QRandomGenerator::global()->bounded(min, max));
-        qDebug() << min << " " << max << " " << value;
+//        qDebug() << min << " " << max << " " << value;
     }
 }
 
-void NumberPropertie::onValueChange(int newValue)
+void NumberProperty::onValueChange(int newValue)
 {
     if(newValue != value) {
         value = newValue;
@@ -183,16 +183,16 @@ void NumberPropertie::onValueChange(int newValue)
 
 // ========[ ImagePropertie ]==================================================
 
-ImagePropertie::ImagePropertie(QString labelText)
-    : BasicPropertie (labelText)
+ImageProperty::ImageProperty(QString labelText)
+    : BasicProperty (labelText)
 
 {
 
 }
 
-QLayout *ImagePropertie::getSettingsLayout()
+QLayout *ImageProperty::getSettingsLayout()
 {
-    QLayout *ml = BasicPropertie::getSettingsLayout();
+    QLayout *ml = BasicProperty::getSettingsLayout();
 
     QHBoxLayout *pathLO = new QHBoxLayout();
     QLabel *pathL = new QLabel(label);
@@ -200,11 +200,14 @@ QLayout *ImagePropertie::getSettingsLayout()
     QPushButton *pathB = new QPushButton(tr("Select image"));
 
     connect(pathB, &QPushButton::clicked,
-            this, &ImagePropertie::onPathButtonPush);
+            this, &ImageProperty::onPathButtonPush, Qt::QueuedConnection);
 
     pathLO->addWidget(pathL);
     pathLO->addWidget(pathB);
     ml->addItem(pathLO);
+    QLabel *imgL = new QLabel();
+    imgL->setPixmap(QPixmap::fromImage(img).scaledToWidth(150, Qt::SmoothTransformation));
+    ml->addWidget(imgL);
 
 //    QVBoxLayout *fl = new QVBoxLayout();
 
@@ -219,19 +222,19 @@ QLayout *ImagePropertie::getSettingsLayout()
     return ml;
 }
 
-QImage &ImagePropertie::getImage()
+QImage &ImageProperty::getImage()
 {
     return img;
 }
 
-void ImagePropertie::setImagePath(const QString &path)
+void ImageProperty::setImagePath(const QString &path)
 {
     imgPath = path;
     img = QImage(imgPath);
     emit imageChange();
 }
 
-void ImagePropertie::toXml(QXmlStreamWriter &stream)
+void ImageProperty::toXml(QXmlStreamWriter &stream)
 {
     stream.writeStartElement("ImagePropertie");
     stream.writeAttribute("label", label);
@@ -239,35 +242,47 @@ void ImagePropertie::toXml(QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
-void ImagePropertie::onPathButtonPush()
+void ImageProperty::onPathButtonPush()
 {
     imgPath = QFileDialog::getOpenFileName(nullptr,
                                                  tr("Open Image"),
                                                  "/home/",
                                                  tr("Image Files (*.png *.jpg *.bmp)"));
+
+//    QFileDialog fileDialog(nullptr,
+//                           tr("Open Image"),
+//                           "/home/",
+//                           tr("Image Files (*.png *.jpg *.bmp)"));
+//    fileDialog.setAcceptMode(QFileDialog::AcceptOpen);
+//    fileDialog.setFileMode(QFileDialog::ExistingFiles);
+//    fileDialog.setOption(QFileDialog::DontUseNativeDialog,true);
+//    if (QDialog::Accepted != fileDialog.exec())
+//        return;
+
+//    imgPath = fileDialog.selectedFiles().first();
     img = QImage(imgPath);
     emit imageChange();
 }
 
 // ========[ StringPropertie ]==================================================
 
-StringPropertie::StringPropertie(QString labelText, QString s)
-    : BasicPropertie(labelText)
+StringProperty::StringProperty(QString labelText, QString s)
+    : BasicProperty(labelText)
     , str(s)
 {
 
 }
 
-QLayout *StringPropertie::getSettingsLayout()
+QLayout *StringProperty::getSettingsLayout()
 {
-    QLayout *ml = BasicPropertie::getSettingsLayout();
+    QLayout *ml = BasicProperty::getSettingsLayout();
 
     QHBoxLayout *strLO = new QHBoxLayout();
     QLabel *strL = new QLabel(label);
     QLineEdit *strLE = new QLineEdit(str);
 
     connect(strLE, &QLineEdit::textChanged,
-            this, &StringPropertie::onStringChange);
+            this, &StringProperty::onStringChange);
 
     strLO->addWidget(strL);
     strLO->addWidget(strLE);
@@ -276,12 +291,12 @@ QLayout *StringPropertie::getSettingsLayout()
     return ml;
 }
 
-QString &StringPropertie::getString()
+QString &StringProperty::getString()
 {
     return str;
 }
 
-void StringPropertie::toXml(QXmlStreamWriter &stream)
+void StringProperty::toXml(QXmlStreamWriter &stream)
 {
     stream.writeStartElement("StringPropertie");
     stream.writeAttribute("label", label);
@@ -289,7 +304,7 @@ void StringPropertie::toXml(QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
-void StringPropertie::onStringChange(QString newStr)
+void StringProperty::onStringChange(QString newStr)
 {
     str = newStr;
     emit stringChange(newStr);
@@ -298,23 +313,23 @@ void StringPropertie::onStringChange(QString newStr)
 // ========[ ColorPropertie ]==================================================
 
 
-ColorPropertie::ColorPropertie(QString labelText, QColor c)
-    : BasicPropertie(labelText)
+ColorProperty::ColorProperty(QString labelText, QColor c)
+    : BasicProperty(labelText)
     , color(c)
 {
 
 }
 
-QLayout *ColorPropertie::getSettingsLayout()
+QLayout *ColorProperty::getSettingsLayout()
 {
-    QLayout *ml = BasicPropertie::getSettingsLayout();
+    QLayout *ml = BasicProperty::getSettingsLayout();
 
     QHBoxLayout *colorLO = new QHBoxLayout();
     QLabel *colorL = new QLabel(label);
     QPushButton *colorPB = new QPushButton(tr("Choose color"));
 
     connect(colorPB, &QPushButton::clicked,
-            this, &ColorPropertie::onColorChange);
+            this, &ColorProperty::onColorChange);
 
     colorLO->addWidget(colorL);
     colorLO->addWidget(colorPB);
@@ -323,12 +338,12 @@ QLayout *ColorPropertie::getSettingsLayout()
     return ml;
 }
 
-QColor &ColorPropertie::getColor()
+QColor &ColorProperty::getColor()
 {
     return color;
 }
 
-void ColorPropertie::toXml(QXmlStreamWriter &stream)
+void ColorProperty::toXml(QXmlStreamWriter &stream)
 {
     stream.writeStartElement("ColorPropertie");
     stream.writeAttribute("label", label);
@@ -338,7 +353,7 @@ void ColorPropertie::toXml(QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
-void ColorPropertie::onColorChange()
+void ColorProperty::onColorChange()
 {
     color = QColorDialog::getColor();
     emit changed();

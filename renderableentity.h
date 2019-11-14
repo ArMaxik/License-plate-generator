@@ -12,8 +12,8 @@ class RenderableEntity : public Qt3DCore::QEntity
 public:
     RenderableEntity(Qt3DCore::QNode *parent = nullptr, Qt3DRender::QMaterial *material = nullptr);
 
-    Qt3DExtras::QPlaneMesh *mesh() const;
-    Qt3DCore::QTransform *transform() const;
+    Qt3DExtras::QPlaneMesh *getMesh() const;
+    Qt3DCore::QTransform *getTransform() const;
 
 public slots:
     void randomize();

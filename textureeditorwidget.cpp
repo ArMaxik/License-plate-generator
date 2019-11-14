@@ -18,7 +18,6 @@ TextureEditorWidget::TextureEditorWidget(QWidget *parent)
 
     Canvas *canvas = new Canvas(QSize(600, 400));
     canvas->setUpChanels();
-    controllView->addItem(canvas);
 
     texGen->setCanvas(canvas);
     treeModel->setCanvas(canvas);

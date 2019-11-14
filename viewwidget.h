@@ -40,7 +40,6 @@ public:
     CanvasViewWidget(QWidget *parent = nullptr);
 
     void setCanvas(Canvas *c);
-    void addItem(QGraphicsItem *item) { scene->addItem(item); }
 
 protected slots:
     void recalulateSceneRect() override;

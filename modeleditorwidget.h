@@ -6,6 +6,8 @@
 #include "offscreenengine.h"
 
 #include <QWidget>
+#include <QProgressBar>
+
 
 class RenderStep
 {
@@ -36,6 +38,9 @@ public:
     ModelManager *getModelManager()        { return modelM;     }
     RenderManager *getRenderManager()      { return renderM;    }
 
+signals:
+    void picturesRendered(int num);
+
 public slots:
     void setUpRender();
 
@@ -62,6 +67,7 @@ private slots:
 
 class ModelEditorWidget : public QWidget
 {
+    Q_OBJECT
 public:
     ModelEditorWidget(TextureGenerator *tg, QWidget *parent = nullptr);
 
@@ -70,6 +76,13 @@ public:
 private:
     SceneTreeModel *treeModel;
     SceneController *sceneController;
+
+    QProgressBar *renderPB;
+
+    void setUpLayout();
+
+private slots:
+    void setUpForRender();
 };
 
 #endif // MODELEDITORWIDGET_H

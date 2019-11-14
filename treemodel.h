@@ -27,6 +27,11 @@ public:
 
 protected:
     AbstractModelItem *rootItem;
+
+    QModelIndex findWhoNeedDeleted(QModelIndex start = QModelIndex());
+
+protected slots:
+    void DeleterWhoNeed();
 };
 
 

@@ -20,10 +20,10 @@ private:
     TextureEditorWidget *texEditor;
     BasicItem *createItem(const QDomNode &BasicItemXml);
     BasicNode *createNode(const QDomNode &nodeXml, BoundRect *br, BasicChanel::Nodes *nodeType);
-    NumberPropertie *createNumberPropertie(const QDomNode &propertyXml);
-    ImagePropertie *createImagePropertie(const QDomNode &propertyXml);
-    StringPropertie *createStringPropertie(const QDomNode &propertyXml);
-    ColorPropertie *createColorPropertie(const QDomNode &propertyXml);
+    NumberProperty *createNumberPropertie(const QDomNode &propertyXml);
+    ImageProperty *createImagePropertie(const QDomNode &propertyXml);
+    StringProperty *createStringPropertie(const QDomNode &propertyXml);
+    ColorProperty *createColorPropertie(const QDomNode &propertyXml);
 };
 
 #endif // SCENELOADER_H

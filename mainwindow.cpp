@@ -42,10 +42,10 @@ void MainWindow::setUpToolBar()
             textureEdit, &TextureEditorWidget::clear);
 
     connect(tb->getSaveSceneAction(), &QAction::triggered,
-            textureEdit, &TextureEditorWidget::save);
+            textureEdit, &TextureEditorWidget::save, Qt::QueuedConnection);
 
     connect(tb->getLoadSceneAction(), &QAction::triggered,
-            sceneLoader, &SceneLoader::loadScene);
+            sceneLoader, &SceneLoader::loadScene, Qt::QueuedConnection);
 
 
     addToolBar(tb);

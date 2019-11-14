@@ -34,15 +34,15 @@ public:
     virtual QLayout *getSettingsLayout();
     QString getName() { return name; }
 
-    BasicChanel *getDiffuseChanel()  { return diffuseCh; }
-    BasicChanel *getSpecularChanel() { return specularCh; }
-    BasicChanel *getNormalChanel()   { return normalCh; }
+    BasicChanel *getDiffuseChanel() const  { return diffuseCh; }
+    BasicChanel *getSpecularChanel() const { return specularCh; }
+    BasicChanel *getNormalChanel() const   { return normalCh; }
 
-    BoundRect *getBoundRect() const  { return bound; }
+    BoundRect *getBoundRect() const        { return bound; }
 
-    void setDiffuseChanel(BasicChanel *dChanel) { diffuseCh = dChanel; }
+    void setDiffuseChanel(BasicChanel *dChanel)  { diffuseCh = dChanel; }
     void setSpecularChanel(BasicChanel *sChanel) { specularCh = sChanel; }
-    void setNormalChanel(BasicChanel *nChanel) {normalCh = nChanel; }
+    void setNormalChanel(BasicChanel *nChanel)   { normalCh = nChanel; }
 
     virtual void setUpChanels();
     void setName(const QString &newName) { name = newName; }
@@ -54,11 +54,13 @@ public:
 signals:
     void changed();
     void layoutChanged();
+    void needDelete();
 
 protected:
     QString name;
     BoundRect *bound;
     Chanels sizeAffectedCh;
+    Chanels shownC;
 
     BasicChanel *diffuseCh;
     BasicChanel *specularCh;
@@ -66,8 +68,7 @@ protected:
 
     QLayout *setUpBasicLayout();
 
-    Chanels shownC;
-    bool diffuseChToSpec;
+//    bool diffuseChToSpec;
 
 protected slots:
     void onChanelChanged() { emit changed(); }

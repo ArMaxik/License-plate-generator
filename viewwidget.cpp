@@ -95,6 +95,7 @@ void CanvasViewWidget::setCanvas(Canvas *c)
     connect(canvas->getBoundRect(), &BoundRect::sizeChanged,
             this, &CanvasViewWidget::recalulateSceneRect);
     recalulateSceneRect();
+    scene->addItem(c);
 }
 
 void CanvasViewWidget::recalulateSceneRect()

@@ -1,6 +1,10 @@
 #include "managers.h"
 
 #include <QLabel>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QDoubleSpinBox>
+#include <QtMath>
 
 AbstractManager::AbstractManager(QObject *parent)
     : QObject(parent)
@@ -15,6 +19,7 @@ MaterialManager::MaterialManager(QObject *parent)
     , mainMat(new MaterialNormalDiffuseSpecular())
 {
     name = tr("Material Manager");
+    qDebug() << mainMat->shininess();
 
 //    QObject::connect(texGen, &TextureGenerator::diffuseGenerated,
 //                         floridaPlate->getDiffuseTexture(), &ImageTexture::setImage);
@@ -33,8 +38,23 @@ TextureGenerator *MaterialManager::getGenerator() const
 QLayout *MaterialManager::getSettingsLayout()
 {
     QVBoxLayout *l = new QVBoxLayout();
-    l->addWidget(new QLabel("Just a MaterialManager"));
+    l->addStretch();
 
+    QHBoxLayout *shiNumLO = new QHBoxLayout();
+    QLabel *shiNumL = new QLabel(tr("Shininess strenght"));
+    QDoubleSpinBox *shiNumDSB = new QDoubleSpinBox();
+    shiNumDSB->setRange(0.0, 10.0);
+    shiNumDSB->setDecimals(1);
+    shiNumDSB->setSingleStep(0.1);
+    shiNumDSB->setValue((10.0 - qLn(mainMat->shininess())/qLn(10.0))*10.0/9.9);
+    shiNumLO->addWidget(shiNumL);
+    shiNumLO->addWidget(shiNumDSB);
+    l->addLayout(shiNumLO);
+
+    connect(shiNumDSB, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this, [this](double s){ mainMat->setShininess(qPow(10, 10.0 - (s*0.99))); qDebug() << mainMat->shininess();});
+
+    l->addStretch();
     return l;
 }
 
@@ -147,13 +167,45 @@ RenderManager::RenderManager(Qt3DCore::QEntity *scene, QObject *parent)
     name = tr("Render Manager");
 
     picNum = 20;
-    savePath = "C:/Users/slava/OneDrive/Qt_projects/PlatesEditor/pic/";
+    savingPath = "C:/Users/slava/OneDrive/Qt_projects/PlatesEditor/pic/";
 }
 
 QLayout *RenderManager::getSettingsLayout()
 {
     QVBoxLayout *l = new QVBoxLayout();
-    l->addWidget(new QLabel("Just a SettingsManager"));
+    l->addStretch();
+
+    QHBoxLayout *picNumLO = new QHBoxLayout();
+    QLabel *picNumL = new QLabel(tr("Picture number"));
+    QSpinBox *picNumSB = new QSpinBox();
+    picNumSB->setRange(1, 5000);
+    picNumSB->setValue(picNum);
+    picNumLO->addWidget(picNumL);
+    picNumLO->addWidget(picNumSB);
+    l->addLayout(picNumLO);
+
+    QHBoxLayout *pathLO = new QHBoxLayout();
+    QLabel *pathL = new QLabel(tr("Saving path"));
+    QLabel *pathDispL = new QLabel(savingPath);
+    QPushButton *pathPB = new QPushButton(tr("Choose path"));
+    pathLO->addWidget(pathL);
+    pathLO->addWidget(pathPB);
+    l->addLayout(pathLO);
+    l->addWidget(pathDispL);
+
+    connect(picNumSB, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int num){ picNum = num; });
+    connect(pathPB, &QPushButton::pressed,
+            this, [=](){
+              savingPath = QFileDialog::getExistingDirectory(
+                              nullptr
+                            , "Save path"
+                            , ""
+                            , QFileDialog::ShowDirsOnly
+                            | QFileDialog::DontResolveSymlinks) + "/";
+              pathDispL->setText(savingPath);}, Qt::QueuedConnection);
+
+    l->addStretch();
 
     return l;
 }

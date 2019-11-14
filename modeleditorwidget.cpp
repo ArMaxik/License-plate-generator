@@ -77,6 +77,7 @@ void SceneController::doNextRenderStep()
         renderEngine->setClearColor(Qt::black);
         renderEngine->requestRenderCapture();
     }
+    emit picturesRendered(firstRenderStep->renderNum);
 }
 
 void SceneController::acceptRender(QImage img)
@@ -92,14 +93,7 @@ ModelEditorWidget::ModelEditorWidget(TextureGenerator *tg, QWidget *parent)
     , treeModel(new SceneTreeModel())
     , sceneController(new SceneController(this))
 {
-    QVBoxLayout *mainL = new QVBoxLayout();
-    setLayout(mainL);
-
-    QPushButton *renderButton = new QPushButton(tr("Render"));
-    mainL->addWidget(renderButton);
-
-    connect(renderButton, &QPushButton::clicked,
-            sceneController, &SceneController::setUpRender);
+    setUpLayout();
 
     sceneController->getMaterialsManager()->setTextureGenerator(tg);
     treeModel->addItem(sceneController->getMaterialsManager());
@@ -108,4 +102,28 @@ ModelEditorWidget::ModelEditorWidget(TextureGenerator *tg, QWidget *parent)
     treeModel->addItem(sceneController->getLightsManager());
     treeModel->addItem(sceneController->getRenderManager());
 
+}
+
+void ModelEditorWidget::setUpLayout()
+{
+    QVBoxLayout *mainL = new QVBoxLayout();
+    setLayout(mainL);
+
+    QPushButton *renderButton = new QPushButton(tr("Render"));
+    mainL->addWidget(renderButton);
+    renderPB = new QProgressBar(this);
+    mainL->addWidget(renderPB);
+
+    connect(renderButton, &QPushButton::clicked,
+            sceneController, &SceneController::setUpRender);
+    connect(renderButton, &QPushButton::clicked,
+            this, &ModelEditorWidget::setUpForRender);
+    connect(sceneController, &SceneController::picturesRendered,
+            this, [this](int num){ renderPB->setValue(renderPB->maximum() - num); });
+}
+
+void ModelEditorWidget::setUpForRender()
+{
+     renderPB->setRange(0, sceneController->getRenderManager()->getPictureCount());
+     renderPB->setValue(0);
 }

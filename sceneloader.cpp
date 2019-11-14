@@ -6,11 +6,11 @@
 static QMap<QString, QDomNode> *getNodeProperties(const QDomNode &nodeXml)
 {
     QMap<QString, QDomNode> *map = new QMap<QString, QDomNode>();  // Smart pointers!!!
-    auto properies = nodeXml.childNodes();
+    auto propertys = nodeXml.childNodes();
 
-    for(int i = 0; i < properies.count(); i++) {
-        map->insert(properies.item(i).attributes().namedItem("label").nodeValue(),
-                   properies.item(i));
+    for(int i = 0; i < propertys.count(); i++) {
+        map->insert(propertys.item(i).attributes().namedItem("label").nodeValue(),
+                   propertys.item(i));
     }
     return map;
 }
@@ -89,14 +89,14 @@ BasicNode *SceneLoader::createNode(const QDomNode &nodeXml, BoundRect *br, Basic
 
     if(*nodeType == BasicChanel::Nodes::ImageN) {
         ImageNode *iNode = new ImageNode(br);
-        iNode->setWidthProperie(createNumberPropertie(properties->value("Image Width")));
+        iNode->setWidthProperty(createNumberPropertie(properties->value("Image Width")));
         iNode->setHeightPropertie(createNumberPropertie(properties->value("Image Height")));
-        iNode->setImageProperie(createImagePropertie(properties->value("Image")));
+        iNode->setImageProperty(createImagePropertie(properties->value("Image")));
         node = iNode;
     } else if(*nodeType == BasicChanel::Nodes::TextN) {
         TextNode *tNode = new TextNode(br);
-        tNode->setStringProperie(createStringPropertie(properties->value("Text")));
-        tNode->setFontSizeProperie(createNumberPropertie(properties->value("Text size")));
+        tNode->setStringProperty(createStringPropertie(properties->value("Text")));
+        tNode->setFontSizeProperty(createNumberPropertie(properties->value("Text size")));
         tNode->setColortPropertie(createColorPropertie(properties->value("Text Color")));
         node = tNode;
     }
@@ -104,43 +104,43 @@ BasicNode *SceneLoader::createNode(const QDomNode &nodeXml, BoundRect *br, Basic
     return node;
 }
 
-NumberPropertie *SceneLoader::createNumberPropertie(const QDomNode &propertyXml)
+NumberProperty *SceneLoader::createNumberPropertie(const QDomNode &propertyXml)
 {
     QString label = propertyXml.attributes().namedItem("label").nodeValue();
     int value = propertyXml.firstChildElement("value").text().toInt();
     int min = propertyXml.firstChildElement("min").text().toInt();
     int max = propertyXml.firstChildElement("max").text().toInt();
 
-    NumberPropertie *np = new NumberPropertie(label, value, min, max);
+    NumberProperty *np = new NumberProperty(label, value, min, max);
     return np;
 }
 
-ImagePropertie *SceneLoader::createImagePropertie(const QDomNode &propertyXml)
+ImageProperty *SceneLoader::createImagePropertie(const QDomNode &propertyXml)
 {
     QString label = propertyXml.attributes().namedItem("label").nodeValue();
     QString imgPath = propertyXml.firstChildElement("imgPath").text();
 
-    ImagePropertie *ip = new ImagePropertie(label);
+    ImageProperty *ip = new ImageProperty(label);
     ip->setImagePath(imgPath);
     return ip;
 }
 
-StringPropertie *SceneLoader::createStringPropertie(const QDomNode &propertyXml)
+StringProperty *SceneLoader::createStringPropertie(const QDomNode &propertyXml)
 {
     QString label = propertyXml.attributes().namedItem("label").nodeValue();
     QString str = propertyXml.firstChildElement("str").text();
 
-    StringPropertie *sp = new StringPropertie(label, str);
+    StringProperty *sp = new StringProperty(label, str);
     return sp;
 }
 
-ColorPropertie *SceneLoader::createColorPropertie(const QDomNode &propertyXml)
+ColorProperty *SceneLoader::createColorPropertie(const QDomNode &propertyXml)
 {
     QString label = propertyXml.attributes().namedItem("label").nodeValue();
     int r = propertyXml.firstChildElement("red").text().toInt();
     int g = propertyXml.firstChildElement("green").text().toInt();
     int b = propertyXml.firstChildElement("blue").text().toInt();
 
-    ColorPropertie *cp = new ColorPropertie(label, QColor(r, g, b));
+    ColorProperty *cp = new ColorProperty(label, QColor(r, g, b));
     return cp;
 }

@@ -24,6 +24,10 @@ public:
     AbstractModelItem *parentItem();
 
     void clear();
+    bool isDelete() { return needDelete; }
+
+public slots:
+    void Delete()   { needDelete = true; }
 
 signals:
     void layoutChanged();
@@ -31,13 +35,15 @@ signals:
 protected:
     QVector<AbstractModelItem*> childItems;
     AbstractModelItem *parent;
+
+    bool needDelete;
 };
 
 class TreeItem : public AbstractModelItem
 {
 public:
     explicit TreeItem(BasicItem *item, AbstractModelItem *parent);
-    ~TreeItem() override { delete itemData; qDebug() << "Deleted TI";}
+    ~TreeItem() override { delete itemData; }
 
     QVariant data(int column) const override;
 

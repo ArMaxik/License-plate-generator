@@ -5,6 +5,7 @@
 AbstractModelItem::AbstractModelItem(AbstractModelItem *parent)
     : QObject()
     , parent(parent)
+    , needDelete(false)
 {
 
 }

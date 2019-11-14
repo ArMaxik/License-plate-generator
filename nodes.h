@@ -38,7 +38,7 @@ signals:
     void layoutChanged();
 
 protected:
-    QList<BasicPropertie*> properites;
+    QList<BasicProperty*> properites;
     BoundRect *bound;
     bool affectSize;
     qreal scale;
@@ -80,14 +80,14 @@ public:
                    const QStyleOptionGraphicsItem *option,
                    QWidget *widget) override;
 
-    void setImageProperie(ImagePropertie *img);
-    void setWidthProperie(NumberPropertie *w);
-    void setHeightPropertie(NumberPropertie *h);
+    void setImageProperty(ImageProperty *img);
+    void setWidthProperty(NumberProperty *w);
+    void setHeightPropertie(NumberProperty *h);
 
 protected:
-    ImagePropertie *image;
-    NumberPropertie *width;
-    NumberPropertie *height;
+    ImageProperty *image;
+    NumberProperty *width;
+    NumberProperty *height;
 
 protected slots:
     void reloadImage();
@@ -107,15 +107,15 @@ public:
                    QWidget *widget) override;
     void setAffectSize(bool affect) override { affectSize = affect; updateBound(); }
 
-    void setStringProperie(StringPropertie *str);
-    void setFontSizeProperie(NumberPropertie *size);
-    void setColortPropertie(ColorPropertie *c);
+    void setStringProperty(StringProperty *str);
+    void setFontSizeProperty(NumberProperty *size);
+    void setColortPropertie(ColorProperty *c);
 
 
 protected:
-    StringPropertie *string;
-    NumberPropertie *fontSize;
-    ColorPropertie *color;
+    StringProperty *string;
+    NumberProperty *fontSize;
+    ColorProperty *color;
     QFont font;
     QPen pen;
 
@@ -136,7 +136,7 @@ public:
                    QWidget *widget) override;
 
 protected:
-    ColorPropertie *color;
+    ColorProperty *color;
 };
 
 #endif // NODES_H

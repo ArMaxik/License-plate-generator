@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QFrame>
+#include <QPushButton>
 #include <QComboBox>
 #include <QListWidget>
 
@@ -18,11 +19,11 @@ BasicItem::BasicItem()
     , name(QObject::tr("Unnamed Item"))
     , bound(new BoundRect(QRectF(0.0, 0.0, 0.0, 0.0), this))
     , sizeAffectedCh(Chanels::diffuseC)
+    , shownC(Chanels::diffuseC)
     , diffuseCh(new DiffuseChanel(bound))
     , specularCh(new SpecularChanel(bound))
     , normalCh(new NormalChanel(bound))
-    , shownC(Chanels::diffuseC)
-    , diffuseChToSpec(false)
+//    , diffuseChToSpec(false)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
@@ -126,6 +127,11 @@ QLayout *BasicItem::getSettingsLayout()
     layout->addWidget(diffuseGroup);
     layout->addWidget(specularGroup);
     layout->addWidget(normalGroup);
+
+    QPushButton *deleteBtt = new QPushButton(tr("Delete object"));
+    connect(deleteBtt, &QPushButton::pressed,
+            this, &BasicItem::needDelete);
+    layout->addWidget(deleteBtt);
 
     return layout;
 }

@@ -8,7 +8,7 @@
 
 #include <QGraphicsObject>
 #include <QLayout>
-#include <QStack>
+#include <QSet>
 #include <QFrame>
 #include <QXmlStreamWriter>
 
@@ -27,7 +27,7 @@ public:
                QWidget *widget) override;
 
     virtual QLayout *getSettingsLayout();
-    QPointer<NodeHolder> getNode() { return nodeHolder; }
+    NodeHolder* getNode() { return nodeHolder; }
     void randomize();
     virtual void toXml(QXmlStreamWriter &stream) = 0;
 
