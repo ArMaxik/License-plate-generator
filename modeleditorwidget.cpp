@@ -43,6 +43,8 @@ void SceneController::setUpRender()
     delete firstRenderStep;
 //    delete currentRenderStep;
 
+    renderEngine->setSize(renderM->getImageSize());
+
     firstRenderStep = new FirstRenderStep(nullptr, nullptr);
     firstRenderStep->renderNum = renderM->getPictureCount();
     currentRenderStep = firstRenderStep;
@@ -111,8 +113,14 @@ void ModelEditorWidget::setUpLayout()
 
     QPushButton *renderButton = new QPushButton(tr("Render"));
     mainL->addWidget(renderButton);
+
+    QHBoxLayout *pLo = new QHBoxLayout();
     renderPB = new QProgressBar(this);
-    mainL->addWidget(renderPB);
+    QPushButton *pPb = new QPushButton(tr("Cancel"));
+
+    pLo->addWidget(renderPB);
+    pLo->addWidget(pPb);
+    mainL->addLayout(pLo);
 
     connect(renderButton, &QPushButton::clicked,
             sceneController, &SceneController::setUpRender);

@@ -30,6 +30,8 @@ protected:
 
     virtual void makeNotRandomLayout(QVBoxLayout *ml);
     virtual void makeRandomLayout(QVBoxLayout *ml);
+
+    bool randoming;
 };
 
 class NumberProperty : public BasicProperty
@@ -99,18 +101,26 @@ class StringProperty : public BasicProperty
 public:
     StringProperty(QString labelText, QString s = "Text");
 
-    QLayout *getSettingsLayout() override;
-
     QString &getString();
     operator QString() const { return str; }
 
     void toXml(QXmlStreamWriter &stream) override;
+
+public slots:
+    virtual void randomize();
 
 signals:
     void stringChange(QString newStr);
 
 protected:
     QString str;
+    QString randomPattern;
+
+    virtual void makeNotRandomLayout(QVBoxLayout *ml) override;
+    virtual void makeRandomLayout(QVBoxLayout *ml) override;
+
+    static const QString alphabet;
+    static const QString numbers;
 
 protected slots:
     void onStringChange(QString newStr);
@@ -122,8 +132,6 @@ class ColorProperty : public BasicProperty
 public:
     ColorProperty(QString labelText, QColor c = Qt::black);
 
-    QLayout *getSettingsLayout() override;
-
     QColor &getColor();
     operator QColor() const { return color; }
 
@@ -134,6 +142,10 @@ signals:
 
 protected:
     QColor color;
+
+
+    virtual void makeNotRandomLayout(QVBoxLayout *ml) override;
+    virtual void makeRandomLayout(QVBoxLayout *ml) override;
 
 protected slots:
     void onColorChange();

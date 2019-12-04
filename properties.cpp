@@ -17,6 +17,7 @@ BasicProperty::BasicProperty(QString labelText)
     : QObject()
     , random(false)
     , label(labelText)
+    , randoming(true)
 {
 
 }
@@ -33,7 +34,7 @@ QLayout *BasicProperty::getSettingsLayout()
 
     chbLO->addWidget(chbL);
     chbLO->addWidget(cb);
-    ml->addLayout(chbLO);
+    if(randoming) ml->addLayout(chbLO);
 
     connect(cb, &QCheckBox::stateChanged,
             this, [this](int state){ random = (state == Qt::Checked); emit layoutChanged(); });
@@ -187,7 +188,7 @@ ImageProperty::ImageProperty(QString labelText)
     : BasicProperty (labelText)
 
 {
-
+    randoming = false;
 }
 
 QLayout *ImageProperty::getSettingsLayout()
@@ -273,22 +274,38 @@ StringProperty::StringProperty(QString labelText, QString s)
 
 }
 
-QLayout *StringProperty::getSettingsLayout()
+void StringProperty::makeNotRandomLayout(QVBoxLayout *ml)
 {
-    QLayout *ml = BasicProperty::getSettingsLayout();
-
     QHBoxLayout *strLO = new QHBoxLayout();
     QLabel *strL = new QLabel(label);
     QLineEdit *strLE = new QLineEdit(str);
 
     connect(strLE, &QLineEdit::textChanged,
-            this, &StringProperty::onStringChange);
+            this, [this](QString newStr){ str = newStr; });
+    connect(strLE, &QLineEdit::textChanged,
+            this, &StringProperty::stringChange);
 
     strLO->addWidget(strL);
+    strLO->addStretch();
     strLO->addWidget(strLE);
     ml->addItem(strLO);
+}
 
-    return ml;
+void StringProperty::makeRandomLayout(QVBoxLayout *ml)
+{
+    QHBoxLayout *strLO = new QHBoxLayout();
+    QLabel *strL = new QLabel(tr("Random pattern"));
+    QLineEdit *strLE = new QLineEdit(randomPattern);
+
+    connect(strLE, &QLineEdit::textChanged,
+            this, [this](QString newStr){ randomPattern = newStr; });
+    connect(strLE, &QLineEdit::textChanged,
+            this, &StringProperty::stringChange);
+
+    strLO->addWidget(strL);
+    strLO->addStretch();
+    strLO->addWidget(strLE);
+    ml->addItem(strLO);
 }
 
 QString &StringProperty::getString()
@@ -304,11 +321,45 @@ void StringProperty::toXml(QXmlStreamWriter &stream)
     stream.writeEndElement();
 }
 
+void StringProperty::randomize()
+{
+    str.clear();
+
+    QRegularExpression re("(\\w)(\\d+)");
+    QRegularExpressionMatchIterator i = re.globalMatch(randomPattern);
+    QStringList words;
+    while (i.hasNext()) {
+        QRegularExpressionMatch match = i.next();
+        QString code = match.captured(1);
+        int num = match.captured(2).toInt();
+
+        const QString *source;
+        if(code == "L") {
+            source = &alphabet;
+        } else if(code == "D") {
+            source = &numbers;
+        } else {
+            continue;
+        }
+
+        for(int i = 0; i < num; i++) {
+            str += (*source)[QRandomGenerator::global()->bounded(source->size())];
+        }
+        qDebug() << match.captured(1) << match.captured(2);
+    }
+    emit stringChange(str);
+}
+
 void StringProperty::onStringChange(QString newStr)
 {
     str = newStr;
     emit stringChange(newStr);
 }
+
+//const QString StringProperty::alphabet = QString("qwertyuiopasdfghjklzxcvbnm");
+const QString StringProperty::alphabet = QString("ETOPAHKCBM");
+const QString StringProperty::numbers = QString("0123456789");
+
 
 // ========[ ColorPropertie ]==================================================
 
@@ -320,9 +371,9 @@ ColorProperty::ColorProperty(QString labelText, QColor c)
 
 }
 
-QLayout *ColorProperty::getSettingsLayout()
+
+void ColorProperty::makeNotRandomLayout(QVBoxLayout *ml)
 {
-    QLayout *ml = BasicProperty::getSettingsLayout();
 
     QHBoxLayout *colorLO = new QHBoxLayout();
     QLabel *colorL = new QLabel(label);
@@ -335,7 +386,81 @@ QLayout *ColorProperty::getSettingsLayout()
     colorLO->addWidget(colorPB);
     ml->addItem(colorLO);
 
-    return ml;
+}
+
+void ColorProperty::makeRandomLayout(QVBoxLayout *ml)
+{
+    QHBoxLayout *numLO = new QHBoxLayout();
+    QLabel *numL = new QLabel(label);
+    numLO->addWidget(numL);
+    ml->addLayout(numLO);
+
+    QHBoxLayout *rLO = new QHBoxLayout();
+    QLabel *rL = new QLabel(tr("Red"));
+    ml->addWidget(rL);
+
+    QHBoxLayout *rLOmin = new QHBoxLayout();
+    QLabel *rLmin = new QLabel(tr("min value"));
+    QSpinBox *rSBmin = new QSpinBox();
+    rSBmin->setRange(1, INT_MAX);
+    rSBmin->setValue(0);
+    rLOmin->addWidget(rLmin);
+    rLOmin->addWidget(rSBmin);
+
+    QHBoxLayout *rLOmax = new QHBoxLayout();
+    QLabel *rLmax = new QLabel(tr("max value"));
+    QSpinBox *rSBmax = new QSpinBox();
+    rSBmax->setRange(1, INT_MAX);
+    rSBmax->setValue(255);
+    rLOmax->addWidget(rLmax);
+    rLOmax->addWidget(rSBmax);
+
+    ml->addLayout(rLOmin);
+    ml->addLayout(rLOmax);
+
+    QLabel *gL = new QLabel(tr("Green"));
+    ml->addWidget(gL);
+
+    QHBoxLayout *gLOmin = new QHBoxLayout();
+    QLabel *gLmin = new QLabel(tr("min value"));
+    QSpinBox *gSBmin = new QSpinBox();
+    gSBmin->setRange(1, INT_MAX);
+    gSBmin->setValue(0);
+    gLOmin->addWidget(gLmin);
+    gLOmin->addWidget(gSBmin);
+
+    QHBoxLayout *gLOmax = new QHBoxLayout();
+    QLabel *gLmax = new QLabel(tr("max value"));
+    QSpinBox *gSBmax = new QSpinBox();
+    gSBmax->setRange(1, INT_MAX);
+    gSBmax->setValue(255);
+    gLOmax->addWidget(gLmax);
+    gLOmax->addWidget(gSBmax);
+
+    ml->addLayout(gLOmin);
+    ml->addLayout(gLOmax);
+
+    QLabel *bL = new QLabel(tr("Blue"));
+    ml->addWidget(bL);
+
+    QHBoxLayout *bLOmin = new QHBoxLayout();
+    QLabel *bLmin = new QLabel(tr("min value"));
+    QSpinBox *bSBmin = new QSpinBox();
+    bSBmin->setRange(1, INT_MAX);
+    bSBmin->setValue(0);
+    bLOmin->addWidget(bLmin);
+    bLOmin->addWidget(bSBmin);
+
+    QHBoxLayout *bLOmax = new QHBoxLayout();
+    QLabel *bLmax = new QLabel(tr("max value"));
+    QSpinBox *bSBmax = new QSpinBox();
+    bSBmax->setRange(1, INT_MAX);
+    bSBmax->setValue(255);
+    bLOmax->addWidget(bLmax);
+    bLOmax->addWidget(bSBmax);
+
+    ml->addLayout(bLOmin);
+    ml->addLayout(bLOmax);
 }
 
 QColor &ColorProperty::getColor()

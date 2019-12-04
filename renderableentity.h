@@ -12,8 +12,13 @@ class RenderableEntity : public Qt3DCore::QEntity
 public:
     RenderableEntity(Qt3DCore::QNode *parent = nullptr, Qt3DRender::QMaterial *material = nullptr);
 
-    Qt3DExtras::QPlaneMesh *getMesh() const;
+    Qt3DExtras::QPlaneMesh *getMesh() { return m_mesh; }
     Qt3DCore::QTransform *getTransform() const;
+    QSizeF getSize() const { return QSizeF(m_mesh->width(), m_mesh->height()); }
+    void setSize(QSizeF size) {
+                                m_mesh->setHeight(size.height());
+                                m_mesh->setWidth(size.width());
+                              }
 
 public slots:
     void randomize();

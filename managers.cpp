@@ -84,8 +84,36 @@ ModelManager::ModelManager(Qt3DCore::QEntity *scene, QObject *parent)
 QLayout *ModelManager::getSettingsLayout()
 {
     QVBoxLayout *l = new QVBoxLayout();
-    l->addWidget(new QLabel("Just a ModelManager"));
+    l->addStretch();
 
+    QDoubleSpinBox *wSpinBox = new QDoubleSpinBox();
+    QDoubleSpinBox *hSpinBox = new QDoubleSpinBox();
+    wSpinBox->setRange(0.0, 20.0);
+    hSpinBox->setRange(0.0, 20.0);
+    wSpinBox->setValue(licensePlate->getSize().width());
+    hSpinBox->setValue(licensePlate->getSize().height());
+
+    QLabel *wL = new QLabel(tr("Widht"));
+    QLabel *hL = new QLabel(tr("Height"));
+
+    QHBoxLayout *wLt = new QHBoxLayout();
+    QHBoxLayout *hLt = new QHBoxLayout();
+
+    l->addLayout(wLt);
+    l->addLayout(hLt);
+
+    wLt->addWidget(wL);
+    wLt->addWidget(wSpinBox);
+
+    hLt->addWidget(hL);
+    hLt->addWidget(hSpinBox);
+
+    connect(wSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this, [this](double w){ licensePlate->getMesh()->setWidth(w); });
+    connect(hSpinBox,  QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this, [this](double h){ licensePlate->getMesh()->setHeight(h); });
+
+    l->addStretch();
     return l;
 }
 
@@ -167,6 +195,8 @@ RenderManager::RenderManager(Qt3DCore::QEntity *scene, QObject *parent)
     name = tr("Render Manager");
 
     picNum = 20;
+    picW = 400;
+    picH = 400;
     savingPath = "C:/Users/slava/OneDrive/Qt_projects/PlatesEditor/pic/";
 }
 
@@ -174,6 +204,24 @@ QLayout *RenderManager::getSettingsLayout()
 {
     QVBoxLayout *l = new QVBoxLayout();
     l->addStretch();
+
+    QHBoxLayout *wNumLO = new QHBoxLayout();
+    QLabel *wNumL = new QLabel(tr("Picture width"));
+    QSpinBox *wNumSB = new QSpinBox();
+    wNumSB->setRange(1, 5000);
+    wNumSB->setValue(picW);
+    wNumLO->addWidget(wNumL);
+    wNumLO->addWidget(wNumSB);
+    l->addLayout(wNumLO);
+
+    QHBoxLayout *hNumLO = new QHBoxLayout();
+    QLabel *hNumL = new QLabel(tr("Picture height"));
+    QSpinBox *hNumSB = new QSpinBox();
+    hNumSB->setRange(1, 5000);
+    hNumSB->setValue(picH);
+    hNumLO->addWidget(hNumL);
+    hNumLO->addWidget(hNumSB);
+    l->addLayout(hNumLO);
 
     QHBoxLayout *picNumLO = new QHBoxLayout();
     QLabel *picNumL = new QLabel(tr("Picture number"));
@@ -193,6 +241,10 @@ QLayout *RenderManager::getSettingsLayout()
     l->addLayout(pathLO);
     l->addWidget(pathDispL);
 
+    connect(wNumSB, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int w){ picW = w; });
+    connect(hNumSB, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int h){ picH = h; });
     connect(picNumSB, QOverload<int>::of(&QSpinBox::valueChanged),
             this, [this](int num){ picNum = num; });
     connect(pathPB, &QPushButton::pressed,

@@ -47,7 +47,6 @@ void MainWindow::setUpToolBar()
     connect(tb->getLoadSceneAction(), &QAction::triggered,
             sceneLoader, &SceneLoader::loadScene, Qt::QueuedConnection);
 
-
     addToolBar(tb);
 }
 

@@ -23,6 +23,11 @@ private:
    QAction *clearAllAction;
    QAction *saveSceneAction;
    QAction *loadSceneAction;
+
+   bool actionsVisible;
+
+private slots:
+    void toggleEditors();
 };
 
 #endif // TOOLBAR_H

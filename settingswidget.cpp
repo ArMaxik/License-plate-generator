@@ -18,8 +18,9 @@ SettingsWidget::SettingsWidget(QMainWindow *parent, Qt::WindowFlags flags)
     emptyWidget->setLayout(new QVBoxLayout());
     emptyWidget->setFrameStyle(QFrame::Panel | QFrame::Raised);
     emptyWidget->setLineWidth(2);
-    emptyWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Maximum);
-    emptyWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Maximum);
+    emptyWidget->sizePolicy().setHorizontalPolicy(QSizePolicy::Minimum);
+    emptyWidget->sizePolicy().setVerticalPolicy(QSizePolicy::Minimum);
+    setMinimumWidth(260);
     setWindowTitle(tr("Settings"));
 
     show();
